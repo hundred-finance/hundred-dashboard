@@ -7,7 +7,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import {FantomLendlyLayout, Layout} from './Layout/layout';
 import Main from './Lendly/Fantom/Main/main';
-import { Network } from "./networks";
+import NETWORKS, { Network } from "./networks";
 import { MyGlobalContext } from "./Types/gloabalContext";
 import Dashboard from './Dashboard/dashboard';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
@@ -63,8 +63,7 @@ const App = () => {
         setNetwork(temp)
       }
       else{
-        const p = safeProvider
-        setProvider(p)
+        setNetwork(NETWORKS[1])
       }
     }
     setOpenSite(true)
