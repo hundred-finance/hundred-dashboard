@@ -13,7 +13,7 @@ import wc from "../../assets/huIcons/wc.png"
 import cbw from "../../assets/huIcons/cbw.png"
 
 const Connect = () => {
-  const { connector, library, chainId, account, activate, deactivate, error} = useWeb3React<ethers.providers.Web3Provider>()
+  const { connector, chainId, account, activate, deactivate, error} = useWeb3React<ethers.providers.Web3Provider>()
   const { setNetwork, network} = useGlobalContext()
   const [showModal, setShowModal] = useState(false)
   const [showError, setShowError] = useState(false)

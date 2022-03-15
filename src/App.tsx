@@ -7,7 +7,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import {FantomLendlyLayout, Layout} from './Layout/layout';
 import Main from './Lendly/Fantom/Main/main';
-import NETWORKS, { Network } from "./networks";
+import { Network } from "./networks";
 import { MyGlobalContext } from "./Types/gloabalContext";
 import Dashboard from './Dashboard/dashboard';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
@@ -23,7 +23,7 @@ declare global {
 global.Buffer = window.Buffer || require("buffer").Buffer
 
 const App = () => {
-  const { library, error, activate } = useWeb3React()
+  const { library, activate } = useWeb3React()
 
   const [network, setNetwork] = useState<Network | null>(null)
   const [provider, setProvider] = useState<Web3Provider | JsonRpcProvider>()
