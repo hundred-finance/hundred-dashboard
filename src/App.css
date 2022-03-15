@@ -1,0 +1,245 @@
+* {
+  font-size: 14px;
+}
+
+.App{
+  background-color: #282c34;
+  min-height: 100vh;  
+  color: white;
+}
+
+.table td{
+  white-space: nowrap;
+}
+
+.copy-btn{
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.copy-td{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.hidden{
+  display: none;
+}
+
+.inputGroup-hover:hover{
+  background-color: #b3b3b3;
+}
+
+.max-width{
+  max-width: 50px;
+}
+
+.navbar{
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button{
+  min-width: 10rem;
+  height: 3rem;
+  border: 1px solid rgb(248, 259, 260);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 150ms ease-in-out,
+              color 150ms ease-in-out,
+              box-shadow 150ms ease-in-out,
+              -webkit-box-shadow 150ms ease-in-out;
+}
+
+.button:hover{
+  color: #222529;
+  background-color: rgb(248, 259, 260);
+}
+
+.button:hover > .circle{
+  border: 1px solid rgb(34, 37, 41);
+}
+
+.button:active{
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(248,259,260,0.9);
+  box-shadow: 0px 0px 10px 0px rgba(248,259,260,0.9);
+}
+
+.button .circle{
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  transform: scale(0.7);
+}
+
+.button-label{
+  color:rgb(248, 259, 260);
+  font-size: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  
+}
+
+.button-network-label{
+  color:rgb(248, 259, 260);
+  font-size: 1rem;
+  padding-right: 15px;
+  padding-left: 5px;
+  
+}
+
+.button:hover > .button-label,
+.button:hover > .button-network-label{
+  color: rgb(34, 37, 41);
+}
+
+.rounded-circle{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.nav-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.col-padding{
+  padding: 30px 10px;
+}
+
+.popover{
+  border: 1px solid rgb(248, 259, 260);
+  min-width: 15rem;
+}
+
+.bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow::before, .bs-popover-bottom>.popover-arrow::before{
+  border-bottom-color: rgb(248, 259, 260);
+
+}
+
+.bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow::after, .bs-popover-bottom>.popover-arrow::after{
+  border-bottom-color: rgb(34, 37, 41); 
+}
+
+.modal-content{
+  background-color: rgb(34, 37, 41);
+  color:rgb(248, 259, 260);
+}
+
+.modal-content .modal-header .btn-close{
+  width: 1em;
+  height: 1em;
+  background: 
+  transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgb(248, 259, 260)'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>") center/1em auto no-repeat;
+}
+
+.wallets .wallet{
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.wallets .wallet:first-child{
+  margin-top: 5px;
+}
+
+.wallets .wallet:last-child{
+  margin-bottom: 5px;
+}
+
+.wallets .wallet div{
+  font-size: 1.2rem;
+  padding-left: .6rem;
+}
+
+
+.wallets .wallet img{
+  width: 30px;
+  margin: 5px;
+}
+
+.wallets .wallet:hover{
+  border: 1px solid rgb(248, 259, 260);
+  opacity: 0.9;
+}
+
+.wallets .wallet:active{
+  background-color: rgb(248, 259, 260);
+  color: rgb(34, 37, 41);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(248,259,260,0.9);
+  box-shadow: 0px 0px 10px 0px rgba(248,259,260,0.9);
+}
+
+.networks{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.networks .networks-category{
+  flex: 1;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.networks .network{
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  height: 40px;
+  opacity: .6;
+  user-select: none;
+  cursor: pointer;
+}
+
+.networks .network-active{
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.networks .network-inactive:hover{
+  border: 1px solid rgb(248, 259, 260);
+  opacity: 1;
+}
+
+.networks .network-inactive:active{
+  background-color: rgb(248, 259, 260);
+  color: rgb(34, 37, 41);
+}
+
+.networks .network .network-logo{
+  margin: 0 .8rem;
+  
+  
+}
+
+.networks .network .network-logo img{
+  width: 25px;
+  height: 25px;
+}
+
+.networks .network .network-title{
+  margin-right: 1rem;
+}

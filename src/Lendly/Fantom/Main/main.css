@@ -1,0 +1,23 @@
+.main{
+    display: flex;
+    height: calc(100vh - 100px);
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.main-box{
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    background-color: rgb(224, 224, 224);
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.main-box:hover{
+    opacity: .8;
+}
