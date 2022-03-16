@@ -60,7 +60,7 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     return {
       address,
       symbol,
-      totalSupply: totalSupply / 10 ** underlying.decimals,
+      totalSupply: totalSupply / 10 ** underlying.decimals * exchangeRate / 1e18,
       borrows: borrows / 10 ** underlying.decimals,
       reserves: reserves / 10 ** underlying.decimals,
       reserveFactor: reserveFactor / 1e18,

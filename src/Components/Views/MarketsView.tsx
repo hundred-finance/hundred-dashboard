@@ -314,7 +314,7 @@ const MarketsView = () =>{
                             }
                             </div>
                         </td>
-                        <td className="text-right">{(item.totalSupply * item.exchangeRate).toFixed(4)}</td>
+                        <td className="text-right">{(item.totalSupply).toFixed(4)}</td>
                         <td className="text-right">{item.borrows.toFixed(4)}</td>
                         <td className="text-right">{item.reserves.toFixed(4)}</td>
                         <td className="text-right">{item.cash.toFixed(4)}</td>
