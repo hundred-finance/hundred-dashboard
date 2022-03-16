@@ -352,7 +352,7 @@ const MarketsView = () =>{
                         </td>
                         <td className="text-right">{(item.supplyRate * 100).toFixed(2)}%</td>
                         <td className="text-right">{(item.borrowRate * 100).toFixed(2)}%</td>
-                        <td className="text-right">{item.exchangeRate.toFixed(4)}</td>
+                        <td className="text-right">{item.exchangeRate.toFixed(6)}</td>
                         <td>{item.interestRateModel}</td>
                         <td className="text-center">
                             {
