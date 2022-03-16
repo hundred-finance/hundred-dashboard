@@ -74,7 +74,7 @@ export type HTokenInfo = {
     isComped: boolean,
     isCompedLoading: boolean,
     hndAPR: number,
-    admin: string
+    admin: string,
 }
 
 export type InterestRateModel = {

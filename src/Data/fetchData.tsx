@@ -40,6 +40,8 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     if(!isNativeToken)
         underlyingAddress = data[15] as string
 
+       
+
         const interestInfo = interestRateModels[interestAddress.toLowerCase()];
     const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
     const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
@@ -66,7 +68,7 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       reserveFactorLoading: false,
       cash: cash /10 ** underlying.decimals,
       decimals,
-      exchangeRate: exchangeRate/1e18,
+      exchangeRate: exchangeRate/10 ** (10 + underlying.decimals),
       supplyRate: supplyRate/1e18*365*24*60*60/13.5,
       borrowRate: borrowRate/1e18*365*24*60*60/13.5,
       utilizationRate,

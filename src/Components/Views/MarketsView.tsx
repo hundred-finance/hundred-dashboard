@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { Col, Container, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip } from "react-bootstrap"
 import {MdContentCopy, MdCheck, MdCancel} from "react-icons/md"
 import {BsToggleOff, BsToggleOn} from "react-icons/bs"
@@ -101,36 +101,36 @@ const MarketsView = () =>{
         }
     }
 
-    const dropCompedMarket = async (index: number): Promise<void> => {
-        if(comptroller && signer){
-            const temp = [...markets]
-            temp[index].isCompedLoading = true
+    // const dropCompedMarket = async (index: number): Promise<void> => {
+    //     if(comptroller && signer){
+    //         const temp = [...markets]
+    //         temp[index].isCompedLoading = true
   
-            setMarkets(temp)
+    //         setMarkets(temp)
             
-            try{
-              const signedComptroller = comptroller.comptroller.connect(signer);
-              const tx = await signedComptroller._dropCompMarket(temp[index].address);
-              const receipt = await tx.wait()
+    //         try{
+    //           const signedComptroller = comptroller.comptroller.connect(signer);
+    //           const tx = await signedComptroller._dropCompMarket(temp[index].address);
+    //           const receipt = await tx.wait()
             
-              if(receipt.status){
-                const temp = [...markets]
-                var market = await signedComptroller.markets(temp[index].address);
-                temp[index].isComped = market.isComped;
-                setMarkets(temp)
-              }
+    //           if(receipt.status){
+    //             const temp = [...markets]
+    //             var market = await signedComptroller.markets(temp[index].address);
+    //             temp[index].isComped = market.isComped;
+    //             setMarkets(temp)
+    //           }
           
-            }
-            catch(err){
+    //         }
+    //         catch(err){
             
-            }
-            finally{
-              const temp = [...markets]
-              temp[index].isCompedLoading = false
-              setMarkets(temp)
-            }
-        }
-      }
+    //         }
+    //         finally{
+    //           const temp = [...markets]
+    //           temp[index].isCompedLoading = false
+    //           setMarkets(temp)
+    //         }
+    //     }
+    //   }
   
     const setCollateralFactor = async (index: number): Promise<void> =>{
       if(comptroller && signer){
@@ -255,11 +255,10 @@ const MarketsView = () =>{
                         <th className="text-center align-middle">Reserve Factor</th>
                         <th className="text-center align-middle">Supply Rate</th>
                         <th className="text-center align-middle">Borrow Rate</th>
-                        <th className="text-center align-middle">HND APR</th>
+                        <th className="text-center align-middle">Exchange Rate</th>
                         <th className="text-center align-middle">Interest Rate Model</th>
                         <th className="text-center align-middle">Mint</th>
                         <th className="text-center align-middle">Borrow</th>
-                        <th className="text-center align-middle">Comped</th>
                         <th className="text-center align-middle">Price</th>
                     </tr>
                 </thead>
@@ -353,7 +352,7 @@ const MarketsView = () =>{
                         </td>
                         <td className="text-right">{(item.supplyRate * 100).toFixed(2)}%</td>
                         <td className="text-right">{(item.borrowRate * 100).toFixed(2)}%</td>
-                        <td className="text-right">{(item.hndAPR * 100).toFixed(2)}%</td>
+                        <td className="text-right">{item.exchangeRate.toFixed(2)}</td>
                         <td>{item.interestRateModel}</td>
                         <td className="text-center">
                             {
@@ -379,18 +378,7 @@ const MarketsView = () =>{
                             }
                                 <Spinner animation="border" size="sm" hidden={!item.borrowPausedLoading}/>
                                 </td>
-                        <td className="text-center">
-                            {
-                                item.isComped ? 
-                                <BsToggleOn className={`text-success cursor-pointer ${item.isCompedLoading ? "hidden" : ""}`} 
-                                size={26}
-                                onClick={() => dropCompedMarket(i)}/> 
-                                : <BsToggleOff className={`cursor-pointer ${item.isCompedLoading ? "hidden" : ""}`}
-                                size={26}
-                                onClick= {() => dropCompedMarket(i)}/>
-                            }
-                            <Spinner animation="border" size="sm" hidden={!item.isCompedLoading}/>
-                            </td>
+                        
                         <td className="text-right">${item.price.toFixed(4)}</td>
                     </tr>
                         ))}
