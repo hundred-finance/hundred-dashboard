@@ -221,7 +221,6 @@ const ComptrollerView = () => {
                         <th className="text-center align-middle">Implementation</th>
                         <th className="text-center align-middle">Seize</th>
                         <th className="text-center align-middle">Transfer</th>
-                        <th className="text-center align-middle">Admin</th>
                         <th className="text-center align-middle">Oracle</th>
                         <th className="text-center align-middle">Pause Guardian</th>
                         <th className="text-center align-middle">Close Factor</th>
@@ -281,20 +280,6 @@ const ComptrollerView = () => {
                                  : ""}
                                  <Spinner animation="border" size="sm" hidden={!comptrollerRef.current.transferPausedLoading}/>
                                  </td>
-                         <td className="text-center">
-                             <div className="copy-td">
-                                 <a target="_blank" rel="noreferrer" href={`${linkAddress}${comptrollerRef.current.admin}`}>{ shortenAddress(comptrollerRef.current.admin) }</a>{" "}
-                                 {
-                                     comptrollerRef.current.admin ?
-                                     <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{content}</Tooltip>}>
-                                         <div>
-                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( comptrollerRef.current ? comptrollerRef.current.admin : "")}/>
-                                         </div>
-                                     </OverlayTrigger>
-                                     : ""
-                                 }
-                             </div>
-                         </td>
                          <td className="text-center">
                              <div className="copy-td">
                                  <a target="_blank" rel="noreferrer" href={`${linkAddress}${comptrollerRef.current.oracleAddress}`}>{ shortenAddress(comptrollerRef.current.oracleAddress) }</a>{" "}
