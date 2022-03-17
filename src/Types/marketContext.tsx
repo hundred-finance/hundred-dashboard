@@ -8,9 +8,9 @@ export type MarketContext = {
     setComptroller: (c: Comptroller) => void,
     admins: Admins | undefined,
     setAdmins: (a: Admins) => void,
-    markets: HTokenInfo[],
+    markets: HTokenInfo[] | undefined,
     setMarkets: (m: HTokenInfo[]) => void
-    interestRateModels: InterestRateModel[]
+    interestRateModels: InterestRateModel[] | undefined
     setInterestRateModels: (i: InterestRateModel[]) => void
 }
 
@@ -20,9 +20,9 @@ export const MyDataContext = createContext<MarketContext>({
     setComptroller: () => {},
     admins: undefined,
     setAdmins: () => {},
-    markets: [],
+    markets: undefined,
     setMarkets: () => {},
-    interestRateModels: [],
+    interestRateModels: undefined,
     setInterestRateModels: () => {}
 })
 

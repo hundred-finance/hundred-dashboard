@@ -21,8 +21,8 @@ const Dashboard = ({lendly} : Props) => {
     const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner | null>(null)
     const [comptroller, setComptroller] = useState<Comptroller>()
     const [admins, setAdmins] = useState<Admins>()
-    const [markets, setMarkets] = useState<HTokenInfo[]>([])
-    const [interestRateModels, setInterestRateModels] = useState<InterestRateModel[]>([])
+    const [markets, setMarkets] = useState<HTokenInfo[]>()
+    const [interestRateModels, setInterestRateModels] = useState<InterestRateModel[]>()
 
     const [retry, setRetry] = useState<number>(0)
    
@@ -49,9 +49,9 @@ const Dashboard = ({lendly} : Props) => {
                     const ethcallProvider = new Provider()
                     await ethcallProvider.init(provider)
                     const net = {...network}
-                    console.log(net)
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
                     const comptrollerData = await getComptrollerData(provider, ethcallProvider, net.lendly && lendly ? net.lendly[lendly].unitrollerAddress : network.hundred.unitrollerAddress);
-                    
                     setSigner(s => signer)
                     setComptroller(c => comptrollerData)
                 }
@@ -71,8 +71,8 @@ const Dashboard = ({lendly} : Props) => {
       setSigner(_ => null)
       setComptroller(undefined)
       setAdmins(undefined)
-      setMarkets(_ => [])
-      setInterestRateModels(_ => [])
+      setMarkets(undefined)
+      setInterestRateModels(undefined)
   
         if(network && provider){
           setRetry(0)
@@ -89,6 +89,9 @@ const Dashboard = ({lendly} : Props) => {
                 if(comptroller && provider){
                     const ethcallProvider = new Provider()
                     await ethcallProvider.init(provider)
+                    const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
                     const comp = {...comptroller}
                     const admins = await getAdmins(comp.oracleAddress, comp.hundred, comp.pauseGuardian, comp.admin, ethcallProvider)
                     setAdmins(_ => admins)
@@ -119,9 +122,10 @@ const Dashboard = ({lendly} : Props) => {
                 if(comptroller && network && provider){
                     const ethcallProvider = new Provider()
                     await ethcallProvider.init(provider)
-                    
-                    let marketData: HTokenInfo[] = []
                     const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
+                    let marketData: HTokenInfo[] = []
                     const nativeTokenAddress =  net.lendly && lendly ? net.lendly[lendly].nativeTokenAddress : net.hundred.nativeTokenAddress
                     const interestRateModelsData =  net.lendly && lendly ? net.lendly[lendly].interestRateModels : net.hundred.interestRateModels
                     const unitrollerAddress =  net.lendly && lendly ? net.lendly[lendly].unitrollerAddress : net.hundred.unitrollerAddress
@@ -154,9 +158,12 @@ const Dashboard = ({lendly} : Props) => {
     useEffect(() => {
         const getInterestData = async () => {
             try{
-                if(network && provider){
+                if(network && provider && markets){
                     const ethcallProvider = new Provider()
                     await ethcallProvider.init(provider)
+                    const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
                     const interestRateModelAddress = [];
                     const map = new Map();
                     for (const item of [...markets]) {
@@ -165,10 +172,9 @@ const Dashboard = ({lendly} : Props) => {
                             interestRateModelAddress.push(item.interestRateContract);
                         }
                     }
-                    const net = {...network}
                     const interestRateModelsData =  net.lendly && lendly ? net.lendly[lendly].interestRateModels : net.hundred.interestRateModels
                     const interestRateModels = await Promise.all(interestRateModelAddress.map((x) => getInterestRateModel(x, ethcallProvider, interestRateModelsData)));
-
+                    console.log(interestRateModels)
                     setInterestRateModels(_ => interestRateModels)
                 }
             }
@@ -182,7 +188,7 @@ const Dashboard = ({lendly} : Props) => {
             }
         }
 
-        if(markets.length > 0){
+        if(markets){
             setRetry(0)
             getInterestData()
         }

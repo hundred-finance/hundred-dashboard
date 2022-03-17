@@ -55,7 +55,7 @@ const InterestRateModelsView = () =>{
                         </tr>
                     </thead>
                     <tbody>
-                    {interestRateModels.length > 0 ? interestRateModels.map((item, i) => (
+                    {interestRateModels ? [...interestRateModels].map((item, i) => (
                         <tr key={i}>
                             <td>{i+1}</td>
                             <td>

@@ -45,7 +45,7 @@ const MarketsView = () =>{
     }
 
     const updateBorrowPaused = async (index: number): Promise<void> => {
-        if(comptroller && signer){
+        if(comptroller && signer && markets){
             const temp = [...markets]
             temp[index].borrowPausedLoading = true
             setMarkets(temp)
@@ -73,7 +73,7 @@ const MarketsView = () =>{
     }
 
     const updateMintPaused = async (index: number): Promise<void> => {
-        if(comptroller && signer){
+        if(comptroller && signer && markets){
             const temp = [...markets]
             temp[index].mintPausedLoading = true
   
@@ -133,7 +133,7 @@ const MarketsView = () =>{
     //   }
   
     const setCollateralFactor = async (index: number): Promise<void> =>{
-      if(comptroller && signer){
+      if(comptroller && signer && markets){
           try
           {
             const temp = [...markets]
@@ -161,31 +161,35 @@ const MarketsView = () =>{
     }
   
     const editCollateral = (index: number, value: string): void => {
+      if(markets){
         const temp = [...markets]
         temp[index].collateralFactorEdit = +value
       
         setMarkets(temp)
-      
+      }  
     }
   
     const openCollateral = (index: number): void =>{
-      const temp = [...markets]
-      temp[index].collateralFactorEdit = temp[index].collateralFactor * 100
-      temp[index].collateralFactorLoading = true
+      if(markets){
+        const temp = [...markets]
+        temp[index].collateralFactorEdit = temp[index].collateralFactor * 100
+        temp[index].collateralFactorLoading = true
   
-      setMarkets(temp)
-      
+        setMarkets(temp)
+      }
     }
   
     const cancelCollateral = (index: number): void => {
-      const temp = [...markets]
-      temp[index].collateralFactorLoading = false
+      if(markets){
+        const temp = [...markets]
+        temp[index].collateralFactorLoading = false
 
-      setMarkets(temp)
+        setMarkets(temp)
+      }
     }
 
     const setReserveFactor = async (index: number): Promise<void> =>{
-      if(provider && signer){
+      if(provider && signer && markets){
           try
           {
             const temp = [...markets]
@@ -212,27 +216,31 @@ const MarketsView = () =>{
     }
 
     const editReserveFactor = (index: number, value: string) => {
-      const temp = [...markets]
-      temp[index].reserveFactorEdit = +value
+      if(markets){
+        const temp = [...markets]
+        temp[index].reserveFactorEdit = +value
       
-      setMarkets(temp)
-      
+        setMarkets(temp)
+      }
     }
 
     const openReserveFactor = (index: number) =>{
-      const temp = [...markets]
-      temp[index].reserveFactorEdit = temp[index].reserveFactor * 100
-      temp[index].reserveFactorLoading = true
+      if(markets){
+        const temp = [...markets]
+        temp[index].reserveFactorEdit = temp[index].reserveFactor * 100
+        temp[index].reserveFactorLoading = true
   
-      setMarkets(temp)
-      
+        setMarkets(temp)
+      }
     }
 
     const cancelReserveFactor = (index: number) => {
-      const temp = [...markets]
-      temp[index].reserveFactorLoading = false
+      if(markets){
+        const temp = [...markets]
+        temp[index].reserveFactorLoading = false
 
-      setMarkets(temp)
+        setMarkets(temp)
+      }
     }
 
     return(
@@ -262,10 +270,10 @@ const MarketsView = () =>{
                         <th className="text-center align-middle">Price</th>
                     </tr>
                 </thead>
-                {markets.length > 0 ? 
+                {markets ? 
                     (<tbody>
                       {
-                        markets.map((item, i) => (
+                        [...markets].map((item, i) => (
                     <tr key={i}>
                         <td>{i+1}</td>
                         <td>{item.underlying.logo ? 

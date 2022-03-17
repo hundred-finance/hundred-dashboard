@@ -1,5 +1,6 @@
 import Logos from "./logos"
 import ABI from "./abi"
+import { Multicall } from "ethcall/lib/multicall"
 
 type InterestRateModel = {
     name: string,
@@ -27,10 +28,10 @@ type Lendly = {
     [key: string] : LendlyData
 }
 
-type Multicall = {
-    address: string,
-    block: number
-}
+// type Multicall = {
+//     address: string,
+//     block: number
+// }
 
 type Network ={
     chainId: number,
@@ -302,6 +303,34 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://optimistic.etherscan.io/address/"
     },
+    4689 : {
+        chainId: 4689,
+        network: "IoTeX",
+        symbol: "IOTX",
+        logo: Logos["IOTX"],
+        name: "IOTX",
+        blocksPerYear: 6307200,
+        networkParams: {
+            chainId: "0x1251",
+            chainName: "IoTeX",
+            rpcUrls: ["https://babel-api.iotex.io"],
+            nativeCurrency: {
+                name: "IOTX",
+                decimals: 18,
+                symbol: "IOTX"
+            },
+            blockExplorerUrls: ["https://iotexscan.io/"],
+        },
+        hundred: {
+            nativeTokenAddress: "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee",
+            unitrollerAddress: "0x8c6139ff1e9d7c1e32bdafd79948d0895ba0a831",
+            interestRateModels: {
+                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
+                "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+            }
+        },
+        linkAddress: "https://iotexscan.io/address/"
+    },
     42 : {
         chainId: 42,
         network: "Kovan",
@@ -403,8 +432,45 @@ const NETWORKS: NetworkData = {
             block: 0
         },
         isTestNetwork: true
+    },
+    4690 : {
+        chainId: 4690,
+        network: "IoTeX Testnet",
+        symbol: "IOTX",
+        logo: Logos["IOTX"],
+        name: "IOTX-T",
+        blocksPerYear: 6307200,
+        networkParams: {
+            chainId: "0x1252",
+            chainName: "IoTeX Testnet",
+            rpcUrls: ["https://babel-api.testnet.iotex.io"],
+            nativeCurrency: {
+                name: "IOTX-T",
+                decimals: 18,
+                symbol: "IOTX-T"
+            },
+            blockExplorerUrls: ["https://testnet.iotexscan.io/"],
+        },
+        hundred: {
+            nativeTokenAddress: "",
+            unitrollerAddress: "0x8c6139ff1e9d7c1e32bdafd79948d0895ba0a831",
+            interestRateModels: {
+                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "ETH",       abi : ABI.NO_KINK_MODEL_ABI  },
+                "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "BTC",       abi : ABI.NO_KINK_MODEL_ABI  },
+                "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
+                "0xbb93c7f378b9b531216f9ad7b5748be189a55807" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+            }
+        },
+        multicall : {
+            address: "0x25bb701a0ce238faecaec56b437460a372d7f139",
+            block: 0
+        },
+        linkAddress: "https://testnet.iotexscan.io/address/",
+        isTestNetwork : true
     }
 }
 
 export default NETWORKS
 export type { Network }
+
+

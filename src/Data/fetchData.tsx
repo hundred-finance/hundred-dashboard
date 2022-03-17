@@ -18,7 +18,6 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
         ethcallCToken.exchangeRateStored(), ethcallComptroller.mintGuardianPaused(address), ethcallComptroller.borrowGuardianPaused(address), 
         ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address)]//, ethcallCToken.borrowRatePerBlock()]
     if(!isNativeToken) calls.push(ethcallCToken.underlying())
-
     const data = await ethcallProvider.all(calls)
     let underlyingAddress = ""
     const interestAddress = data[0] as string
@@ -180,7 +179,7 @@ export const getComptrollerData = async (provider: ethers.providers.Web3Provider
     liquidationIncentiveEdit : 0,
     liquidationIncentiveLoading : false,
     maxAssets,
-    pauseGuardian,
+    pauseGuardian: pauseGuardian === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian,
     implementation
   }
 }
@@ -242,17 +241,33 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
   const hundredContract = new Contract(hundred, ABI.HUNDRED_ABI)
   const pauseGuardianContract = new Contract(pauseGuardian, ABI.GUARDIAN_ABI)
 
-  const [oracleOwner, hundredOwner] = await ethcallProvider.all([oracleContract.owner(), hundredContract.owner()])
+  let oracleOwner = ""
+  let hundredOwner = ""
   let pauseGuardianOwner = ""
-  if(pauseGuardian !== ""){
-    try{
-      const [tempPauseGuardian] = await ethcallProvider.all([pauseGuardianContract.owner()])
-      pauseGuardianOwner = tempPauseGuardian as string
-    }
-    catch(err){
-      console.log(err)
-    }
+
+  const calls: any[] = []
+
+  if(pauseGuardian !== "")
+    calls.push(oracleContract.owner(), hundredContract.owner(), pauseGuardianContract.owner())
+  else 
+    calls.push(oracleContract.owner(), hundredContract.owner())
+
+  try{
+    const data = await ethcallProvider.all(calls)
+    oracleOwner = data[0] as string
+    hundredOwner = data[1] as string
+    if(data.length === 3)
+      pauseGuardianOwner = data[2] as string
   }
+  catch{
+    calls.splice(1,1)
+    const data = await ethcallProvider.all(calls)
+    oracleOwner = data[0] as string
+    if(data.length === 2)
+      pauseGuardianOwner = data[1] as string
+  }
+
+
   const admins: Admins = {
     Unitroller: unitrollerAdmin,
     Oracle: oracleOwner,

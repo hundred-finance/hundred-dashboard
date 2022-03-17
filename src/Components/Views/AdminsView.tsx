@@ -50,7 +50,7 @@ const AdminsView = () => {
                      </tr>
                  </thead>
                  {admins ? <tbody>
-                     {Object.entries(admins).map((o, index) => {
+                     {Object.entries({...admins}).map((o, index) => {
                          return <tr key={1001+index}>
                              <td>
                                  {index + 1}
