@@ -47,7 +47,7 @@ const Dashboard = ({lendly} : Props) => {
                 if(provider && network){
                     const signer = provider.getSigner();
                     const ethcallProvider = new Provider()
-                    await ethcallProvider.init(provider)
+                    await ethcallProvider.init(provider as any)
                     const net = {...network}
                     if(net.multicall) 
                         ethcallProvider.multicall = net.multicall
@@ -88,7 +88,7 @@ const Dashboard = ({lendly} : Props) => {
             try{
                 if(comptroller && provider){
                     const ethcallProvider = new Provider()
-                    await ethcallProvider.init(provider)
+                    await ethcallProvider.init(provider as any)
                     const net = {...network}
                     if(net.multicall) 
                         ethcallProvider.multicall = net.multicall
@@ -121,7 +121,7 @@ const Dashboard = ({lendly} : Props) => {
             try{
                 if(comptroller && network && provider){
                     const ethcallProvider = new Provider()
-                    await ethcallProvider.init(provider)
+                    await ethcallProvider.init(provider as any)
                     const net = {...network}
                     if(net.multicall) 
                         ethcallProvider.multicall = net.multicall
@@ -160,7 +160,7 @@ const Dashboard = ({lendly} : Props) => {
             try{
                 if(network && provider && markets){
                     const ethcallProvider = new Provider()
-                    await ethcallProvider.init(provider)
+                    await ethcallProvider.init(provider as any)
                     const net = {...network}
                     if(net.multicall) 
                         ethcallProvider.multicall = net.multicall
@@ -174,7 +174,6 @@ const Dashboard = ({lendly} : Props) => {
                     }
                     const interestRateModelsData =  net.lendly && lendly ? net.lendly[lendly].interestRateModels : net.hundred.interestRateModels
                     const interestRateModels = await Promise.all(interestRateModelAddress.map((x) => getInterestRateModel(x, ethcallProvider, interestRateModelsData)));
-                    console.log(interestRateModels)
                     setInterestRateModels(_ => interestRateModels)
                 }
             }

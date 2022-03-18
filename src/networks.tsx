@@ -417,20 +417,14 @@ const NETWORKS: NetworkData = {
             blockExplorerUrls: ["https://kovan-optimistic.etherscan.io"]
         },
         hundred: {
-            nativeTokenAddress: "0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d",
+            nativeTokenAddress: "0xe8f12f5492ec28609d2932519456b7436d6c93bd",
             unitrollerAddress: "0x0f390559f258eb8591c8e31cf0905e97cf36ace2",
             interestRateModels: {
-                "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "ETH",       abi : ABI.NO_KINK_MODEL_ABI  },
-                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BTC",       abi : ABI.NO_KINK_MODEL_ABI  },
-                "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
-                "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+                "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
+                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
         linkAddress: "https://kovan-optimistic.etherscan.io/address/",
-        multicall: {
-            address: "0x19ead25619352ea106f25a1c870c0a4df65faa75",
-            block: 0
-        },
         isTestNetwork: true
     },
     4690 : {
@@ -467,6 +461,35 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://testnet.iotexscan.io/address/",
         isTestNetwork : true
+    },
+    43113 : {
+        chainId: 43113,
+        network: "Avalanche Testnet",
+        symbol: "AVAX",
+        logo: Logos["AVAX"],
+        name: "AVAX",
+        blocksPerYear: 31556952,
+        networkParams : {
+            chainId: "0xa869",
+            chainName: "Avalanche Fuji Testnet",
+            rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+            nativeCurrency: {
+                name: "AVAX",
+                decimals: 18,
+                symbol: "AVAX"
+            },
+            blockExplorerUrls: ["https://cchain.explorer.avax-test.network"]
+        },
+        hundred: {
+            nativeTokenAddress: "0xe8f12f5492ec28609d2932519456b7436d6c93bd",
+            unitrollerAddress: "0x0f390559f258eb8591c8e31cf0905e97cf36ace2",
+            interestRateModels: {
+                "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
+                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+            }
+        },
+        linkAddress: "https://cchain.explorer.avax-test.network/address/",
+        isTestNetwork: true
     }
 }
 
