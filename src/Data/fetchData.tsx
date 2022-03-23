@@ -104,9 +104,9 @@ const getNativeInfo = async (network: Network): Promise<UnderlyingInfo> => {
     
   return{
     address: "0x0",
-    symbol: network ? network.symbol : "",
-    logo: network ? Logos[network.symbol] : "",
-    name: network ? network.name : "",
+    symbol: network ? network.networkParams.nativeCurrency.symbol : "",
+    logo: network ? Logos[network.networkParams.nativeCurrency.symbol] : "",
+    name: network ? network.networkParams.nativeCurrency.name : "",
     decimals: 18,
     totalSupply: 0
   }
