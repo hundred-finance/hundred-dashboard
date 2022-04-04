@@ -1,9 +1,10 @@
 import { Contract, Provider } from "ethcall"
-import { ethers } from "ethers"
+import { BigNumber, ethers } from "ethers"
+import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -276,3 +277,81 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
   }
   return admins
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getGauges = async ( network: Network, ethcallProvider: any): Promise<Array<GaugeV4>> => {
+    console.log("getGauges")
+
+    let generalData: Array<GaugeV4> = [];
+
+    if (network.gaugeControllerAddress) {
+        const controller = network.gaugeControllerAddress
+        const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
+
+        const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
+
+        const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
+        const activeGauges: string[] = [];
+
+        let lpAndMinterAddresses: any = await ethcallProvider.all(
+            gauges.flatMap((g) => [
+                new Contract(g, ABI.GAUGE_V4_ABI).lp_token(),
+                new Contract(g, ABI.GAUGE_V4_ABI).minter(),
+                new Contract(g, ABI.GAUGE_V4_ABI).reward_policy_maker(),
+                new Contract(g, ABI.GAUGE_V4_ABI).working_supply(),
+                new Contract(g, ABI.GAUGE_V4_ABI).is_killed(),
+                new Contract(controller, ABI.GAUGE_CONTROLLER_ABI).gauge_relative_weight(g)
+            ])
+        )
+
+        lpAndMinterAddresses = _.chunk(lpAndMinterAddresses, 6)
+        const activeLpAndMinterAddresses: any[][] = []
+
+        for (let i = 0; i < lpAndMinterAddresses.length; i++) {
+            if (!lpAndMinterAddresses[i][4]) {
+                activeGauges.push(gauges[i]);
+                activeLpAndMinterAddresses.push(lpAndMinterAddresses[i])
+            }
+        }
+
+        let rewards: any = await ethcallProvider.all(
+            activeGauges.flatMap((g, index) => [
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rate_at(floor(new Date().getTime() / 1000)),
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g),
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).underlying(),
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current epoch rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(1), //epoch 2 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(2), //epoch 3 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(3), //epoch 4 rewards
+                ]
+            )
+        )
+
+        rewards = _.chunk(rewards, 7)
+
+       return generalData = activeLpAndMinterAddresses.map((c, index) => {
+            return {
+                backstopGauge: false,
+                address: activeGauges[index],
+                lpToken: c[0],
+                lpTokenUnderlying: rewards[index][2],
+                lpBackstopTokenUnderlying: undefined,
+                backstopTotalSupply: BigNumber.from(0),
+                backstopTotalBalance: BigNumber.from(0),
+                minter: c[1],
+                rewardPolicyMaker: c[2],
+                weight: c[5],
+                totalStake: rewards[index][1],
+                workingTotalStake: c[3],
+                currentRewardBalance: rewards[index][3],
+                epochCurrentRewards: rewards[index][4],
+                epoch2Rewards: rewards[index][5],
+                epoch3Rewards: rewards[index][6],
+                epoch4Rewards: rewards[index][6], //breaks if changed to 7
+              }
+        });
+
+    }
+    return []
+  }

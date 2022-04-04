@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 export type Data = {
     signer: ethers.providers.JsonRpcSigner | null,
@@ -96,4 +96,24 @@ export type Admins = {
     Oracle: string, 
     Hundred: string, 
     PauseGuardian: string
+}
+
+export type GaugeV4 = {
+    backstopGauge: boolean
+    address : string
+    lpToken: string
+    lpTokenUnderlying: string
+    lpBackstopTokenUnderlying: string | undefined
+    backstopTotalSupply: BigNumber,
+    backstopTotalBalance: BigNumber,
+    minter: string
+    rewardPolicyMaker: string
+    totalStake: BigNumber
+    workingTotalStake: BigNumber
+    currentRewardBalance: BigNumber
+    epochCurrentRewards: BigNumber
+    epoch2Rewards: BigNumber
+    epoch3Rewards: BigNumber
+    epoch4Rewards: BigNumber
+
 }

@@ -15,7 +15,8 @@ export type LendlyData = {
     name: string,
     nativeTokenAddress: string,
     unitrollerAddress: string,
-    interestRateModels: InterestRateModels
+    interestRateModels: InterestRateModels,
+    gaugeControllerAddress?: string,
 }
 
 export type HundredData = {
@@ -46,7 +47,8 @@ type Network ={
     safeAddress?: string,
     hundred: HundredData,
     multicall?: Multicall,
-    lendly?: Lendly
+    lendly?: Lendly,
+    gaugeControllerAddress?: string,
 }
 
 type NativeCurrency = {
@@ -137,7 +139,9 @@ const NETWORKS: NetworkData = {
                 interestRateModels: {
                     "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                     "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
-                }
+                },
+                gaugeControllerAddress: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
+
             },
             "WEVE": {
                 name: "WEVE",
@@ -148,7 +152,9 @@ const NETWORKS: NetworkData = {
                     "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
                 }
             }
-        }
+        },
+        gaugeControllerAddress: "0xb1c4426C86082D91a6c097fC588E5D5d8dD1f5a8",
+
     },
     42161 : {
         chainId: 42161,
@@ -180,7 +186,9 @@ const NETWORKS: NetworkData = {
                 "0xa8cd5d59827514bcf343ec19f531ce1788ea48f8" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI },
                 "0x5b9451b1bfae2a74d7b9d0d45bdd0e9a27f7bb22" : { name: "MIM",       abi : ABI.INTEREST_MODEL_ABI}
             }
-        }
+        },
+        gaugeControllerAddress: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+
     },
     1666600000 : {
         chainId: 1666600000,
@@ -209,7 +217,9 @@ const NETWORKS: NetworkData = {
                 "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                 "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
-        }
+        },
+        gaugeControllerAddress: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
+
     },
     1285 : {
         chainId: 1285,
@@ -243,6 +253,8 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://moonriver.moonscan.io/address/",
         safeAddress: "https://multisig.moonbeam.network/",
+        gaugeControllerAddress: "0xca78ca5C3Da9a5a4C960C1757456E99d9F1bc76d",
+
     },
     100 : {
         chainId: 100,
@@ -274,6 +286,8 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://blockscout.com/xdai/mainnet/address/",
         safeAddress: "https://gnosis-safe.io/app/gno:",
+        gaugeControllerAddress: "0x2105dE165eD364919703186905B9BB5B8015F13c",
+
     },
     10 : {
         chainId: 10,
@@ -360,7 +374,9 @@ const NETWORKS: NetworkData = {
                 "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                 "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
-        }
+        },
+        gaugeControllerAddress: "0x2E08596F46f51d1E88207790270aF2BD94602762",
+
 
     },
     1666700000 : {
