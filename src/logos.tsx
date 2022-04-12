@@ -76,6 +76,7 @@ import HNDlogo from "./assets/images/HUNDRED-logo.png"
 import veDAO from "./assets/images/veDAO-logo.png"
 import Arbitrum from "./assets/images/ARBITRUM-logo.svg"
 import AVAXLogo from "./assets/images/AVAX-logo.svg"
+import POLYGONlogo from "./assets/images/POLYGON-logo.svg"
 
 type Logo = {
     [key: string] : string
@@ -178,7 +179,10 @@ const Logos: Logo ={
     "WeVE"      : veDAO,
     "Arbitrum"  : Arbitrum,
     "AVAX"      : AVAXLogo,
-    "USDT.e"    : USDTlogo
+    "USDT.e"    : USDTlogo,
+    "ioDAI"     : DAIlogo,
+    "Polygon"   : POLYGONlogo,
+    "hxDAI"     : DAIlogo
 }
 
 export default Logos

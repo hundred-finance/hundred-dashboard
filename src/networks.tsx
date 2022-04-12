@@ -34,9 +34,7 @@ type Lendly = {
 type Network ={
     chainId: number,
     network: string,
-    symbol: string,
     logo: string,
-    name: string,
     blocksPerYear: number,
     networkParams: NetworkParams,
     isTestNetwork?: boolean,
@@ -82,9 +80,7 @@ const NETWORKS: NetworkData = {
     1 : {
         chainId: 1,
         network: "Ethereum", 
-        symbol: "ETH",
         logo: Logos["ETH"], 
-        name: "Ethereum",
         blocksPerYear: 24*60*60/13.5*365,
         networkParams: {
             chainId: "0x1",
@@ -113,9 +109,7 @@ const NETWORKS: NetworkData = {
     250 : {
         chainId: 250,
         network: "Fantom Opera", 
-        symbol: "FTM",
         logo: Logos["FTM"], 
-        name: "FTM",
         blocksPerYear: 24*60*60*365,
         networkParams: {
             chainId: "0xFA",
@@ -206,9 +200,7 @@ const NETWORKS: NetworkData = {
     42161 : {
         chainId: 42161,
         network: "Arbitrum",
-        symbol: "AETH",
         logo: Logos["Arbitrum"], 
-        name: "AETH",
         blocksPerYear: 24*60*60/13.5*365,
         networkParams: {
             chainId: "0xa4b1",
@@ -258,9 +250,7 @@ const NETWORKS: NetworkData = {
     1666600000 : {
         chainId: 1666600000,
         network: "Harmony",
-        symbol: "ONE",
         logo: Logos["ONE"],
-        name: "ONE",
         blocksPerYear: 15778476,
         networkParams : {
             chainId: "0x63564c40",
@@ -306,9 +296,7 @@ const NETWORKS: NetworkData = {
     1285 : {
         chainId: 1285,
         network: "Moonriver",
-        symbol: "MOVR",
         logo: Logos["MOVR"],
-        name: "MOVR",
         blocksPerYear: 2465386,
         networkParams : {
             chainId: "0x505",
@@ -357,9 +345,7 @@ const NETWORKS: NetworkData = {
     100 : {
         chainId: 100,
         network: "Gnosis Chain", 
-        symbol: "xDai",
         logo: Logos["GNOSIS"],
-        name: "Gnosis",
         blocksPerYear: 6307200,
         networkParams: {
             chainId: "0x64",
@@ -399,9 +385,7 @@ const NETWORKS: NetworkData = {
     10 : {
         chainId: 10,
         network: "Optimism",
-        symbol: "ETH",
         logo: Logos["OPT"],
-        name: "OPT",
         blocksPerYear: 2336000,
         networkParams: {
             chainId: "0xa",
@@ -438,9 +422,7 @@ const NETWORKS: NetworkData = {
     4689 : {
         chainId: 4689,
         network: "IoTeX",
-        symbol: "IOTX",
         logo: Logos["IOTX"],
-        name: "IOTX",
         blocksPerYear: 6307200,
         networkParams: {
             chainId: "0x1251",
@@ -463,12 +445,38 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://iotexscan.io/address/"
     },
+    137 : {
+        chainId: 137,
+        network: "Polygon",
+        logo: Logos["Polygon"],
+        blocksPerYear: 15017140,
+        networkParams: {
+            chainId: "0x89",
+            chainName: "Polygon",
+            rpcUrls: ["https://polygon-mainnet.infura.io/v3/295cce92179b4be498665b1b16dfee34"],
+            nativeCurrency:{
+                name: "MATIC",
+                decimals: 18,
+                symbol: "MATIC"
+            },
+            blockExplorerUrls: ["https://polygonscan.com"]
+        },
+        hundred: {
+            nativeTokenAddress: "0xebd7f3349aba8bb15b897e03d6c1a4ba95b55e31",
+            unitrollerAddress: "0xedba32185baf7fef9a26ca567bc4a6cbe426e499",
+            interestRateModels: {
+                "0x772918d032cfd4ff09ea7af623e56e2d8d96bb65" : { name: "ETH",       abi : ABI.NO_KINK_MODEL_ABI  },
+                "0xb1c4426c86082d91a6c097fc588e5d5d8dd1f5a8" : { name: "wBTC",      abi : ABI.NO_KINK_MODEL_ABI  },
+                "0x29ddb4c4f9baae366dbd40eff79d364e004425b0" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
+                "0x42b458056f887fd665ed6f160a59afe932e1f559" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+            }
+        },
+        linkAddress: "https://polygonscan.com/address/"
+    },
     42 : {
         chainId: 42,
         network: "Kovan",
-        symbol: "ETH",
         logo: Logos["ETH"],
-        name: "ETH",
         blocksPerYear: 2336000,
         isTestNetwork: true,
         networkParams: {
@@ -516,9 +524,7 @@ const NETWORKS: NetworkData = {
     1666700000 : {
         chainId: 1666700000,
         network: "Harmony Testnet",
-        symbol: "ETH",
         logo: Logos["ONE"],
-        name: "ONE",
         blocksPerYear: 15017140,
         networkParams: {
             chainId: "0x6357d2e0",
@@ -551,9 +557,7 @@ const NETWORKS: NetworkData = {
     69 : {
         chainId: 69,
         network: "Optimism Kovan",
-        symbol: "ETH",
         logo: Logos["OPT"],
-        name: "OPT",
         blocksPerYear: 15017140,
         networkParams: {
             chainId: "0x45",
@@ -591,9 +595,7 @@ const NETWORKS: NetworkData = {
     4690 : {
         chainId: 4690,
         network: "IoTeX Testnet",
-        symbol: "IOTX",
         logo: Logos["IOTX"],
-        name: "IOTX-T",
         blocksPerYear: 6307200,
         networkParams: {
             chainId: "0x1252",
@@ -626,9 +628,7 @@ const NETWORKS: NetworkData = {
     43113 : {
         chainId: 43113,
         network: "Avalanche Testnet",
-        symbol: "AVAX",
         logo: Logos["AVAX"],
-        name: "AVAX",
         blocksPerYear: 31556952,
         networkParams : {
             chainId: "0xa869",
@@ -667,5 +667,3 @@ const NETWORKS: NetworkData = {
 
 export default NETWORKS
 export type { Network }
-
-
