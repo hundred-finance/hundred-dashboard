@@ -244,7 +244,6 @@ const MarketsView = () =>{
     }
 
     return(
-            <Container fluid>
               <Row>
                  <Col className="col-padding">
                 <h4>Markets</h4>
@@ -409,7 +408,6 @@ const MarketsView = () =>{
             </Table>
             </Col>
             </Row>
-            </Container>
         )
     }
 

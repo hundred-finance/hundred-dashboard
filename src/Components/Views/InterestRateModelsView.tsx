@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Container, Table,Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap"
+import { Table,Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap"
 import { MdContentCopy } from "react-icons/md";
 import { shortenAddress } from "../../helpers";
 import { useGlobalContext } from "../../Types/gloabalContext";
@@ -34,7 +34,6 @@ const InterestRateModelsView = () =>{
     }
 
     return(
-            <Container fluid>
                 <Row>
                 <Col sm="12" md="12" lg="10" xl="9" xxl="8" className="col-padding">
                 <h4>Interest Rate Models</h4>
@@ -104,7 +103,6 @@ const InterestRateModelsView = () =>{
                 </Table>
                 </Col>
                 </Row>
-            </Container>
         )
     }
 

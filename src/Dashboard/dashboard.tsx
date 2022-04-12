@@ -1,13 +1,16 @@
 import { Provider } from "ethcall"
 import { ethers } from "ethers";
 import { useEffect, useRef, useState } from "react";
+import { Row } from "react-bootstrap";
 import AdminsView from "../Components/Views/AdminsView";
 import ComptrollerView from "../Components/Views/ComptrollerView";
+import EpochsView from "../Components/Views/EpochsView";
+import ContractsView from "../Components/Views/ContractsView";
 import GaugesView from "../Components/Views/GaugesView";
 import InterestRateModelsView from "../Components/Views/InterestRateModelsView";
 import MarketsView from "../Components/Views/MarketsView";
-import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getInterestRateModel } from "../Data/fetchData";
-import { Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "../Types/data";
+import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getInterestRateModel, getContracts } from "../Data/fetchData";
+import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "../Types/data";
 import { useGlobalContext } from "../Types/gloabalContext";
 import { MyDataContext } from "../Types/marketContext";
 
@@ -25,7 +28,7 @@ const Dashboard = ({lendly} : Props) => {
     const [markets, setMarkets] = useState<HTokenInfo[]>()
     const [interestRateModels, setInterestRateModels] = useState<InterestRateModel[]>()
     const [gauges, setGauges] = useState<GaugeV4[]>()
-
+    const [contracts, setContracts] = useState<Contracts>()
     const [retry, setRetry] = useState<number>(0)
    
     const retryRef = useRef<number>(0)
@@ -79,7 +82,7 @@ const Dashboard = ({lendly} : Props) => {
       setMarkets(undefined)
       setInterestRateModels(undefined)
       setGauges(undefined)
-
+      setContracts(undefined)
   
         if(network && provider){
           setRetry(0)
@@ -205,7 +208,7 @@ const Dashboard = ({lendly} : Props) => {
         const getGaugesData = async () => {
 
             try{
-                if(network && network.gaugeControllerAddress){
+                if(network && network.contractV1 && network.contractV1.gaugeController){
 
                     const ethcallProvider = new Provider()
 
@@ -237,6 +240,38 @@ const Dashboard = ({lendly} : Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [markets])
 
+          useEffect(() => {
+        const getContractsData = async () => {
+            try{
+                if(comptroller && provider && network){
+                    const ethcallProvider = new Provider()
+                    await ethcallProvider.init(provider as any)
+                    const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
+                    const contracts = await getContracts(net , ethcallProvider)
+                    setContracts(_ => contracts)
+                }
+            }
+            catch(error: any){
+                if(!error.toString().includes("execution reverted"))
+                    console.error("markets: ", error.error)
+                if(retryRef.current < 10){
+                    const temp = retryRef.current + 1
+                    setRetry(temp)
+                    setTimeout(getContractsData, temp * 500)
+                }
+            }
+        }
+
+        if(comptroller){
+            setRetry(0)
+            getContractsData()
+        }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [comptroller])
+
     return (
         <MyDataContext.Provider value={({
             signer,
@@ -245,12 +280,17 @@ const Dashboard = ({lendly} : Props) => {
             markets, setMarkets: updateMarkets,
             interestRateModels, setInterestRateModels,
             gauges, setGauges: updateGauges, 
+            contracts, setContracts,
         })}>
             <ComptrollerView/>
-            <AdminsView/>
-            <GaugesView/> 
+            <Row> 
+                <AdminsView/>
+                <GaugesView/> 
+            </Row>
+            <EpochsView/> 
             <MarketsView/>
             <InterestRateModelsView/>
+            <ContractsView/>
         </MyDataContext.Provider>
     )
 }

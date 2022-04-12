@@ -16,7 +16,9 @@ export type LendlyData = {
     nativeTokenAddress: string,
     unitrollerAddress: string,
     interestRateModels: InterestRateModels,
-    gaugeControllerAddress?: string,
+    gaugeController?: string,
+    contractV1?: ContractData, 
+    contractV2?: ContractData, 
 }
 
 export type HundredData = {
@@ -28,11 +30,6 @@ export type HundredData = {
 type Lendly = {
     [key: string] : LendlyData
 }
-
-// type Multicall = {
-//     address: string,
-//     block: number
-// }
 
 type Network ={
     chainId: number,
@@ -48,9 +45,21 @@ type Network ={
     hundred: HundredData,
     multicall?: Multicall,
     lendly?: Lendly,
-    gaugeControllerAddress?: string,
+    contractV1?: ContractData, 
+    contractV2?: ContractData, 
 }
 
+export type ContractData = {
+    delegationProxy?: string,
+    gaugeController?: string,
+    minter?: string,
+    mirroredVotingEscrow?: string,
+    rewardPolicyMaker?: string,
+    smartWalletChecker?: string,
+    treasury?: string,
+    veBoostDelegation?: string,
+    votingEscrow?: string,
+}
 type NativeCurrency = {
     name: string,
     decimals: number,
@@ -140,7 +149,26 @@ const NETWORKS: NetworkData = {
                     "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                     "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
                 },
-                gaugeControllerAddress: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
+                gaugeController: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
+                contractV1: {
+                    gaugeController: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
+                    minter: "0xfa0f5d0ca1031ac6a47ca8db9cf9dcfd45b3659a",
+                    rewardPolicyMaker: "0xbeD8EFa1973F6E1fB3515bf94aa760174431b3F8",
+                    treasury: "0x0d9459a2d7252c4cd62cf13416cd319c3e0c5bb4",
+                    votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
+                    },
+                
+                contractV2: {
+                    delegationProxy: "0x7100CBCa885905F922a19006cF7fD5d0E1bBb26c",
+                    gaugeController: "0x198618d2aa6cBC89Ea24550fE896D4afa28CD635",
+                    minter: "0x14Cb5E017a3F10B9f6254fF24b87e2297dC8b8b3",
+                    mirroredVotingEscrow: "0x6c63287CC629417E96b77DD7184748Bb6536A4e2",
+                    rewardPolicyMaker: "0x9A9C7C065efcd4A8FfBF3d97882BbcaEd4eB2910",
+                    smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+                    treasury: "0x1Ac7Cb8D9e3AC86296a5DEA9d55BF846AB459bA9",
+                    veBoostDelegation: "0xcabc8fC306fCAa4c05B58522B13756AE12eDd902",
+                    votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
+                    },
 
             },
             "WEVE": {
@@ -153,8 +181,27 @@ const NETWORKS: NetworkData = {
                 }
             }
         },
-        gaugeControllerAddress: "0xb1c4426C86082D91a6c097fC588E5D5d8dD1f5a8",
 
+        contractV1: {
+            gaugeController: "0xb1c4426C86082D91a6c097fC588E5D5d8dD1f5a8",
+            minter: "0x42B458056f887Fd665ed6f160A59Afe932e1F559",
+            rewardPolicyMaker: "0x772918d032cFd4Ff09Ea7Af623e56E2D8D96bB65",
+            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+            treasury: "0x29DDb4c4f9baAe366DbD40eff79d364e004425b0",
+            votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
+            },
+
+        contractV2: {
+            delegationProxy: "0x7100CBCa885905F922a19006cF7fD5d0E1bBb26c",
+            gaugeController: "0x89Aa51685a2B658be8a7b9C3Af70D66557544181",
+            minter: "0x2105dE165eD364919703186905B9BB5B8015F13c",
+            mirroredVotingEscrow: "0x6c63287CC629417E96b77DD7184748Bb6536A4e2",
+            rewardPolicyMaker: "0x1B65EDec9370a29adb618f741C22fdbe20EB68DD",
+            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+            treasury: "0x988174f4AB5ad41E1313F1b07877dFe4A78CE5F2",
+            veBoostDelegation: "0xcabc8fC306fCAa4c05B58522B13756AE12eDd902",
+            votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
+            },
     },
     42161 : {
         chainId: 42161,
@@ -187,8 +234,26 @@ const NETWORKS: NetworkData = {
                 "0x5b9451b1bfae2a74d7b9d0d45bdd0e9a27f7bb22" : { name: "MIM",       abi : ABI.INTEREST_MODEL_ABI}
             }
         },
-        gaugeControllerAddress: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+        contractV1: {
+            gaugeController: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            minter: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
+            rewardPolicyMaker: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
+            smartWalletChecker: "0x603c5919FCFB13423b963b04D55d1b393da88A7e",
+            treasury: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            votingEscrow: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+            },
 
+        contractV2: {
+            delegationProxy: "0x5BA443267c09578bfd87e033a401F69d37Fe677e",
+            gaugeController: "0xBA427dDccba3B63497D8148276Bf64783FaBBe7E",
+            minter: "0xc246F4d921dd446cE5c6Bb3aABd64C2d714e21C1",           
+            mirroredVotingEscrow: "0x6b5f15E939C8d797E6bd8D5fFda24eDeC655D08d",
+            rewardPolicyMaker: "0xb5D66fB34DD0D874709fDB4682C89bB634E7c364",
+            smartWalletChecker: "0x603c5919FCFB13423b963b04D55d1b393da88A7e",
+            treasury: "0x7Cec58EE233624888294fB194c224EBf66ff37B5",
+            veBoostDelegation: "0x0000000000000000000000000000000000000000",
+            votingEscrow: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+     },
     },
     1666600000 : {
         chainId: 1666600000,
@@ -218,8 +283,25 @@ const NETWORKS: NetworkData = {
                 "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        gaugeControllerAddress: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
+        contractV1: {
+            gaugeController: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
+            minter: "0xb4300e088a3AE4e624EE5C71Bc1822F68BB5f2bc",
+            rewardPolicyMaker: "0xEdBA32185BAF7fEf9A26ca567bC4A6cbe426e499",
+            treasury: "0x243E33aa7f6787154a8E59d3C27a66db3F8818ee",
+            votingEscrow: "0xE4e43864ea18d5E5211352a4B810383460aB7fcC",
+            },
 
+        contractV2: {
+            delegationProxy: "0xB11C769e66f1ECEA06B5c30154B880200Bf57C25",
+            gaugeController: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
+            minter: "0xd7f3Bf2085AD32ff95E1bCC408d37F10f6949270",
+            mirroredVotingEscrow: "0x1dB11Cf7C332E797ac912e11b8762e0A4b24a836",
+            rewardPolicyMaker: "0xC3bae38Bfa2CbBE30f442649070408f484bd5882",
+            smartWalletChecker: "0x0000000000000000000000000000000000000000",
+            treasury: "0xF191d17dEe9943F06bB784C0492805280AeE0bf9",
+            veBoostDelegation: "0x5734BB74cFac69f1c34bA66eA6608cCdEe6b81F2",
+            votingEscrow: "0xE4e43864ea18d5E5211352a4B810383460aB7fcC",
+            },
     },
     1285 : {
         chainId: 1285,
@@ -253,8 +335,24 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://moonriver.moonscan.io/address/",
         safeAddress: "https://multisig.moonbeam.network/",
-        gaugeControllerAddress: "0xca78ca5C3Da9a5a4C960C1757456E99d9F1bc76d",
-
+        contractV1: {
+            gaugeController: "0xb4300e088a3AE4e624EE5C71Bc1822F68BB5f2bc",
+            minter: "0x607312a5C671D0C511998171e634DE32156e69d0",
+            rewardPolicyMaker: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
+            treasury: "0xEdBA32185BAF7fEf9A26ca567bC4A6cbe426e499",
+            votingEscrow: "0x243E33aa7f6787154a8E59d3C27a66db3F8818ee",
+        },
+        contractV2: {
+            delegationProxy: "0x274E94f03AC51779D14bD45aF77C0e0e9d97cef9",
+            gaugeController: "0xca78ca5C3Da9a5a4C960C1757456E99d9F1bc76d",
+            minter: "0x08110737CB8276B155aB18533dacF7d27e2357c8",
+            mirroredVotingEscrow: "0x7A143fe393C8EC031e8A27129aB523FFC2c3125D",
+            rewardPolicyMaker: "0x371F3AD36072230424C828629d53B0Dbd93c8273",
+            smartWalletChecker: "0x988174f4AB5ad41E1313F1b07877dFe4A78CE5F2",
+            treasury: "0xD7a8De0672131668be0366cF517DbD1c369cE200",
+            veBoostDelegation: "0x6333000289bc27A090b3D51E734C2f13e3edc4fd",
+            votingEscrow: "0x243E33aa7f6787154a8E59d3C27a66db3F8818ee",
+            },
     },
     100 : {
         chainId: 100,
@@ -286,8 +384,17 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://blockscout.com/xdai/mainnet/address/",
         safeAddress: "https://gnosis-safe.io/app/gno:",
-        gaugeControllerAddress: "0x2105dE165eD364919703186905B9BB5B8015F13c",
-
+        contractV2: {
+            delegationProxy: "0x989b2F0722808d9F9c574363fA8759e925f30F12",
+            gaugeController: "0x2105dE165eD364919703186905B9BB5B8015F13c",
+            minter: "0x818b3dff96d01590Caf72965e6F50b24331EfdEC",
+            mirroredVotingEscrow: "0x988174f4AB5ad41E1313F1b07877dFe4A78CE5F2",
+            rewardPolicyMaker: "0x89Aa51685a2B658be8a7b9C3Af70D66557544181",
+            smartWalletChecker: "0xEE5d3c956Ff7bF49054380610D8e598793838156",
+            treasury: "0x1B65EDec9370a29adb618f741C22fdbe20EB68DD",
+            veBoostDelegation: "0x629e95631602Ad5751e79557f297c32C93598B64",
+            votingEscrow: "0xf64E1a3eF0d2F5659dC4c10983e595B797C6ecA4",
+            },
     },
     10 : {
         chainId: 10,
@@ -315,7 +422,18 @@ const NETWORKS: NetworkData = {
                 "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        linkAddress: "https://optimistic.etherscan.io/address/"
+        linkAddress: "https://optimistic.etherscan.io/address/",
+        contractV2: {
+            delegationProxy: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            gaugeController: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+            minter: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            mirroredVotingEscrow: "0xAc8204a9d79CA87D192ea98A9381600642A66a5F",
+            rewardPolicyMaker: "0x3ffd03Ef31F6D5A6C517CEFA9CDf43efEBeE8399",
+            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+            treasury: "0xec378cdd60E890332F7A8CC251315327a4f244B6",
+            veBoostDelegation: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
+            votingEscrow: "0x1F8e8472e124F58b7F0D2598EaE3F4f482780b09",
+            },
     },
     4689 : {
         chainId: 4689,
@@ -375,9 +493,25 @@ const NETWORKS: NetworkData = {
                 "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        gaugeControllerAddress: "0x2E08596F46f51d1E88207790270aF2BD94602762",
+        contractV1: {
+            gaugeController: "0xFa0F5d0cA1031aC6A47CA8Db9cf9dcfd45B3659a",
+            minter: "0x89fC1cc860dDF4fb91A7C52b12d5343bB03C332E",
+            rewardPolicyMaker: "0x0d9459A2d7252c4cd62cF13416Cd319c3e0C5bB4",
+            treasury: "0x788Ac705a7B67562CdD1913b67EE091785FA4F68",
+            votingEscrow: "0xbeD8EFa1973F6E1fB3515bf94aa760174431b3F8",
+            },
 
-
+        contractV2: {
+            delegationProxy: "",
+            gaugeController: "",
+            minter: "",
+            mirroredVotingEscrow: "",
+            rewardPolicyMaker: "",
+            smartWalletChecker: "",
+            treasury: "",
+            veBoostDelegation: "",
+            votingEscrow: "",
+            },
     },
     1666700000 : {
         chainId: 1666700000,
@@ -441,7 +575,18 @@ const NETWORKS: NetworkData = {
             }
         },
         linkAddress: "https://kovan-optimistic.etherscan.io/address/",
-        isTestNetwork: true
+        isTestNetwork: true,
+        contractV2: {
+            delegationProxy: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            gaugeController: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+            minter: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            mirroredVotingEscrow: "0xAc8204a9d79CA87D192ea98A9381600642A66a5F",
+            rewardPolicyMaker: "0x3ffd03Ef31F6D5A6C517CEFA9CDf43efEBeE8399",
+            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+            treasury: "0xec378cdd60E890332F7A8CC251315327a4f244B6",
+            veBoostDelegation: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
+            votingEscrow: "0x1F8e8472e124F58b7F0D2598EaE3F4f482780b09",
+            },
     },
     4690 : {
         chainId: 4690,
@@ -505,7 +650,18 @@ const NETWORKS: NetworkData = {
             }
         },
         linkAddress: "https://cchain.explorer.avax-test.network/address/",
-        isTestNetwork: true
+        isTestNetwork: true,
+        contractV2: {
+            delegationProxy: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            gaugeController: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+            minter: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            mirroredVotingEscrow: "0xAc8204a9d79CA87D192ea98A9381600642A66a5F",
+            rewardPolicyMaker: "0x3ffd03Ef31F6D5A6C517CEFA9CDf43efEBeE8399",
+            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
+            treasury: "0xec378cdd60E890332F7A8CC251315327a4f244B6",
+            veBoostDelegation: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
+            votingEscrow: "0x1F8e8472e124F58b7F0D2598EaE3F4f482780b09",
+        }
     }
 }
 

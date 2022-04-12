@@ -4,7 +4,7 @@ import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -280,16 +280,11 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getGauges = async ( network: Network, ethcallProvider: any): Promise<Array<GaugeV4>> => {
-    console.log("getGauges")
 
-    let generalData: Array<GaugeV4> = [];
-
-    if (network.gaugeControllerAddress) {
-        const controller = network.gaugeControllerAddress
+    if(network){
+        const controller = network.contractV1?.gaugeController ? network.contractV1?.gaugeController : network.contractV2?.gaugeController ? network.contractV2?.gaugeController : ""; 
         const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
-
         const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
-
         const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
         const activeGauges: string[] = [];
 
@@ -313,45 +308,136 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
                 activeLpAndMinterAddresses.push(lpAndMinterAddresses[i])
             }
         }
-
         let rewards: any = await ethcallProvider.all(
             activeGauges.flatMap((g, index) => [
                     new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rate_at(floor(new Date().getTime() / 1000)),
-                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g),
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g), //staked balance of hToken
                     new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).underlying(),
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current epoch rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(1), //epoch 2 rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(2), //epoch 3 rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(3), //epoch 4 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current epoch 0 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(1), //epoch 1 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(2), //epoch 2 rewards
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(3), //epoch 3 rewards
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).decimals(), 
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).current_epoch(), //current epoch number
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.HTOKEN_ABI).admin() // admin address
+
                 ]
             )
         )
-
-        rewards = _.chunk(rewards, 7)
-
-       return generalData = activeLpAndMinterAddresses.map((c, index) => {
+        //reshape into 5 arrays
+        rewards = _.chunk(rewards, 10)
+        const underlying: UnderlyingInfo[] = [];
+        
+        //get underlying info
+        for (let i = 0; i < rewards.length; i++) {
+          const info =  await getUnderlying(ethcallProvider, rewards[i][2], network)
+          underlying.push(info) 
+        }
+      
+       return activeLpAndMinterAddresses.map((c, index) => {
             return {
-                backstopGauge: false,
+              
                 address: activeGauges[index],
+                admin: rewards[index][9],
+                backstopGauge: false,
+                backstopTotalBalance: BigNumber.from(0),
+                backstopTotalSupply: BigNumber.from(0),
+                currentEpoch: rewards[index][8],
+                decimals: rewards[index][7],
+                epoch0Rewards: rewards[index][3],
+                epoch1Rewards: rewards[index][4],
+                epoch2Rewards: rewards[index][5],
+                epoch3Rewards: rewards[index][6], 
+                lpBackstopTokenUnderlying: undefined,
                 lpToken: c[0],
                 lpTokenUnderlying: rewards[index][2],
-                lpBackstopTokenUnderlying: undefined,
-                backstopTotalSupply: BigNumber.from(0),
-                backstopTotalBalance: BigNumber.from(0),
                 minter: c[1],
                 rewardPolicyMaker: c[2],
-                weight: c[5],
                 totalStake: rewards[index][1],
+                underlying: underlying[index],
+                weight: c[5],
                 workingTotalStake: c[3],
-                currentRewardBalance: rewards[index][3],
-                epochCurrentRewards: rewards[index][4],
-                epoch2Rewards: rewards[index][5],
-                epoch3Rewards: rewards[index][6],
-                epoch4Rewards: rewards[index][6], //breaks if changed to 7
               }
         });
 
     }
     return []
   }
+    export const getContracts = async (network: Network, ethcallProvider: Provider): Promise<Contracts> => {
+
+        //init V1 addresses
+        let V1_DelegationProxy = ""
+        let V1_GaugeController = ""
+        let V1_Minter = ""
+        let V1_MirroredVotingEscrow = ""
+        let V1_RewardPolicyMaker = ""
+        let V1_SmartWalletChecker = ""
+        let V1_Treasury = ""
+        let V1_veBoostDelegation = ""
+        let V1_VotingEscrow = ""
+
+        //init V2 addresses
+        let V2_DelegationProxy = ""
+        let V2_GaugeController = ""
+        let V2_Minter = ""
+        let V2_MirroredVotingEscrow = ""
+        let V2_RewardPolicyMaker = ""
+        let V2_SmartWalletChecker = ""
+        let V2_Treasury = ""
+        let V2_veBoostDelegation = ""
+        let V2_VotingEscrow = ""
+
+        //fetch V1 addresses
+        if (network.contractV1 && network.contractV1.delegationProxy) V1_DelegationProxy = network.contractV1.delegationProxy;
+        if (network.contractV1 && network.contractV1.gaugeController) V1_GaugeController = network.contractV1.gaugeController;
+        if (network.contractV1 && network.contractV1.minter) V1_Minter = network.contractV1.minter;
+        if (network.contractV1 && network.contractV1.mirroredVotingEscrow) V1_MirroredVotingEscrow = network.contractV1.mirroredVotingEscrow;
+        if (network.contractV1 && network.contractV1.rewardPolicyMaker) V1_RewardPolicyMaker = network.contractV1.rewardPolicyMaker;
+        if (network.contractV1 && network.contractV1.smartWalletChecker) V1_SmartWalletChecker = network.contractV1.smartWalletChecker;
+        if (network.contractV1 && network.contractV1.treasury) V1_Treasury = network.contractV1.treasury;
+        if (network.contractV1 && network.contractV1.veBoostDelegation) V1_veBoostDelegation = network.contractV1.veBoostDelegation;
+        if (network.contractV1 && network.contractV1.votingEscrow) V1_VotingEscrow = network.contractV1.votingEscrow;
+
+        //fetch V2 addresses
+        if (network.contractV2 && network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
+        if (network.contractV2 && network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
+        if (network.contractV2 && network.contractV2.minter) V2_Minter = network.contractV2.minter;
+        if (network.contractV2 && network.contractV2.mirroredVotingEscrow) V2_MirroredVotingEscrow = network.contractV2.mirroredVotingEscrow;
+        if (network.contractV2 && network.contractV2.rewardPolicyMaker) V2_RewardPolicyMaker = network.contractV2.rewardPolicyMaker;
+        if (network.contractV2 && network.contractV2.smartWalletChecker) V2_SmartWalletChecker = network.contractV2.smartWalletChecker;
+        if (network.contractV2 && network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
+        if (network.contractV2 && network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
+        if (network.contractV2 && network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
+
+        //define V1 addresses
+        const contractsV1: ContractInfo = {
+            delegationProxy: V1_DelegationProxy,
+            gaugeController: V1_GaugeController,
+            minter: V1_Minter,
+            mirroredVotingEscrow: V1_MirroredVotingEscrow,
+            rewardPolicyMaker: V1_RewardPolicyMaker,
+            smartWalletChecker: V1_SmartWalletChecker,
+            treasury: V1_Treasury,
+            veBoostDelegation: V1_veBoostDelegation,
+            votingEscrow: V1_VotingEscrow,
+        }
+
+        //define V2 addresses
+        const contractsV2: ContractInfo = {
+            delegationProxy: V2_DelegationProxy,
+            gaugeController: V2_GaugeController,
+            minter: V2_Minter,
+            mirroredVotingEscrow: V2_MirroredVotingEscrow,
+            rewardPolicyMaker: V2_RewardPolicyMaker,
+            smartWalletChecker: V2_SmartWalletChecker,
+            treasury: V2_Treasury,
+            veBoostDelegation: V2_veBoostDelegation,
+            votingEscrow: V2_VotingEscrow,
+        }
+
+        //return 'Contracts' object
+        return {
+            contractsV1: contractsV1,
+            contractsV2: contractsV2,
+        }
+    }

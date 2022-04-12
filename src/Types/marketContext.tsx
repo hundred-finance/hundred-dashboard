@@ -1,6 +1,6 @@
 import { providers } from "ethers";
 import { createContext, useContext } from "react";
-import { Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "./data";
+import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "./data";
 
 export type MarketContext = {
     signer: providers.JsonRpcSigner | null,
@@ -13,7 +13,9 @@ export type MarketContext = {
     interestRateModels: InterestRateModel[] | undefined
     setInterestRateModels: (i: InterestRateModel[]) => void
     gauges: GaugeV4[] | undefined,
-    setGauges: (g: GaugeV4[]) => void
+    setGauges: (g: GaugeV4[]) => void,
+    contracts: Contracts | undefined,
+    setContracts: (ad: Contracts) => void,
 }
 
 export const MyDataContext = createContext<MarketContext>({
@@ -28,6 +30,8 @@ export const MyDataContext = createContext<MarketContext>({
     setInterestRateModels: () => {},
     gauges: undefined,
     setGauges: () => {},
+    contracts: undefined,
+    setContracts: () => {},
 })
 
 export const useMarketContext = () => useContext(MyDataContext)

@@ -210,7 +210,6 @@ const ComptrollerView = () => {
        }
 
      return(
-         <Container fluid>
              <Row>
                  <Col xxl="9" xl="10" lg="11" md="12" className="col-padding">
                  <h4>Comptroller</h4>
@@ -367,7 +366,6 @@ const ComptrollerView = () => {
              </Table>
                  </Col>
              </Row>
-         </Container>
 
      )
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Container } from 'react-bootstrap'
 import { Outlet } from 'react-router-dom'
 import Spinner from '../Components/Spinner/spinner'
 import Header, { FantomLendlyHeader } from './Header'
@@ -7,9 +8,9 @@ export const Layout:React.FC = () => {
     return (
         <div>
           <Header />
-          <div className="wrapper">
+            <Container fluid>
             <Outlet/>
-          </div>
+            </Container>
           <Spinner/>
         </div>
       )
@@ -19,9 +20,9 @@ export const FantomLendlyLayout:React.FC = () => {
   return (
       <div>
         <FantomLendlyHeader />
-        <div className="wrapper">
-          <Outlet/>
-        </div>
+            <Container fluid>
+            <Outlet/>
+            </Container>
         <Spinner/>
       </div>
     )

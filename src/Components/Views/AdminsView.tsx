@@ -37,8 +37,6 @@ const AdminsView = () => {
     }
 
      return(
-         <Container fluid>
-             <Row>
                  <Col xl="3" lg="4" md="6">
                  <h4>Admins</h4>
              <Table striped bordered hover variant="dark" size="sm" responsive>
@@ -84,8 +82,6 @@ const AdminsView = () => {
                    </tbody>}
              </Table>
                  </Col>
-             </Row>
-         </Container>
 
      )
 }

@@ -98,22 +98,42 @@ export type Admins = {
     PauseGuardian: string
 }
 
+export type Contracts = {
+    contractsV1: ContractInfo, 
+    contractsV2: ContractInfo, 
+}
+
+export type ContractInfo = {
+    delegationProxy: string, 
+    gaugeController: string, 
+    minter: string, 
+    mirroredVotingEscrow: string,
+    rewardPolicyMaker: string, 
+    smartWalletChecker: string, 
+    treasury: string, 
+    veBoostDelegation: string, 
+    votingEscrow: string, 
+}
+
 export type GaugeV4 = {
-    backstopGauge: boolean
+
     address : string
+    admin: string
+    backstopGauge: boolean
+    backstopTotalBalance: BigNumber
+    backstopTotalSupply: BigNumber
+    currentEpoch: BigNumber
+    decimals: number
+    epoch0Rewards: BigNumber
+    epoch1Rewards: BigNumber
+    epoch2Rewards: BigNumber
+    epoch3Rewards: BigNumber
+    lpBackstopTokenUnderlying: string | undefined
     lpToken: string
     lpTokenUnderlying: string
-    lpBackstopTokenUnderlying: string | undefined
-    backstopTotalSupply: BigNumber,
-    backstopTotalBalance: BigNumber,
     minter: string
     rewardPolicyMaker: string
     totalStake: BigNumber
+    underlying: UnderlyingInfo
     workingTotalStake: BigNumber
-    currentRewardBalance: BigNumber
-    epochCurrentRewards: BigNumber
-    epoch2Rewards: BigNumber
-    epoch3Rewards: BigNumber
-    epoch4Rewards: BigNumber
-
 }

@@ -1,17 +1,15 @@
 import { useState } from "react"
-import { Col, Container, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip } from "react-bootstrap"
-import {MdContentCopy, MdCheck, MdCancel} from "react-icons/md"
-import {BsToggleOff, BsToggleOn} from "react-icons/bs"
+import { Col, OverlayTrigger, Table, Tooltip } from "react-bootstrap"
+import {MdContentCopy} from "react-icons/md"
 import { useMarketContext } from "../../Types/marketContext"
 import { useGlobalContext } from "../../Types/gloabalContext"
 import { shortenAddress } from "../../helpers"
-import { BigNumber, ethers } from "ethers"
 import Loading from "../Loading/loading"
 
 const GaugesView = () =>{
     const [content, setContent] = useState("Copy address to clipboard")
-    const {signer, comptroller, gauges, setGauges} = useMarketContext()
-    const {network, provider} = useGlobalContext()
+    const {gauges} = useMarketContext()
+    const {network} = useGlobalContext()
 
 
     const linkAddress = network ? network.linkAddress : ""
@@ -37,24 +35,16 @@ const GaugesView = () =>{
         document.body.removeChild(textArea);
     }
 
-
-
     return(
-            <Container fluid>
-              <Row>
-                 <Col className="col-padding">
+                 <Col xl="4" xs="6" >
                 <h4>Gauges</h4>
             <Table striped bordered hover variant="dark" size="sm" responsive>
                 <thead>
                     <tr>
                         <th className="text-center align-middle">#</th>
-                        <th className="text-center align-middle">Gauge</th>
-                        <th className="text-center align-middle">Total Staked</th>
-                        <th className="text-center align-middle">Current Reward Balance</th>
-                        <th className="text-center align-middle">Rewards for Current Epoch</th>
-                        <th className="text-center align-middle">Rewards for Epoch 2</th>
-                        <th className="text-center align-middle">Rewards for Epoch 3</th>
-                        <th className="text-center align-middle">Rewards for Epoch 4</th>
+                        <th className="text-center align-middle" colSpan={2}>Gauge</th>
+                        <th className="text-center align-middle">Total hToken Staked</th>
+                        <th className="text-center align-middle">Admin</th>
                     </tr>
                 </thead>
                 {gauges ? 
@@ -63,26 +53,38 @@ const GaugesView = () =>{
                         [...gauges].map((item, i) => (
                     <tr key={i}>
                         <td>{i+1}</td>
-                        <td className="text-center">
-                             <div className="copy-td">
-                                 <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.address}`}>{ shortenAddress(item.address) }</a>
-                                {
-                                  item.address ?
-                                  <OverlayTrigger placement="top-start" overlay={<Tooltip id="first">{content}</Tooltip>}>
-                                      <div>
-                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( item ? item.address: "")}/>
-                                      </div>
-                                  </OverlayTrigger>
-                                     : ""
-                                }
-                             </div>
+                        <td>{item.underlying.logo ? 
+                                <img className="rounded-circle" src={item.underlying.logo} alt=""/>
+                            : ""}</td>
+                        <td>
+                            <div className="copy-td">
+                            <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.address}`}>{"h" + item.underlying.symbol}</a>
+                            {
+                                item.address ?
+                                <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
+                                    <div>
+                                        <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(item.address)}/>
+                                    </div>
+                                </OverlayTrigger>
+                                : ""
+                            }
+                            </div>
                         </td>
-                        <td className="text-right">{(+item.totalStake.toString()).toFixed(4)}</td>
-                        <td className="text-right">{(+item.currentRewardBalance.toString()).toFixed(4)}</td>
-                        <td className="text-right">{(+item.epochCurrentRewards.toString()).toFixed(4)}</td>
-                        <td className="text-right">{(+item.epoch2Rewards.toString()).toFixed(4)}</td> 
-                        <td className="text-right">{(+item.epoch3Rewards.toString()).toFixed(4)}</td>
-                        <td className="text-right">{(+item.epoch4Rewards.toString()).toFixed(4)}</td> 
+                        <td className="text-right">{(+item.totalStake.toString()/(10 ** +item.decimals.toString())).toFixed(4)}</td>  
+                        <td>
+                            <div className="copy-td">
+                            <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.admin}`}>{shortenAddress(item.admin)}</a>
+                            {
+                                item.admin ?
+                                <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
+                                    <div>
+                                        <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(item.admin)}/>
+                                    </div>
+                                </OverlayTrigger>
+                                : ""
+                            }
+                            </div>
+                        </td>
                     </tr>
                         ))}
                     </tbody>
@@ -103,8 +105,6 @@ const GaugesView = () =>{
                   
             </Table>
             </Col>
-            </Row>
-            </Container>
         )
     }
 
