@@ -1,6 +1,6 @@
 import { providers } from "ethers";
 import { createContext, useContext } from "react";
-import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "./data";
+import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel, EpochsInfo } from "./data";
 
 export type MarketContext = {
     signer: providers.JsonRpcSigner | null,
@@ -16,6 +16,9 @@ export type MarketContext = {
     setGauges: (g: GaugeV4[]) => void,
     contracts: Contracts | undefined,
     setContracts: (ad: Contracts) => void,
+    epochs: EpochsInfo | undefined,
+    setEpochs: (e: EpochsInfo) => void,
+
 }
 
 export const MyDataContext = createContext<MarketContext>({
@@ -32,6 +35,9 @@ export const MyDataContext = createContext<MarketContext>({
     setGauges: () => {},
     contracts: undefined,
     setContracts: () => {},
+    epochs: undefined,
+    setEpochs: () => {},
+
 })
 
 export const useMarketContext = () => useContext(MyDataContext)

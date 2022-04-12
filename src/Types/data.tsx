@@ -122,12 +122,7 @@ export type GaugeV4 = {
     backstopGauge: boolean
     backstopTotalBalance: BigNumber
     backstopTotalSupply: BigNumber
-    currentEpoch: BigNumber
     decimals: number
-    epoch0Rewards: BigNumber
-    epoch1Rewards: BigNumber
-    epoch2Rewards: BigNumber
-    epoch3Rewards: BigNumber
     lpBackstopTokenUnderlying: string | undefined
     lpToken: string
     lpTokenUnderlying: string
@@ -136,4 +131,12 @@ export type GaugeV4 = {
     totalStake: BigNumber
     underlying: UnderlyingInfo
     workingTotalStake: BigNumber
+}
+
+export type EpochsInfo = {
+    currentEpoch: number
+    epoch0Rewards: BigNumber
+    epoch1Rewards: BigNumber
+    epoch2Rewards: BigNumber
+    epoch3Rewards: BigNumber
 }

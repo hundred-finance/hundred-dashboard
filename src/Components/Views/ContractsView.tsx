@@ -49,8 +49,9 @@ const ContractsView = () => {
                         <th className="text-left align-middle">Admin</th>
                      </tr>
                  </thead>
-                 {contracts && contracts?.contractsV1 && admins? <tbody>
-                     {Object.entries({...contracts?.contractsV1}).filter(c -> c!== undefined).map((c, index) => {
+                 {contracts && contracts?.contractsV1 && admins? 
+                 <tbody>
+                     {Object.entries({...contracts?.contractsV1}).filter(c => c[1]!== "").map((c, index) => {
                          return <tr key={1001+index}>
                              <td>
                                  {index + 1}

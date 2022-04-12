@@ -4,7 +4,7 @@ import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Comptroller, ContractInfo, Contracts, EpochsInfo, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -313,19 +313,14 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
                     new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rate_at(floor(new Date().getTime() / 1000)),
                     new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g), //staked balance of hToken
                     new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).underlying(),
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(0), //current epoch 0 rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(1), //epoch 1 rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(2), //epoch 2 rewards
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rewards(3), //epoch 3 rewards
                     new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).decimals(), 
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).current_epoch(), //current epoch number
                     new Contract(activeLpAndMinterAddresses[index][2], ABI.HTOKEN_ABI).admin() // admin address
 
                 ]
             )
         )
         //reshape into 5 arrays
-        rewards = _.chunk(rewards, 10)
+        rewards = _.chunk(rewards, 5)
         const underlying: UnderlyingInfo[] = [];
         
         //get underlying info
@@ -338,16 +333,11 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
             return {
               
                 address: activeGauges[index],
-                admin: rewards[index][9],
+                admin: rewards[index][4],
                 backstopGauge: false,
                 backstopTotalBalance: BigNumber.from(0),
                 backstopTotalSupply: BigNumber.from(0),
-                currentEpoch: rewards[index][8],
-                decimals: rewards[index][7],
-                epoch0Rewards: rewards[index][3],
-                epoch1Rewards: rewards[index][4],
-                epoch2Rewards: rewards[index][5],
-                epoch3Rewards: rewards[index][6], 
+                decimals: rewards[index][3],
                 lpBackstopTokenUnderlying: undefined,
                 lpToken: c[0],
                 lpTokenUnderlying: rewards[index][2],
@@ -441,3 +431,46 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
             contractsV2: contractsV2,
         }
     }
+  
+  export const getEpochs = async (network: Network, ethcallProvider: Provider): Promise<EpochsInfo> => {
+    
+    //check contract version & fetch the rewardPolicyMaker address
+    const rewardsPolicyMaker = network.contractV1?.rewardPolicyMaker ? network.contractV1?.rewardPolicyMaker : network.contractV2?.rewardPolicyMaker ? network.contractV2?.rewardPolicyMaker : null
+
+    //array of calls
+    const calls: any[] = []
+    let current = 0 
+
+    //create new contract
+    if (rewardsPolicyMaker ) {
+    const rewardsContract = new Contract(rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI)
+
+    calls.push(rewardsContract.current_epoch())
+
+    //get current epoch & clear calls array
+    const result = await ethcallProvider.all(calls)
+    calls.pop()
+
+    //convert from BigNumber to number
+    current = +result.toString()
+
+    //store calls 
+    calls.push(
+      rewardsContract.rewards(current), 
+      rewardsContract.rewards(current+1),
+      rewardsContract.rewards(current+2),
+      rewardsContract.rewards(current+3),
+      )
+    }
+
+    //fetch data
+    let epochsData: any = await ethcallProvider.all(calls) 
+
+    return{
+    currentEpoch: current,
+    epoch0Rewards: epochsData[0],
+    epoch1Rewards: epochsData[1],
+    epoch2Rewards: epochsData[2],
+    epoch3Rewards: epochsData[3], 
+    }
+  }

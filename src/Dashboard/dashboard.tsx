@@ -9,8 +9,8 @@ import ContractsView from "../Components/Views/ContractsView";
 import GaugesView from "../Components/Views/GaugesView";
 import InterestRateModelsView from "../Components/Views/InterestRateModelsView";
 import MarketsView from "../Components/Views/MarketsView";
-import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getInterestRateModel, getContracts } from "../Data/fetchData";
-import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "../Types/data";
+import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getInterestRateModel, getContracts, getEpochs } from "../Data/fetchData";
+import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel, EpochsInfo } from "../Types/data";
 import { useGlobalContext } from "../Types/gloabalContext";
 import { MyDataContext } from "../Types/marketContext";
 
@@ -29,6 +29,7 @@ const Dashboard = ({lendly} : Props) => {
     const [interestRateModels, setInterestRateModels] = useState<InterestRateModel[]>()
     const [gauges, setGauges] = useState<GaugeV4[]>()
     const [contracts, setContracts] = useState<Contracts>()
+    const [epochs, setEpochs] = useState<EpochsInfo>()
     const [retry, setRetry] = useState<number>(0)
    
     const retryRef = useRef<number>(0)
@@ -83,6 +84,7 @@ const Dashboard = ({lendly} : Props) => {
       setInterestRateModels(undefined)
       setGauges(undefined)
       setContracts(undefined)
+      setEpochs(undefined)
   
         if(network && provider){
           setRetry(0)
@@ -272,6 +274,38 @@ const Dashboard = ({lendly} : Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comptroller])
 
+    useEffect(() => {
+        const getEpochsData = async () => {
+            try{
+                if(markets && provider && network){
+                    const ethcallProvider = new Provider()
+                    await ethcallProvider.init(provider as any)
+                    const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
+                    const epochs = await getEpochs(net , ethcallProvider)
+                    setEpochs(_ => epochs)
+                }
+            }
+            catch(error: any){
+                if(!error.toString().includes("execution reverted"))
+                    console.error("markets: ", error.error)
+                if(retryRef.current < 10){
+                    const temp = retryRef.current + 1
+                    setRetry(temp)
+                    setTimeout(getEpochsData, temp * 500)
+                }
+            }
+        }
+
+        if(markets){
+            setRetry(0)
+            getEpochsData()
+        }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [markets])
+
     return (
         <MyDataContext.Provider value={({
             signer,
@@ -281,13 +315,14 @@ const Dashboard = ({lendly} : Props) => {
             interestRateModels, setInterestRateModels,
             gauges, setGauges: updateGauges, 
             contracts, setContracts,
+            epochs, setEpochs
         })}>
             <ComptrollerView/>
+            <EpochsView/> 
             <Row> 
                 <AdminsView/>
                 <GaugesView/> 
             </Row>
-            <EpochsView/> 
             <MarketsView/>
             <InterestRateModelsView/>
             <ContractsView/>
