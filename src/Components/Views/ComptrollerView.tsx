@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers"
 import { useEffect, useRef, useState } from "react"
-import { Col, Container, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
+import { Col, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
 import { BsToggleOff, BsToggleOn } from "react-icons/bs"
 import {MdCancel, MdCheck, MdContentCopy} from "react-icons/md"
 import { shortenAddress } from "../../helpers"

@@ -1,5 +1,5 @@
 import React, {  useState } from "react"
-import { Col, Container, OverlayTrigger, Row, Table, Tooltip} from "react-bootstrap"
+import { Col, OverlayTrigger, Table, Tooltip} from "react-bootstrap"
 import {MdContentCopy} from "react-icons/md"
 import { shortenAddress } from "../../helpers"
 import { useGlobalContext } from "../../Types/gloabalContext"
