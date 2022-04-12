@@ -104,15 +104,15 @@ export type Contracts = {
 }
 
 export type ContractInfo = {
-    delegationProxy: string, 
-    gaugeController: string, 
-    minter: string, 
-    mirroredVotingEscrow: string,
-    rewardPolicyMaker: string, 
-    smartWalletChecker: string, 
-    treasury: string, 
-    veBoostDelegation: string, 
-    votingEscrow: string, 
+    DelegationProxy: string, 
+    GaugeController: string, 
+    Minter: string, 
+    MirroredVotingEscrow: string,
+    RewardPolicyMaker: string, 
+    SmartWalletChecker: string, 
+    Treasury: string, 
+    VeBoostDelegation: string, 
+    VotingEscrow: string, 
 }
 
 export type GaugeV4 = {

@@ -411,28 +411,28 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
 
         //define V1 addresses
         const contractsV1: ContractInfo = {
-            delegationProxy: V1_DelegationProxy,
-            gaugeController: V1_GaugeController,
-            minter: V1_Minter,
-            mirroredVotingEscrow: V1_MirroredVotingEscrow,
-            rewardPolicyMaker: V1_RewardPolicyMaker,
-            smartWalletChecker: V1_SmartWalletChecker,
-            treasury: V1_Treasury,
-            veBoostDelegation: V1_veBoostDelegation,
-            votingEscrow: V1_VotingEscrow,
+            DelegationProxy: V1_DelegationProxy,
+            GaugeController: V1_GaugeController,
+            Minter: V1_Minter,
+            MirroredVotingEscrow: V1_MirroredVotingEscrow,
+            RewardPolicyMaker: V1_RewardPolicyMaker,
+            SmartWalletChecker: V1_SmartWalletChecker,
+            Treasury: V1_Treasury,
+            VeBoostDelegation: V1_veBoostDelegation,
+            VotingEscrow: V1_VotingEscrow,
         }
 
         //define V2 addresses
         const contractsV2: ContractInfo = {
-            delegationProxy: V2_DelegationProxy,
-            gaugeController: V2_GaugeController,
-            minter: V2_Minter,
-            mirroredVotingEscrow: V2_MirroredVotingEscrow,
-            rewardPolicyMaker: V2_RewardPolicyMaker,
-            smartWalletChecker: V2_SmartWalletChecker,
-            treasury: V2_Treasury,
-            veBoostDelegation: V2_veBoostDelegation,
-            votingEscrow: V2_VotingEscrow,
+            DelegationProxy: V2_DelegationProxy,
+            GaugeController: V2_GaugeController,
+            Minter: V2_Minter,
+            MirroredVotingEscrow: V2_MirroredVotingEscrow,
+            RewardPolicyMaker: V2_RewardPolicyMaker,
+            SmartWalletChecker: V2_SmartWalletChecker,
+            Treasury: V2_Treasury,
+            VeBoostDelegation: V2_veBoostDelegation,
+            VotingEscrow: V2_VotingEscrow,
         }
 
         //return 'Contracts' object

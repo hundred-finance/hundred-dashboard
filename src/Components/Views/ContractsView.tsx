@@ -7,7 +7,7 @@ import { useMarketContext } from "../../Types/marketContext"
 import Loading from "../Loading/loading"
 
 const ContractsView = () => {
-    const {contracts} = useMarketContext()
+    const {contracts, admins} = useMarketContext()
     const { network } = useGlobalContext()
     const [content, setContent] = useState<string>("Copy address to clipboard")
   
@@ -38,7 +38,7 @@ const ContractsView = () => {
 
      return(
              <Row>
-                <Col xl="3" lg="4" md="6">
+                <Col xl="4" lg="4" md="6">
                  <h4>Contracts Version 1</h4>
              <Table striped bordered hover variant="dark" size="sm" responsive>
                  <thead>
@@ -46,11 +46,11 @@ const ContractsView = () => {
                      <th className="text-left align-middle">#</th>
                         <th className="text-left align-middle">Contract</th>
                         <th className="text-left align-middle">Address</th>
+                        <th className="text-left align-middle">Admin</th>
                      </tr>
                  </thead>
-                 {contracts && contracts?.contractsV1 ? <tbody>
-                     {Object.entries({...contracts?.contractsV1}).map((c, index) => {
-                        //  if (c[0] != null) needs condition to filter for undefined variables
+                 {contracts && contracts?.contractsV1 && admins? <tbody>
+                     {Object.entries({...contracts?.contractsV1}).filter(c -> c!== undefined).map((c, index) => {
                          return <tr key={1001+index}>
                              <td>
                                  {index + 1}
@@ -72,8 +72,23 @@ const ContractsView = () => {
                                     }
                                 </div>
                             </td>
+                            <td>
+                                <div className="copy-td">
+                                <a target="_blank" rel="noreferrer" href={`${linkAddress}${admins.Hundred}`}>{shortenAddress(admins.Hundred)}</a>
+                                {
+                                    admins.Hundred ?
+                                    <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
+                                        <div>
+                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(admins.Hundred)}/>
+                                        </div>
+                                    </OverlayTrigger>
+                                    : ""
+                                }
+                                </div>
+                            </td>
                          </tr>
-                    })}
+                    })
+                    }
                  </tbody>
                  : <tbody>
                      <tr>
@@ -85,7 +100,7 @@ const ContractsView = () => {
              </Table>
                  </Col>
 
-                 <Col xl="3" lg="4" md="6">
+                 <Col xl="4" lg="4" md="6">
                  <h4>Contracts Version 2</h4>
              <Table striped bordered hover variant="dark" size="sm" responsive>
                  <thead>
@@ -93,9 +108,10 @@ const ContractsView = () => {
                      <th className="text-left align-middle">#</th>
                         <th className="text-left align-middle">Contract</th>
                         <th className="text-left align-middle">Address</th>
+                        <th className="text-left align-middle">Admin</th>
                      </tr>
                  </thead>
-                 {contracts && contracts?.contractsV2 ? <tbody>
+                 {contracts && contracts?.contractsV2 && admins ? <tbody>
                      {Object.entries({...contracts?.contractsV2}).map((c, index) => {
                          return <tr key={1001+index}>
                              <td>
@@ -116,6 +132,20 @@ const ContractsView = () => {
                                         </OverlayTrigger>
                                         : null
                                     }
+                                </div>
+                            </td>
+                            <td>
+                                <div className="copy-td">
+                                <a target="_blank" rel="noreferrer" href={`${linkAddress}${admins.Hundred}`}>{shortenAddress(admins.Hundred)}</a>
+                                {
+                                    admins.Hundred ?
+                                    <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
+                                        <div>
+                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(admins.Hundred)}/>
+                                        </div>
+                                    </OverlayTrigger>
+                                    : ""
+                                }
                                 </div>
                             </td>
                          </tr>
