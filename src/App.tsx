@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import {FantomLendlyLayout, Layout} from './Layout/layout';
+import {FantomLendlyLayout, Layout, ChainsLayout} from './Layout/layout';
 import Main from './Lendly/Fantom/Main/main';
 import NETWORKS, { Network } from "./networks";
 import { MyGlobalContext } from "./Types/gloabalContext";
@@ -13,6 +13,7 @@ import Dashboard from './Dashboard/dashboard';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { useWeb3React} from '@web3-react/core';
 import { GetConnector } from './Connectors/connectors';
+import ChainsDashboard from './Dashboard/chainsDashboard';
 
 declare global {
   interface Window {
@@ -94,6 +95,9 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Layout/>}>
                 <Route index element={<Dashboard/>}/>
+              </Route>
+              <Route path="/gauges" element={<ChainsLayout/>}>
+                <Route index element={<ChainsDashboard/>}/>
               </Route>
               {network && network.lendly ? 
                 <Route path="/fantom/lendly" element={<FantomLendlyLayout/>}>

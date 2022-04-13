@@ -66,4 +66,19 @@ export const FantomLendlyHeader = ()=>{
     )
 }
 
+export const ChainsHeader = ()=>{
+    return (
+        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
+            <Container fluid>
+                <NavLink className={"nav-link"} to="/">
+                    <Navbar.Brand>
+                    <HuLogo size={"60px"} darkMode={true}/>
+                        <span style={{paddingLeft: ".5rem", color: "#fff"}}>Dashboard</span>
+                    </Navbar.Brand>
+                </NavLink>
+            </Container>
+        </Navbar>
+    )
+}
+
 export default Header
