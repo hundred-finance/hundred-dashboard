@@ -25,9 +25,11 @@ export const Header = ()=>{
                 <Navbar.Collapse id="responsive-navbar-nav">
                     {network && network.chainId === 250 && network.lendly ? 
                         <Nav className="me-auto">
+                            <NavLink className={"nav-link"} to="/gauges"> Gauges </NavLink>
                             <NavLink className={"nav-link"} to="/fantom/lendly"> Lendly </NavLink>
                         </Nav>
                     : <Nav className="me-auto">
+                        <NavLink className={"nav-link"} to="/gauges"> Gauges </NavLink>
                       </Nav>}
                     <Nav className="nav-buttons">
                         <NetworkButton/>
