@@ -134,6 +134,7 @@ export type GaugeV4 = {
 }
 
 export type EpochsInfo = {
+    network?: string
     currentEpoch: number
     epoch0Rewards: BigNumber
     epoch1Rewards: BigNumber
