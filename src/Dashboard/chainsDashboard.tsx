@@ -20,6 +20,7 @@ const ChainsDashboard = () => {
       const eInfo : EpochsInfo[] = await getChainsEpochsInfo(chainsEpochData); //get epochs data
       console.log('eInfo: ', eInfo);
       setChainEpochs(eInfo)
+      console.log(eInfo)
     };
 
     chainData();
@@ -33,13 +34,16 @@ const ChainsDashboard = () => {
       }}
     >
       <h4>Chains' Epochs & Rewards</h4>
-      {if (chainEpochs) {
-      [...chainEpochs].map((network, i) => (
-        <div>
-         <h4>{network[0]}</h4>
-        </div>
-             <EpochsView /> )
-            }
+      {chainEpochs ? 
+        [...chainEpochs].map((rewards: EpochsInfo, i) => {
+            return (
+                <div key={i}>
+                    <h4>{rewards.network?.capitalize()}</h4>
+                    <EpochsView /> 
+                </div>
+            )
+        })
+        : null}
              
 
     </ChainDataContext.Provider>

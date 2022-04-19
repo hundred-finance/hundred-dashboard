@@ -231,7 +231,7 @@ export class BigNumber {
 
   Number.prototype.noExponents= function(){
     const data= String(this).split(/[eE]/);
-    if(data.length== 1) return data[0]; 
+    if(data.length === 1) return data[0]; 
 
     let  z= ''
     const sign= this < 0 ? '-':''
