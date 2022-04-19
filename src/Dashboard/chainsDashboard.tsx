@@ -10,16 +10,16 @@ import { ChainDataContext } from "../Types/chainsContext";
 import { API } from "../api";
 
 const ChainsDashboard = () => {
-  const [chainEpochs, setChainEpochs] = useState<EpochsInfo>();
+  const [chainEpochs, setChainEpochs] = useState<EpochsInfo[]>();
 
   useEffect(() => {
     const chainData = async () => {
       const result = await fetchAPI(API.gaugerewards); //fetch API data
       const chainsEpochData = await epochInterface(result); //create interface matching result
 
-      const eInfo = await getChainsEpochsInfo(chainsEpochData); //get epochs data
-
-      // setChainEpochs(chainEpochsData)
+      const eInfo : EpochsInfo[] = await getChainsEpochsInfo(chainsEpochData); //get epochs data
+      console.log('eInfo: ', eInfo);
+      setChainEpochs(eInfo)
     };
 
     chainData();
@@ -32,7 +32,16 @@ const ChainsDashboard = () => {
         setChainEpochs,
       }}
     >
-      <EpochsView />
+      <h4>Chains' Epochs & Rewards</h4>
+      {if (chainEpochs) {
+      [...chainEpochs].map((network, i) => (
+        <div>
+         <h4>{network[0]}</h4>
+        </div>
+             <EpochsView /> )
+            }
+             
+
     </ChainDataContext.Provider>
   );
 };

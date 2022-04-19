@@ -1,4 +1,5 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
+import { BigNumber } from "../bigNumber";
 
 export type Data = {
     signer: ethers.providers.JsonRpcSigner | null,
@@ -136,8 +137,8 @@ export type GaugeV4 = {
 export type EpochsInfo = {
     network?: string
     currentEpoch: number
-    epoch0Rewards: BigNumber
-    epoch1Rewards: BigNumber
-    epoch2Rewards: BigNumber
-    epoch3Rewards: BigNumber
+    epoch0Rewards: number
+    epoch1Rewards: number
+    epoch2Rewards: number
+    epoch3Rewards: number
 }

@@ -1,5 +1,6 @@
 import { Contract, Provider } from "ethcall"
-import { BigNumber, ethers } from "ethers"
+import { ethers } from "ethers"
+import { BigNumber } from "../bigNumber"
 import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
@@ -468,9 +469,9 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
 
     return{
     currentEpoch: current,
-    epoch0Rewards: epochsData[0],
-    epoch1Rewards: epochsData[1],
-    epoch2Rewards: epochsData[2],
-    epoch3Rewards: epochsData[3], 
+    epoch0Rewards: +epochsData[0].toString(),
+    epoch1Rewards: +epochsData[1].toString(),
+    epoch2Rewards: +epochsData[2].toString(),
+    epoch3Rewards: +epochsData[3].toString(), 
     }
   }

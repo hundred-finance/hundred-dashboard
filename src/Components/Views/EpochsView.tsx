@@ -23,10 +23,10 @@ const EpochsView = () =>{
                      { epochs ? (
                          <tr key={10000}>
                          <td className="text-center">{epochs.currentEpoch} </td>
-                         <td className="text-center">{(+epochs.epoch0Rewards.toString()/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(+epochs.epoch1Rewards.toString()/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(+epochs.epoch2Rewards.toString()/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(+epochs.epoch3Rewards.toString()/(10 ** 18)).toFixed(4)} </td>
+                         <td className="text-center">{(epochs.epoch0Rewards/(10 ** 18)).toFixed(4)} </td>
+                         <td className="text-center">{(epochs.epoch1Rewards/(10 ** 18)).toFixed(4)} </td>
+                         <td className="text-center">{(epochs.epoch2Rewards/(10 ** 18)).toFixed(4)} </td>
+                         <td className="text-center">{(epochs.epoch3Rewards/(10 ** 18)).toFixed(4)} </td>
                       </tr>
                      ): <tr>
                          <td colSpan={10}>

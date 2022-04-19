@@ -2,8 +2,8 @@ import { createContext, useContext } from "react";
 import { EpochsInfo } from "./data";
 
 export type ChainsContext = {
-    chainEpochs: EpochsInfo | undefined,
-    setChainEpochs: (e: EpochsInfo) => void,
+    chainEpochs: EpochsInfo[] | undefined,
+    setChainEpochs: (e: EpochsInfo[]) => void,
 
 }
 

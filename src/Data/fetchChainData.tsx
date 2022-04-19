@@ -1,4 +1,5 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
+import { BigNumber } from "../bigNumber";
 import _ from "lodash";
 import { useState } from "react";
 import { EpochsInfo } from "../Types/data";
@@ -59,19 +60,19 @@ export const getChainsEpochsInfo = async (
   cData: any
 ): Promise<Array<EpochsInfo>> => {
 
-  //array of networks
+  // array of networks
   const result = Object.values(cData);
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
-  
+
   return networks.map((n, index) => {
     return {
       network: n,
       currentEpoch: cData.gaugerewards[n][0].epoch,
-      epoch0Rewards: BigNumber.from(cData.gaugerewards[n][0].rewards), // error
-      epoch1Rewards: BigNumber.from(0),
-      epoch2Rewards: BigNumber.from(0),
-      epoch3Rewards: BigNumber.from(0),
+      epoch0Rewards: cData.gaugerewards[n][0].rewards,
+      epoch1Rewards: cData.gaugerewards[n][1].rewards,
+      epoch2Rewards: cData.gaugerewards[n][2].rewards,
+      epoch3Rewards: cData.gaugerewards[n][3].rewards,
     };
   });
 };
