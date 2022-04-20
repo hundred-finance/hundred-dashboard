@@ -16,8 +16,8 @@ export type MarketContext = {
     setGauges: (g: GaugeV4[]) => void,
     contracts: Contracts | undefined,
     setContracts: (ad: Contracts) => void,
-    epochs: EpochsInfo | undefined,
-    setEpochs: (e: EpochsInfo) => void,
+    epochs: EpochsInfo[] | undefined,
+    setEpochs: (e: EpochsInfo[]) => void,
 
 }
 

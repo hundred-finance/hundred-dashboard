@@ -29,7 +29,7 @@ const Dashboard = ({lendly} : Props) => {
     const [interestRateModels, setInterestRateModels] = useState<InterestRateModel[]>()
     const [gauges, setGauges] = useState<GaugeV4[]>()
     const [contracts, setContracts] = useState<Contracts>()
-    const [epochs, setEpochs] = useState<EpochsInfo>()
+    const [epochs, setEpochs] = useState<EpochsInfo[]>()
     const [retry, setRetry] = useState<number>(0)
    
     const retryRef = useRef<number>(0)

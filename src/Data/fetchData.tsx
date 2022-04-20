@@ -433,7 +433,7 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         }
     }
   
-  export const getEpochs = async (network: Network, ethcallProvider: Provider): Promise<EpochsInfo> => {
+  export const getEpochs = async (network: Network, ethcallProvider: Provider): Promise<EpochsInfo[]> => {
     
     //check contract version & fetch the rewardPolicyMaker address
     const rewardsPolicyMaker = network.contractV1?.rewardPolicyMaker ? network.contractV1?.rewardPolicyMaker : network.contractV2?.rewardPolicyMaker ? network.contractV2?.rewardPolicyMaker : null
@@ -466,12 +466,12 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
 
     //fetch data
     let epochsData: any = await ethcallProvider.all(calls) 
-
-    return{
+    let result : EpochsInfo = {
     currentEpoch: current,
     epoch0Rewards: +epochsData[0].toString(),
     epoch1Rewards: +epochsData[1].toString(),
     epoch2Rewards: +epochsData[2].toString(),
     epoch3Rewards: +epochsData[3].toString(), 
     }
+    return [result] 
   }
