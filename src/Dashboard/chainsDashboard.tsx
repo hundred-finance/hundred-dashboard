@@ -31,7 +31,7 @@ const ChainsDashboard = () => {
         setChainEpochs,
       }}
     >
-      <h4>Chains' Epochs & Rewards</h4>
+      <h4>Chains Data</h4>
       <EpochsView/>
     </ChainDataContext.Provider>
   );

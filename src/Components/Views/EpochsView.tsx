@@ -8,7 +8,7 @@ const EpochsView = () =>{
 
     const {epochs} = useMarketContext()
     const {chainEpochs} = useChainsContext()
-    let eData : any = {}
+    let eData : any = []
     if (epochs){
         eData = epochs
     }
@@ -29,6 +29,7 @@ const EpochsView = () =>{
                         <th className="text-center align-middle">Epoch + 1 Rewards</th>
                         <th className="text-center align-middle">Epoch + 2 Rewards</th>
                         <th className="text-center align-middle">Epoch + 3 Rewards</th>
+                        <th className="text-center align-middle">Treasury Balance</th>
                     </tr>
                 </thead>
                  <tbody>
@@ -36,12 +37,13 @@ const EpochsView = () =>{
                         eData.map((network : EpochsInfo) => (
                      network ? (
                          <tr key={10000}>
-                         <td className="text-center">{network.network} </td>
+                         <td className="text-center">{network.network?.capitalize()} </td>
                          <td className="text-center">{network.currentEpoch} </td>
-                         <td className="text-center">{(network.epoch0Rewards/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch1Rewards/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch2Rewards/(10 ** 18)).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch3Rewards/(10 ** 18)).toFixed(4)} </td>
+                         <td className="text-center">{(network.epoch0Rewards).toFixed(4)} </td>
+                         <td className="text-center">{(network.epoch1Rewards).toFixed(4)} </td>
+                         <td className="text-center">{(network.epoch2Rewards).toFixed(4)} </td>
+                         <td className="text-center">{(network.epoch3Rewards).toFixed(4)} </td>
+                         <td className="text-center">{(network?.treasuryBalance)?.toFixed(4)} </td>
                       </tr>
                      ): (<tr>
                          <td colSpan={10}>

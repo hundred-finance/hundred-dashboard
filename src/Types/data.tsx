@@ -141,4 +141,5 @@ export type EpochsInfo = {
     epoch1Rewards: number
     epoch2Rewards: number
     epoch3Rewards: number
+    treasuryBalance?: number
 }

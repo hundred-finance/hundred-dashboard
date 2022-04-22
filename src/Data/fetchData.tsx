@@ -467,6 +467,7 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
     //fetch data
     let epochsData: any = await ethcallProvider.all(calls) 
     let result : EpochsInfo = {
+    network: network.networkParams.chainName,
     currentEpoch: current,
     epoch0Rewards: +epochsData[0].toString(),
     epoch1Rewards: +epochsData[1].toString(),

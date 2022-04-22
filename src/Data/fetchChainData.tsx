@@ -1,8 +1,7 @@
-import { ethers } from "ethers";
-import { BigNumber } from "../bigNumber";
 import _ from "lodash";
-import { useState } from "react";
 import { EpochsInfo } from "../Types/data";
+import { API } from "../api";
+
 
 //fetches API and returns result as json object
 export const fetchAPI = async (endpoint: string) => {
@@ -65,6 +64,8 @@ export const getChainsEpochsInfo = async (
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
 
+  const treasuryBalance = await fetchAPI(API.gauge)
+
   return networks.map((n, index) => {
     return {
       network: n,
@@ -73,6 +74,7 @@ export const getChainsEpochsInfo = async (
       epoch1Rewards: cData.gaugerewards[n][1].rewards,
       epoch2Rewards: cData.gaugerewards[n][2].rewards,
       epoch3Rewards: cData.gaugerewards[n][3].rewards,
+      treasuryBalance: treasuryBalance.gauge[n]
     };
   });
 };
