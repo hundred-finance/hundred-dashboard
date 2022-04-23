@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { EpochsInfo } from "../Types/data";
+import { EpochsInfo, VotingInfo } from "../Types/data";
 import { API } from "../api";
 
 
@@ -47,9 +47,24 @@ interface epochsData {
   3: epochRewards;
 }
 
+//interface for voting info
+interface VotingData{
+  lockedhnd: networkVotingData;
+  vehnd: networkVotingData;
+
+}
+interface networkVotingData{
+  total: number;                  
+  arbitrum: number;                   
+  fantom: number;                  
+  harmony: number;                   
+  moonriver: number;                  
+  gnosis: number;                   
+  optimism: number;                 
+}
+
 //initialize interface
 export const epochInterface = (result: any): ChainsEpochData => {
-  //add promise?
   const target = {} as ChainsEpochData;
   const cData = Object.assign(target, result);
   return cData;
@@ -75,6 +90,43 @@ export const getChainsEpochsInfo = async (
       epoch2Rewards: cData.gaugerewards[n][2].rewards,
       epoch3Rewards: cData.gaugerewards[n][3].rewards,
       treasuryBalance: treasuryBalance.gauge[n]
+    };
+  });
+};
+
+//initialize voting interface
+export const votingInterface = (lockedHND: any, veHND: any): VotingData => {
+  const locked = {} as networkVotingData;
+  const vehnd = {} as networkVotingData;
+
+  const lockedHNDData = Object.assign(locked, lockedHND);
+  const vehndData = Object.assign(vehnd, veHND);
+
+  return {
+    lockedhnd: lockedHNDData.lockedhnd,
+    vehnd: vehndData.vehnd
+  };
+};
+
+export const getChainsVotingInfo = async (
+  vData: any
+): Promise<Array<VotingInfo>> => {
+
+  // array of networks
+  const result = Object.values(vData);
+  const networks = Object.getOwnPropertyNames(result[0]);
+
+  //put 'total' as the last row in table
+  const total = networks.shift(); 
+  if (total){
+    networks.push(total)
+  }
+  return networks.map((n, index) => {
+    return {
+      network: n,
+      lockedHnd: vData.lockedhnd[n], 
+      veHnd: vData.vehnd[n],
+      avgLockTime: vData.lockedhnd[n] > 0 ? (Math.round((vData.vehnd[n]/vData.lockedhnd[n]) * 4 * 100) / 100) : 0
     };
   });
 };

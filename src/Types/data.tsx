@@ -143,3 +143,10 @@ export type EpochsInfo = {
     epoch3Rewards: number
     treasuryBalance?: number
 }
+
+export type VotingInfo = {
+    network: string
+    lockedHnd: number 
+    veHnd: number
+    avgLockTime: number
+}
