@@ -5,7 +5,7 @@ import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, ContractInfo, Contracts, EpochsInfo, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -433,46 +433,3 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         }
     }
   
-  export const getEpochs = async (network: Network, ethcallProvider: Provider): Promise<EpochsInfo[]> => {
-    
-    //check contract version & fetch the rewardPolicyMaker address
-    const rewardsPolicyMaker = network.contractV1?.rewardPolicyMaker ? network.contractV1?.rewardPolicyMaker : network.contractV2?.rewardPolicyMaker ? network.contractV2?.rewardPolicyMaker : null
-
-    //array of calls
-    const calls: any[] = []
-    let current = 0 
-
-    //create new contract
-    if (rewardsPolicyMaker ) {
-    const rewardsContract = new Contract(rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI)
-
-    calls.push(rewardsContract.current_epoch())
-
-    //get current epoch & clear calls array
-    const result = await ethcallProvider.all(calls)
-    calls.pop()
-
-    //convert from BigNumber to number
-    current = +result.toString()
-
-    //store calls 
-    calls.push(
-      rewardsContract.rewards(current), 
-      rewardsContract.rewards(current+1),
-      rewardsContract.rewards(current+2),
-      rewardsContract.rewards(current+3),
-      )
-    }
-
-    //fetch data
-    let epochsData: any = await ethcallProvider.all(calls) 
-    let result : EpochsInfo = {
-    network: network.networkParams.chainName,
-    currentEpoch: current,
-    epoch0Rewards: +epochsData[0].toString(),
-    epoch1Rewards: +epochsData[1].toString(),
-    epoch2Rewards: +epochsData[2].toString(),
-    epoch3Rewards: +epochsData[3].toString(), 
-    }
-    return [result] 
-  }

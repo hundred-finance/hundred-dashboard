@@ -1,20 +1,11 @@
 import { Col, Row, Table } from "react-bootstrap"
-import { useMarketContext } from "../../Types/marketContext"
 import Loading from "../Loading/loading"
 import { EpochsInfo } from "../../Types/data"
 import { useChainsContext } from "../../Types/chainsContext"
 
 const EpochsView = () =>{
 
-    const {epochs} = useMarketContext()
     const {chainEpochs} = useChainsContext()
-    let eData : any = []
-    if (epochs){
-        eData = epochs
-    }
-    else if (chainEpochs){
-        eData = chainEpochs
-    }
     return(
         
         <Row> 
@@ -33,8 +24,8 @@ const EpochsView = () =>{
                     </tr>
                 </thead>
                  <tbody>
-                     { eData ? 
-                        eData.map((network : EpochsInfo) => (
+                     { chainEpochs ? 
+                        chainEpochs.map((network : EpochsInfo) => (
                      network ? (
                          <tr key={10000}>
                          <td className="text-center">{network.network?.capitalize()} </td>
