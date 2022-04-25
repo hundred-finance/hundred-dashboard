@@ -4,7 +4,7 @@ import { API } from "../api";
 
 //fetches API and returns result as json object
 export const fetchAPI = async (endpoint: string) => {
-  const res = await fetch("http://api.hundred.finance/" + endpoint);
+  const res = await fetch("https://api.hundred.finance/" + endpoint);
   const data = await res.json();
   //add a try catch on fetchAPI
   return data;
