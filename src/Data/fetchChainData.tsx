@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { EpochsInfo, VotingInfo } from "../Types/data";
 import { API } from "../api";
 
