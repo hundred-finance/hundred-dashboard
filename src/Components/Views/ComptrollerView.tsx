@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers"
 import { useEffect, useRef, useState } from "react"
-import { Col, Container, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
+import { Col, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
 import { BsToggleOff, BsToggleOn } from "react-icons/bs"
 import {MdCancel, MdCheck, MdContentCopy} from "react-icons/md"
 import { shortenAddress } from "../../helpers"
@@ -210,7 +210,6 @@ const ComptrollerView = () => {
        }
 
      return(
-         <Container fluid>
              <Row>
                  <Col xxl="9" xl="10" lg="11" md="12" className="col-padding">
                  <h4>Comptroller</h4>
@@ -367,7 +366,6 @@ const ComptrollerView = () => {
              </Table>
                  </Col>
              </Row>
-         </Container>
 
      )
 }

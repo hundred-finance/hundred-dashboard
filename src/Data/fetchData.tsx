@@ -1,9 +1,11 @@
 import { Contract, Provider } from "ethcall"
 import { ethers } from "ethers"
+import { BigNumber } from "../bigNumber"
+import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -276,3 +278,158 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
   }
   return admins
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getGauges = async ( network: Network, ethcallProvider: any): Promise<Array<GaugeV4>> => {
+
+    if(network){
+        const controller = network.contractV1?.gaugeController ? network.contractV1?.gaugeController : network.contractV2?.gaugeController ? network.contractV2?.gaugeController : ""; 
+        const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
+        const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
+        const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
+        const activeGauges: string[] = [];
+
+        let lpAndMinterAddresses: any = await ethcallProvider.all(
+            gauges.flatMap((g) => [
+                new Contract(g, ABI.GAUGE_V4_ABI).lp_token(),
+                new Contract(g, ABI.GAUGE_V4_ABI).minter(),
+                new Contract(g, ABI.GAUGE_V4_ABI).reward_policy_maker(),
+                new Contract(g, ABI.GAUGE_V4_ABI).working_supply(),
+                new Contract(g, ABI.GAUGE_V4_ABI).is_killed(),
+                new Contract(controller, ABI.GAUGE_CONTROLLER_ABI).gauge_relative_weight(g)
+            ])
+        )
+
+        lpAndMinterAddresses = _.chunk(lpAndMinterAddresses, 6)
+        const activeLpAndMinterAddresses: any[][] = []
+
+        for (let i = 0; i < lpAndMinterAddresses.length; i++) {
+            if (!lpAndMinterAddresses[i][4]) {
+                activeGauges.push(gauges[i]);
+                activeLpAndMinterAddresses.push(lpAndMinterAddresses[i])
+            }
+        }
+        let rewards: any = await ethcallProvider.all(
+            activeGauges.flatMap((g, index) => [
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rate_at(floor(new Date().getTime() / 1000)),
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g), //staked balance of hToken
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).underlying(),
+                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).decimals(), 
+                    new Contract(activeLpAndMinterAddresses[index][2], ABI.HTOKEN_ABI).admin() // admin address
+
+                ]
+            )
+        )
+        //reshape into 5 arrays
+        rewards = _.chunk(rewards, 5)
+        const underlying: UnderlyingInfo[] = [];
+        
+        //get underlying info
+        for (let i = 0; i < rewards.length; i++) {
+          const info =  await getUnderlying(ethcallProvider, rewards[i][2], network)
+          underlying.push(info) 
+        }
+      
+       return activeLpAndMinterAddresses.map((c, index) => {
+            return {
+              
+                address: activeGauges[index],
+                admin: rewards[index][4],
+                backstopGauge: false,
+                backstopTotalBalance: BigNumber.from(0),
+                backstopTotalSupply: BigNumber.from(0),
+                decimals: rewards[index][3],
+                lpBackstopTokenUnderlying: undefined,
+                lpToken: c[0],
+                lpTokenUnderlying: rewards[index][2],
+                minter: c[1],
+                rewardPolicyMaker: c[2],
+                totalStake: rewards[index][1],
+                underlying: underlying[index],
+                weight: c[5],
+                workingTotalStake: c[3],
+              }
+        });
+
+    }
+    return []
+  }
+    export const getContracts = async (network: Network, ethcallProvider: Provider): Promise<Contracts> => {
+
+        //init V1 addresses
+        let V1_DelegationProxy = ""
+        let V1_GaugeController = ""
+        let V1_Minter = ""
+        let V1_MirroredVotingEscrow = ""
+        let V1_RewardPolicyMaker = ""
+        let V1_SmartWalletChecker = ""
+        let V1_Treasury = ""
+        let V1_veBoostDelegation = ""
+        let V1_VotingEscrow = ""
+
+        //init V2 addresses
+        let V2_DelegationProxy = ""
+        let V2_GaugeController = ""
+        let V2_Minter = ""
+        let V2_MirroredVotingEscrow = ""
+        let V2_RewardPolicyMaker = ""
+        let V2_SmartWalletChecker = ""
+        let V2_Treasury = ""
+        let V2_veBoostDelegation = ""
+        let V2_VotingEscrow = ""
+
+        //fetch V1 addresses
+        if (network.contractV1 && network.contractV1.delegationProxy) V1_DelegationProxy = network.contractV1.delegationProxy;
+        if (network.contractV1 && network.contractV1.gaugeController) V1_GaugeController = network.contractV1.gaugeController;
+        if (network.contractV1 && network.contractV1.minter) V1_Minter = network.contractV1.minter;
+        if (network.contractV1 && network.contractV1.mirroredVotingEscrow) V1_MirroredVotingEscrow = network.contractV1.mirroredVotingEscrow;
+        if (network.contractV1 && network.contractV1.rewardPolicyMaker) V1_RewardPolicyMaker = network.contractV1.rewardPolicyMaker;
+        if (network.contractV1 && network.contractV1.smartWalletChecker) V1_SmartWalletChecker = network.contractV1.smartWalletChecker;
+        if (network.contractV1 && network.contractV1.treasury) V1_Treasury = network.contractV1.treasury;
+        if (network.contractV1 && network.contractV1.veBoostDelegation) V1_veBoostDelegation = network.contractV1.veBoostDelegation;
+        if (network.contractV1 && network.contractV1.votingEscrow) V1_VotingEscrow = network.contractV1.votingEscrow;
+
+        //fetch V2 addresses
+        if (network.contractV2 && network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
+        if (network.contractV2 && network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
+        if (network.contractV2 && network.contractV2.minter) V2_Minter = network.contractV2.minter;
+        if (network.contractV2 && network.contractV2.mirroredVotingEscrow) V2_MirroredVotingEscrow = network.contractV2.mirroredVotingEscrow;
+        if (network.contractV2 && network.contractV2.rewardPolicyMaker) V2_RewardPolicyMaker = network.contractV2.rewardPolicyMaker;
+        if (network.contractV2 && network.contractV2.smartWalletChecker) V2_SmartWalletChecker = network.contractV2.smartWalletChecker;
+        if (network.contractV2 && network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
+        if (network.contractV2 && network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
+        if (network.contractV2 && network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
+
+        //define V1 addresses
+        const contractsV1: ContractInfo = {
+            DelegationProxy: V1_DelegationProxy,
+            GaugeController: V1_GaugeController,
+            Minter: V1_Minter,
+            MirroredVotingEscrow: V1_MirroredVotingEscrow,
+            RewardPolicyMaker: V1_RewardPolicyMaker,
+            SmartWalletChecker: V1_SmartWalletChecker,
+            Treasury: V1_Treasury,
+            VeBoostDelegation: V1_veBoostDelegation,
+            VotingEscrow: V1_VotingEscrow,
+        }
+
+        //define V2 addresses
+        const contractsV2: ContractInfo = {
+            DelegationProxy: V2_DelegationProxy,
+            GaugeController: V2_GaugeController,
+            Minter: V2_Minter,
+            MirroredVotingEscrow: V2_MirroredVotingEscrow,
+            RewardPolicyMaker: V2_RewardPolicyMaker,
+            SmartWalletChecker: V2_SmartWalletChecker,
+            Treasury: V2_Treasury,
+            VeBoostDelegation: V2_veBoostDelegation,
+            VotingEscrow: V2_VotingEscrow,
+        }
+
+        //return 'Contracts' object
+        return {
+            contractsV1: contractsV1,
+            contractsV2: contractsV2,
+        }
+    }
+  

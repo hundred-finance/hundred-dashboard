@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { BigNumber } from "../bigNumber";
 
 export type Data = {
     signer: ethers.providers.JsonRpcSigner | null,
@@ -96,4 +97,56 @@ export type Admins = {
     Oracle: string, 
     Hundred: string, 
     PauseGuardian: string
+}
+
+export type Contracts = {
+    contractsV1: ContractInfo, 
+    contractsV2: ContractInfo, 
+}
+
+export type ContractInfo = {
+    DelegationProxy: string, 
+    GaugeController: string, 
+    Minter: string, 
+    MirroredVotingEscrow: string,
+    RewardPolicyMaker: string, 
+    SmartWalletChecker: string, 
+    Treasury: string, 
+    VeBoostDelegation: string, 
+    VotingEscrow: string, 
+}
+
+export type GaugeV4 = {
+
+    address : string
+    admin: string
+    backstopGauge: boolean
+    backstopTotalBalance: BigNumber
+    backstopTotalSupply: BigNumber
+    decimals: number
+    lpBackstopTokenUnderlying: string | undefined
+    lpToken: string
+    lpTokenUnderlying: string
+    minter: string
+    rewardPolicyMaker: string
+    totalStake: BigNumber
+    underlying: UnderlyingInfo
+    workingTotalStake: BigNumber
+}
+
+export type EpochsInfo = {
+    network?: string
+    currentEpoch: number
+    epoch0Rewards: number
+    epoch1Rewards: number
+    epoch2Rewards: number
+    epoch3Rewards: number
+    treasuryBalance?: number
+}
+
+export type VotingInfo = {
+    network: string
+    lockedHnd: number 
+    veHnd: number
+    avgLockTime: number
 }
