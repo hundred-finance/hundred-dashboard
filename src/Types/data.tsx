@@ -148,5 +148,7 @@ export type VotingInfo = {
     network: string
     lockedHnd: number 
     veHnd: number
+    mveHnd: number
+    circulating: number
     avgLockTime: number
 }
