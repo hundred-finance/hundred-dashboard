@@ -4,17 +4,22 @@ import {
   epochInterface,
   fetchAPI,
   getChainsEpochsInfo,
+  getChainsMigrationInfo,
   getChainsVotingInfo,
+  migrationInterface,
   votingInterface,
 } from "../Data/fetchChainData";
-import { EpochsInfo, VotingInfo } from "../Types/data";
+import { EpochsInfo, MigrationInfo, VotingInfo } from "../Types/data";
 import { ChainDataContext } from "../Types/chainsContext";
 import { API } from "../api";
 import VotingView from "../Components/Views/VotingView";
+import MigrationView from "../Components/Views/MigrationView";
 
 const ChainsDashboard = () => {
   const [chainEpochs, setChainEpochs] = useState<EpochsInfo[]>();
   const [votingInfo, setVotingInfo] = useState<VotingInfo[]>();
+  const [migrationInfo, setMigrationInfo] = useState<MigrationInfo>();
+
   useEffect(() => {
     const chainData = async () => {
       const result = await fetchAPI(API.gaugerewards); //fetch API data
@@ -40,18 +45,32 @@ const ChainsDashboard = () => {
     votingData();
   }, []);
 
+   useEffect(() => {
+    const migrationData = async () => {
+      const migration = await fetchAPI(API.migration);
+
+      const mInterface = migrationInterface(migration); //create interface matching result
+      const mInfo : MigrationInfo  = await getChainsMigrationInfo(mInterface); //get migration data
+      setMigrationInfo(mInfo)
+    };
+
+    migrationData();
+  }, []);
   return (
     <ChainDataContext.Provider
       value={{
         chainEpochs,
         setChainEpochs,
         votingInfo,
-        setVotingInfo
+        setVotingInfo,
+        migrationInfo,
+        setMigrationInfo
       }}
     >
       <h4>Chains Data</h4>
       <EpochsView/>
       <VotingView/>
+      <MigrationView/>
     </ChainDataContext.Provider>
   );
 };
