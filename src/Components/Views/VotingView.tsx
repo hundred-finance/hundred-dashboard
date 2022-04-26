@@ -21,6 +21,8 @@ const VotingView = () =>{
                         <th className="text-center align-middle">mveHND</th>
                         <th className="text-center align-middle">Circulating</th>
                         <th className="text-center align-middle">Average Lock Time in Years</th>
+                        <th className="text-center align-middle">mveHND</th>
+                        <th className="text-center align-middle">Circulating</th>
                     </tr>
                 </thead>
                  <tbody>
@@ -34,6 +36,8 @@ const VotingView = () =>{
                          <td className="text-center">{(network.mveHnd).toFixed(4)} </td>
                          <td className="text-center">{(network.circulating).toFixed(4)} </td>
                          <td className="text-center">{(network.avgLockTime).toFixed(2)} </td>
+                         <td className="text-center">{(network.mveHnd).toFixed(4)} </td>
+                         <td className="text-center">{(network.circulating).toFixed(4)} </td>
                       </tr>
                      ): (<tr>
                          <td colSpan={10}>
