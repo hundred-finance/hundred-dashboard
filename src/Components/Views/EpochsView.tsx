@@ -30,10 +30,10 @@ const EpochsView = () =>{
                          <tr key={10000}>
                          <td className="text-center">{network.network?.capitalize()} </td>
                          <td className="text-center">{network.currentEpoch} </td>
-                         <td className="text-center">{(network.epoch0Rewards).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch1Rewards).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch2Rewards).toFixed(4)} </td>
-                         <td className="text-center">{(network.epoch3Rewards).toFixed(4)} </td>
+                         <td className="text-center">{Math.round(network.epoch0Rewards)} </td>
+                         <td className="text-center">{Math.round(network.epoch1Rewards)} </td>
+                         <td className="text-center">{Math.round(network.epoch2Rewards)} </td>
+                         <td className="text-center">{Math.round(network.epoch3Rewards)} </td>
                          <td className="text-center">{(network?.treasuryBalance)?.toFixed(4)} </td>
                       </tr>
                      ): (<tr>

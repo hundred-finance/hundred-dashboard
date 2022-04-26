@@ -16,8 +16,8 @@ const MigrationView = () =>{
                     <tr>
                         <th className="text-center align-middle">HND Migrating</th>
                         <th className="text-center align-middle">HND Vesting</th>
-                        <th className="text-center align-middle">HND Piou Migrating</th>
-                        <th className="text-center align-middle">HND Piou Vesting</th>
+                        <th className="text-center align-middle">HND PIOU Migrating</th>
+                        <th className="text-center align-middle">HND PIOU Vesting</th>
                         <th className="text-center align-middle">Total</th>
                     </tr>
                 </thead>
