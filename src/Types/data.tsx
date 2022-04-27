@@ -152,3 +152,11 @@ export type VotingInfo = {
     circulating: number
     avgLockTime: number
 }
+
+export type MigrationInfo = {
+    total: number
+    hndMigrating: number 
+    hndVesting: number
+    hndPiouMigrating: number
+    hndPiouVesting: number
+}

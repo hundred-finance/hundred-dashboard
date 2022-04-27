@@ -1,4 +1,4 @@
-import { EpochsInfo, VotingInfo } from "../Types/data";
+import { EpochsInfo, MigrationInfo, VotingInfo } from "../Types/data";
 import { API } from "../api";
 
 
@@ -81,6 +81,14 @@ interface lockedHndData{
   optimism: number;                 
 }
 
+//migration interface
+interface MigrationData{
+  total: number,
+  hndMigrating: number,
+  hndVesting: number,
+  hndPiouMigrating: number,
+  hndPiouVesting: number
+}
 //initialize interface
 export const epochInterface = (result: any): ChainsEpochData => {
   const target = {} as ChainsEpochData;
@@ -162,3 +170,23 @@ export const getChainsVotingInfo = async (
     };
   });
 };
+
+// migration interface
+export const migrationInterface = (migration : any): MigrationData => {
+  const target = {} as MigrationData;
+  const mInterface = Object.assign(target, migration);
+  return mInterface
+};
+
+export const getChainsMigrationInfo = async (
+  mData: any
+): Promise<MigrationInfo> => {
+
+    return {
+      total: mData.migration.total,
+      hndMigrating: mData.migration.hndMigrating,
+      hndVesting: mData.migration.hndVesting,
+      hndPiouMigrating: mData.migration.hndPiouMigrating,
+      hndPiouVesting: mData.migration.hndPiouVesting,
+    };
+  }; 
