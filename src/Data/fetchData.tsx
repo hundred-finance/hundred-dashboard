@@ -283,7 +283,7 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
 export const getGauges = async ( network: Network, ethcallProvider: any): Promise<Array<GaugeV4>> => {
 
     if(network){
-        const controller = network.contractV1?.gaugeController ? network.contractV1?.gaugeController : network.contractV2?.gaugeController ? network.contractV2?.gaugeController : ""; 
+        const controller = network.contractV2?.gaugeController ? network.contractV2?.gaugeController : ""; 
         const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
         const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
         const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
@@ -322,6 +322,7 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         )
         //reshape into 5 arrays
         rewards = _.chunk(rewards, 5)
+        console.log('rewards: ', rewards);
         const underlying: UnderlyingInfo[] = [];
         
         //get underlying info
@@ -356,17 +357,6 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
   }
     export const getContracts = async (network: Network, ethcallProvider: Provider): Promise<Contracts> => {
 
-        //init V1 addresses
-        let V1_DelegationProxy = ""
-        let V1_GaugeController = ""
-        let V1_Minter = ""
-        let V1_MirroredVotingEscrow = ""
-        let V1_RewardPolicyMaker = ""
-        let V1_SmartWalletChecker = ""
-        let V1_Treasury = ""
-        let V1_veBoostDelegation = ""
-        let V1_VotingEscrow = ""
-
         //init V2 addresses
         let V2_DelegationProxy = ""
         let V2_GaugeController = ""
@@ -378,17 +368,6 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         let V2_veBoostDelegation = ""
         let V2_VotingEscrow = ""
 
-        //fetch V1 addresses
-        if (network.contractV1 && network.contractV1.delegationProxy) V1_DelegationProxy = network.contractV1.delegationProxy;
-        if (network.contractV1 && network.contractV1.gaugeController) V1_GaugeController = network.contractV1.gaugeController;
-        if (network.contractV1 && network.contractV1.minter) V1_Minter = network.contractV1.minter;
-        if (network.contractV1 && network.contractV1.mirroredVotingEscrow) V1_MirroredVotingEscrow = network.contractV1.mirroredVotingEscrow;
-        if (network.contractV1 && network.contractV1.rewardPolicyMaker) V1_RewardPolicyMaker = network.contractV1.rewardPolicyMaker;
-        if (network.contractV1 && network.contractV1.smartWalletChecker) V1_SmartWalletChecker = network.contractV1.smartWalletChecker;
-        if (network.contractV1 && network.contractV1.treasury) V1_Treasury = network.contractV1.treasury;
-        if (network.contractV1 && network.contractV1.veBoostDelegation) V1_veBoostDelegation = network.contractV1.veBoostDelegation;
-        if (network.contractV1 && network.contractV1.votingEscrow) V1_VotingEscrow = network.contractV1.votingEscrow;
-
         //fetch V2 addresses
         if (network.contractV2 && network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
         if (network.contractV2 && network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
@@ -399,19 +378,6 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         if (network.contractV2 && network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
         if (network.contractV2 && network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
         if (network.contractV2 && network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
-
-        //define V1 addresses
-        const contractsV1: ContractInfo = {
-            DelegationProxy: V1_DelegationProxy,
-            GaugeController: V1_GaugeController,
-            Minter: V1_Minter,
-            MirroredVotingEscrow: V1_MirroredVotingEscrow,
-            RewardPolicyMaker: V1_RewardPolicyMaker,
-            SmartWalletChecker: V1_SmartWalletChecker,
-            Treasury: V1_Treasury,
-            VeBoostDelegation: V1_veBoostDelegation,
-            VotingEscrow: V1_VotingEscrow,
-        }
 
         //define V2 addresses
         const contractsV2: ContractInfo = {
@@ -428,7 +394,6 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
 
         //return 'Contracts' object
         return {
-            contractsV1: contractsV1,
             contractsV2: contractsV2,
         }
     }

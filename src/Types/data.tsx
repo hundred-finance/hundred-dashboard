@@ -100,7 +100,6 @@ export type Admins = {
 }
 
 export type Contracts = {
-    contractsV1: ContractInfo, 
     contractsV2: ContractInfo, 
 }
 

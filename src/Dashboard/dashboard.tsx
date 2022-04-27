@@ -207,7 +207,7 @@ const Dashboard = ({lendly} : Props) => {
         const getGaugesData = async () => {
 
             try{
-                if(network && network.contractV1 && network.contractV1.gaugeController){
+                if(network && network.contractV2 && network.contractV2.gaugeController){
 
                     const ethcallProvider = new Provider()
 
@@ -283,8 +283,9 @@ const Dashboard = ({lendly} : Props) => {
          })}>
             <ComptrollerView/>
             <Row> 
-                <AdminsView/>
-                <GaugesView/> 
+                <AdminsView/>  
+            { network && network.network !== "Ethereum" ? 
+                (<GaugesView/> ) : null}
             </Row>
             <MarketsView/>
             <InterestRateModelsView/>
