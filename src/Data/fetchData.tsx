@@ -1,11 +1,12 @@
 import { Contract, Provider } from "ethcall"
 import { ethers } from "ethers"
 import { BigNumber } from "../bigNumber"
-import _, { floor } from "lodash"
+import _, { floor, forEach } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
-import { Admins, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { Admins, Backstop, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
+import { act } from "@testing-library/react"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -116,7 +117,10 @@ const getNativeInfo = async (network: Network): Promise<UnderlyingInfo> => {
 
 const getTokenInfo = async (ethcallProvider: Provider, address: string): Promise<UnderlyingInfo> => {
   const contract = new Contract(address, ABI.TOKEN_ABI)
-  const [symbol, name, decimals, totalSupply] = await ethcallProvider.all([contract.symbol(), contract.name(), contract.decimals(), contract.totalSupply()])
+  let [symbol, name, decimals, totalSupply] = await ethcallProvider.all([contract.symbol(), contract.name(), contract.decimals(), contract.totalSupply()])
+  //if symbol has "hToken" format
+  if (symbol.charAt(0)==="h"){
+    symbol = symbol.slice(1);}
   const logo = Logos[symbol]       
   return{
     address,
@@ -322,7 +326,6 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         )
         //reshape into 5 arrays
         rewards = _.chunk(rewards, 5)
-        console.log('rewards: ', rewards);
         const underlying: UnderlyingInfo[] = [];
         
         //get underlying info
@@ -398,3 +401,103 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         }
     }
   
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getBackstopGauges = async ( network: Network, ethcallProvider: any): Promise<Array<Backstop>> => {
+  if(network.backstop?.gaugeController){
+    const underlying: UnderlyingInfo[] = [];
+    const controller = network.backstop.gaugeController 
+    const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
+    const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
+    const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))    
+    
+    //get data
+    const activeGauges : string[] = await getActiveGauges(gauges, ethcallProvider)
+    const gaugeData : any[] = await getLPTokenData(activeGauges, ethcallProvider, ethcallGaugeController)
+    const rewardsData : any[] = await getBackStopData(activeGauges, gaugeData, ethcallProvider); 
+    const backStopUnderlying = await getBackstopUnderlyingInfo(rewardsData, gaugeData, network, ethcallProvider); 
+    for await (const net of rewardsData) {
+    const info =  await getUnderlying(ethcallProvider, net.LUSD, network)
+    underlying.push(info)}       
+
+    return activeGauges.map((gauge, i) => {
+        return {
+            address: gauge,
+            admin: gaugeData[i].admin,
+            backstopGauge: true,
+            backstopTotalBalance: backStopUnderlying[i].tokenBalaceOf,
+            backstopTotalSupply: rewardsData[i].totalSupply,
+            decimals: rewardsData[i].decimals,
+            lpBackstopTokenUnderlying: backStopUnderlying[i].cTokenUnderlying,
+            lpToken: gaugeData[i].lpToken,
+            lpTokenUnderlying: rewardsData[i].LUSD,
+            minter: gaugeData[i].minter,
+            rewardPolicyMaker: gaugeData[i].rewardsPolicyMaker,
+            totalStake: rewardsData[i].balanceOf,
+            underlying: underlying[i],
+            veHndRewardRate: rewardsData[i].rateAt,
+            weight: gaugeData[i].gaugeRelativeWeight,
+            workingTotalStake: gaugeData[i].workingSupply,
+          }
+    })
+}
+return []}
+
+async function getActiveGauges(gauges: string[], ethcallProvider: any) : Promise<Array<string>>  {
+  const checkKilled: any[] = [];
+  const activeGauges: any[] = [];
+
+  gauges.forEach((g) => {
+      const gaugeV4Contract = new Contract(g, ABI.GAUGE_V4_ABI);
+      checkKilled.push(gaugeV4Contract.is_killed())})
+
+  const isKilled = await ethcallProvider.all(checkKilled)      
+    for (let i = 0; i < isKilled.length; i++) {
+      if (isKilled[i]===false) {
+          activeGauges.push(gauges[i]);}}
+
+  return activeGauges}
+
+async function getLPTokenData(activeGauges: string[], ethcallProvider: any, ethcallGaugeController: Contract ) : Promise<Array<any>>  {
+  const gaugeData : any[] = [];
+  for await (const gauge of activeGauges) {
+    const gaugeV4Contract = new Contract(gauge, ABI.GAUGE_V4_ABI);
+    const calls = [           
+      gaugeV4Contract.lp_token(),
+      gaugeV4Contract.minter(),
+      gaugeV4Contract.reward_policy_maker(),
+      gaugeV4Contract.working_supply(),
+      gaugeV4Contract.admin(),
+      ethcallGaugeController.gauge_relative_weight(gauge)
+    ]
+    const [lpToken, minter, rewardsPolicyMaker, workingSupply, admin, gaugeRelativeWeight] = await ethcallProvider.all(calls);
+    let gaugeObject = {lpToken, minter, rewardsPolicyMaker, workingSupply, admin, gaugeRelativeWeight}
+    gaugeData.push(gaugeObject)}
+  return gaugeData }
+
+async function getBackStopData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
+  const rewardsData: any[] = [];
+  for await (const [i, gauge] of activeGauges.entries()) {
+    const rewardContract = new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
+    const backstopContract = new Contract(gaugeData[i].lpToken, ABI.BPRO_ABI);          
+    const calls = [           
+      rewardContract.rate_at(floor(new Date().getTime() / 1000)),
+      backstopContract.balanceOf(activeGauges[i]),
+      backstopContract.LUSD(),
+      backstopContract.totalSupply(),
+      backstopContract.decimals(), 
+    ]
+    const [rateAt, balanceOf, LUSD, totalSupply, decimals, backstopLpToken] = await ethcallProvider.all(calls); 
+    const rewardsObject = {rateAt, balanceOf, LUSD, totalSupply, decimals, backstopLpToken}
+    rewardsData.push(rewardsObject)}
+  return rewardsData;}
+
+
+async function getBackstopUnderlyingInfo(rewardsData: any[], gaugeData:any[], network: Network, ethcallProvider: any ) : Promise<Array<any>>  {
+  const backStopUnderlying: any[] = [];
+  for await (const [i, net] of rewardsData.entries()) {
+    const cTokenContract = new Contract(net.LUSD, ABI.CTOKEN_ABI)
+    const tokenContract = new Contract(net.LUSD, ABI.TOKEN_ABI)
+    const [cTokenUnderlying, tokenBalaceOf] = await ethcallProvider.all([cTokenContract.underlying(),tokenContract.balanceOf(gaugeData[i].lpToken)]) 
+    let tokenObject = {cTokenUnderlying, tokenBalaceOf}
+    backStopUnderlying.push(tokenObject)} 
+  return backStopUnderlying;}

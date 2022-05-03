@@ -1,14 +1,5 @@
-import { EpochsInfo, MigrationInfo, VotingInfo } from "../Types/data";
+import { BackstopsInfo, EpochsInfo, MigrationInfo, VotingInfo } from "../Types/data";
 import { API } from "../api";
-
-
-//fetches API and returns result as json object
-export const fetchAPI = async (endpoint: string) => {
-  const res = await fetch("https://api.hundred.finance/" + endpoint);
-  const data = await res.json();
-  //add a try catch on fetchAPI
-  return data;
-};
 
 //create interface matching json properties
 interface ChainsEpochData {
@@ -16,11 +7,10 @@ interface ChainsEpochData {
 }
 
 interface chainData {
- arbitrum: gaugeTypes;
+  arbitrum: gaugeTypes;
   fantom: gaugeTypes;
   gnosis: epochsData;
   harmony: epochsData;
-  lendly: epochsData;
   moonriver: epochsData;
   optimism: epochsData;
   polygon: gaugeTypes;
@@ -34,8 +24,10 @@ interface totalData {
   epoch3: number;
 }
 interface gaugeTypes {
+  total: totalData
   gauge: epochsData
   backstopGauge: epochsData
+  lendly?: epochsData
 }
 interface epochRewards {
   epoch: number;
@@ -89,6 +81,18 @@ interface MigrationData{
   hndPiouMigrating: number,
   hndPiouVesting: number
 }
+
+//fetches API and returns result as json object
+export const fetchAPI = async (endpoint: string) => {
+  try{
+  const res = await fetch("https://api.hundred.finance/" + endpoint);
+  const data = await res.json();
+  //add a try catch on fetchAPI
+  return data;
+} catch(err){
+    console.error(err);
+  }
+};
 //initialize interface
 export const epochInterface = (result: any): ChainsEpochData => {
   const target = {} as ChainsEpochData;
@@ -190,3 +194,28 @@ export const getChainsMigrationInfo = async (
       hndPiouVesting: mData.migration.hndPiouVesting,
     };
   }; 
+
+//backstop
+export const getChainsBackstopsInfo = async (
+  cData: any
+): Promise<Array<BackstopsInfo>> => {
+
+  // array of networks
+  const result = Object.values(cData);
+  const networks = Object.getOwnPropertyNames(result[0]);
+  networks.shift(); //remove 'total'
+
+  const backstopGuages = networks.filter(n => n !== "arbitrum" && n !== "fantom" && cData.gaugerewards[n].backstopGauge !== undefined)
+  const treasuryBalance = await fetchAPI(API.gauge) //redo once backstop is added
+
+  return backstopGuages.map((n, index) => {
+    return{
+      network: n,
+      currentEpoch: cData.gaugerewards[n].gauge[0].epoch,
+      epoch0Rewards: cData.gaugerewards[n].gauge[0].rewards,
+      epoch1Rewards: cData.gaugerewards[n].gauge[1].rewards,
+      epoch2Rewards: cData.gaugerewards[n].gauge[2].rewards,
+      epoch3Rewards: cData.gaugerewards[n].gauge[3].rewards,
+      treasuryBalance: treasuryBalance.gauge[n]
+    };});
+};

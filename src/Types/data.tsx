@@ -142,7 +142,35 @@ export type EpochsInfo = {
     epoch3Rewards: number
     treasuryBalance?: number
 }
-
+//for all chains dashboard
+export type BackstopsInfo = {
+    network: string
+    currentEpoch: number
+    epoch0Rewards: number
+    epoch1Rewards: number
+    epoch2Rewards: number
+    epoch3Rewards: number
+    treasuryBalance: number
+}
+//chain specific dashboard
+export type Backstop = {
+    address : string
+    admin: string
+    backstopGauge: boolean
+    backstopTotalBalance: BigNumber
+    backstopTotalSupply: BigNumber
+    decimals: number
+    lpBackstopTokenUnderlying: string | undefined
+    lpToken: string
+    lpTokenUnderlying: string
+    minter: string
+    rewardPolicyMaker: string
+    totalStake: BigNumber
+    underlying: UnderlyingInfo
+    veHndRewardRate: BigNumber
+    weight: BigNumber
+    workingTotalStake: BigNumber
+}
 export type VotingInfo = {
     network: string
     lockedHnd: number 

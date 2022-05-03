@@ -43,6 +43,7 @@ type Network ={
     multicall?: Multicall,
     lendly?: Lendly,
     contractV2?: ContractData, 
+    backstop?: ContractData
 }
 
 export type ContractData = {
@@ -452,6 +453,17 @@ const NETWORKS: NetworkData = {
             rewardPolicyMaker: "0x1dB11Cf7C332E797ac912e11b8762e0A4b24a836",
             smartWalletChecker: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
             treasury: "0x6BFD171dDEF7ef775E6C1d6078C10198229DD242",
+            veBoostDelegation: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
+            votingEscrow: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            },
+        backstop: {
+            delegationProxy: "0xd7f3Bf2085AD32ff95E1bCC408d37F10f6949270",
+            gaugeController: "0x1cF3993EbA538e5f085333c86356622161Dd8C0B",
+            minter: "0xc8e2C35b7C9CD784635B72df14179746B7C0f2a7",
+            mirroredVotingEscrow: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
+            rewardPolicyMaker: "0x3A7f310ee75b8cE3e46410Ac438419842B541D10",
+            smartWalletChecker: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            treasury: "0xC457D2DD3209b7186934426ACd8391d504dc3978",
             veBoostDelegation: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
             votingEscrow: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
             },

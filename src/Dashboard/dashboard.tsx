@@ -3,13 +3,14 @@ import { ethers } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { Row } from "react-bootstrap";
 import AdminsView from "../Components/Views/AdminsView";
+import BackstopView from "../Components/Views/BackstopView";
 import ComptrollerView from "../Components/Views/ComptrollerView";
 import ContractsView from "../Components/Views/ContractsView";
 import GaugesView from "../Components/Views/GaugesView";
 import InterestRateModelsView from "../Components/Views/InterestRateModelsView";
 import MarketsView from "../Components/Views/MarketsView";
-import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getInterestRateModel, getContracts } from "../Data/fetchData";
-import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel } from "../Types/data";
+import { getAdmins, getComptrollerData, getCTokenInfo, getGauges, getBackstopGauges, getInterestRateModel, getContracts } from "../Data/fetchData";
+import { Contracts, Admins, Comptroller, GaugeV4, HTokenInfo, InterestRateModel, Backstop } from "../Types/data";
 import { useGlobalContext } from "../Types/gloabalContext";
 import { MyDataContext } from "../Types/marketContext";
 
@@ -29,7 +30,7 @@ const Dashboard = ({lendly} : Props) => {
     const [gauges, setGauges] = useState<GaugeV4[]>()
     const [contracts, setContracts] = useState<Contracts>()
     const [retry, setRetry] = useState<number>(0)
-   
+    const [backstops, setBackstop] = useState<Backstop[]>()
     const retryRef = useRef<number>(0)
      retryRef.current = retry
 
@@ -43,7 +44,9 @@ const Dashboard = ({lendly} : Props) => {
      const updateGauges = (g: GaugeV4[]) : void =>{
          setGauges(_ => g)
      }
-
+     const updateBackstop = (b: Backstop[]) : void =>{
+         setBackstop(_ => b)
+     }
      useEffect(() => {
          retryRef.current = retry
      },[retry])
@@ -82,6 +85,7 @@ const Dashboard = ({lendly} : Props) => {
       setInterestRateModels(undefined)
       setGauges(undefined)
       setContracts(undefined)
+      setBackstop(undefined)
   
         if(network && provider){
           setRetry(0)
@@ -239,6 +243,37 @@ const Dashboard = ({lendly} : Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [markets])
 
+      useEffect(() => {
+        const getBackstopGaugesData = async () => {
+            try{
+                if(network){
+                    const ethcallProvider = new Provider()
+                    await ethcallProvider.init(provider as any)
+                    const net = {...network}
+                    if(net.multicall) 
+                        ethcallProvider.multicall = net.multicall
+                    
+                    const backstopGaugesData = await getBackstopGauges(net, ethcallProvider);
+                      setBackstop(_ => backstopGaugesData)
+                }
+            }
+            catch(error: any){
+                if(!error.toString().includes("execution reverted"))
+                    console.error("backstops gauges: ", error.error)
+                if(retryRef.current < 10){
+                    const temp = retryRef.current + 1
+                    setRetry(temp)
+                    setTimeout(getBackstopGaugesData, temp * 500)
+                }
+            }
+        }
+
+        if(markets){
+            setRetry(0)
+            getBackstopGaugesData()
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [markets])
           useEffect(() => {
         const getContractsData = async () => {
             try{
@@ -280,6 +315,7 @@ const Dashboard = ({lendly} : Props) => {
             interestRateModels, setInterestRateModels,
             gauges, setGauges: updateGauges, 
             contracts, setContracts,
+            backstops, setBackstop : updateBackstop,
          })}>
             <ComptrollerView/>
             <Row> 
@@ -287,6 +323,8 @@ const Dashboard = ({lendly} : Props) => {
             { network && network.network !== "Ethereum" ? 
                 (<GaugesView/> ) : null}
             </Row>
+            { network && network.backstop ? 
+                (<BackstopView/> ) : null}
             <MarketsView/>
             <InterestRateModelsView/>
             <ContractsView/>
