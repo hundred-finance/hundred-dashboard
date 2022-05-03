@@ -17,7 +17,6 @@ export type LendlyData = {
     unitrollerAddress: string,
     interestRateModels: InterestRateModels,
     gaugeController?: string,
-    contractV1?: ContractData, 
     contractV2?: ContractData, 
 }
 
@@ -43,8 +42,8 @@ type Network ={
     hundred: HundredData,
     multicall?: Multicall,
     lendly?: Lendly,
-    contractV1?: ContractData, 
     contractV2?: ContractData, 
+    backstop?: ContractData
 }
 
 export type ContractData = {
@@ -144,13 +143,6 @@ const NETWORKS: NetworkData = {
                     "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
                 },
                 gaugeController: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
-                contractV1: {
-                    gaugeController: "0x788ac705a7b67562cdd1913b67ee091785fa4f68",
-                    minter: "0xfa0f5d0ca1031ac6a47ca8db9cf9dcfd45b3659a",
-                    rewardPolicyMaker: "0xbeD8EFa1973F6E1fB3515bf94aa760174431b3F8",
-                    treasury: "0x0d9459a2d7252c4cd62cf13416cd319c3e0c5bb4",
-                    votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
-                    },
                 
                 contractV2: {
                     delegationProxy: "0x7100CBCa885905F922a19006cF7fD5d0E1bBb26c",
@@ -175,15 +167,6 @@ const NETWORKS: NetworkData = {
                 }
             }
         },
-
-        contractV1: {
-            gaugeController: "0xb1c4426C86082D91a6c097fC588E5D5d8dD1f5a8",
-            minter: "0x42B458056f887Fd665ed6f160A59Afe932e1F559",
-            rewardPolicyMaker: "0x772918d032cFd4Ff09Ea7Af623e56E2D8D96bB65",
-            smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
-            treasury: "0x29DDb4c4f9baAe366DbD40eff79d364e004425b0",
-            votingEscrow: "0x376020c5B0ba3Fd603d7722381fAA06DA8078d8a",
-            },
 
         contractV2: {
             delegationProxy: "0x7100CBCa885905F922a19006cF7fD5d0E1bBb26c",
@@ -226,14 +209,6 @@ const NETWORKS: NetworkData = {
                 "0x5b9451b1bfae2a74d7b9d0d45bdd0e9a27f7bb22" : { name: "MIM",       abi : ABI.INTEREST_MODEL_ABI}
             }
         },
-        contractV1: {
-            gaugeController: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
-            minter: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
-            rewardPolicyMaker: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
-            smartWalletChecker: "0x603c5919FCFB13423b963b04D55d1b393da88A7e",
-            treasury: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
-            votingEscrow: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
-            },
 
         contractV2: {
             delegationProxy: "0x5BA443267c09578bfd87e033a401F69d37Fe677e",
@@ -273,13 +248,6 @@ const NETWORKS: NetworkData = {
                 "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        contractV1: {
-            gaugeController: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
-            minter: "0xb4300e088a3AE4e624EE5C71Bc1822F68BB5f2bc",
-            rewardPolicyMaker: "0xEdBA32185BAF7fEf9A26ca567bC4A6cbe426e499",
-            treasury: "0x243E33aa7f6787154a8E59d3C27a66db3F8818ee",
-            votingEscrow: "0xE4e43864ea18d5E5211352a4B810383460aB7fcC",
-            },
 
         contractV2: {
             delegationProxy: "0xB11C769e66f1ECEA06B5c30154B880200Bf57C25",
@@ -323,13 +291,6 @@ const NETWORKS: NetworkData = {
         },
         linkAddress: "https://moonriver.moonscan.io/address/",
         safeAddress: "https://multisig.moonbeam.network/",
-        contractV1: {
-            gaugeController: "0xb4300e088a3AE4e624EE5C71Bc1822F68BB5f2bc",
-            minter: "0x607312a5C671D0C511998171e634DE32156e69d0",
-            rewardPolicyMaker: "0xa8cD5D59827514BCF343EC19F531ce1788Ea48f8",
-            treasury: "0xEdBA32185BAF7fEf9A26ca567bC4A6cbe426e499",
-            votingEscrow: "0x243E33aa7f6787154a8E59d3C27a66db3F8818ee",
-        },
         contractV2: {
             delegationProxy: "0x274E94f03AC51779D14bD45aF77C0e0e9d97cef9",
             gaugeController: "0xca78ca5C3Da9a5a4C960C1757456E99d9F1bc76d",
@@ -443,7 +404,19 @@ const NETWORKS: NetworkData = {
                 "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        linkAddress: "https://iotexscan.io/address/"
+        linkAddress: "https://iotexscan.io/address/",
+        contractV2: {
+            delegationProxy: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
+            gaugeController: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            minter: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
+            mirroredVotingEscrow: "0xec378cdd60E890332F7A8CC251315327a4f244B6",
+            rewardPolicyMaker: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
+            smartWalletChecker: "0xFf39252Ce6A8fC5657235EeFEB45702B86c42E8F",
+            treasury: "0x3ffd03Ef31F6D5A6C517CEFA9CDf43efEBeE8399",
+            veBoostDelegation: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            votingEscrow: "0xAc8204a9d79CA87D192ea98A9381600642A66a5F",
+        }
+
     },
     137 : {
         chainId: 137,
@@ -471,7 +444,29 @@ const NETWORKS: NetworkData = {
                 "0x42b458056f887fd665ed6f160a59afe932e1f559" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        linkAddress: "https://polygonscan.com/address/"
+        linkAddress: "https://polygonscan.com/address/",
+        contractV2: {
+            delegationProxy: "0xd7f3Bf2085AD32ff95E1bCC408d37F10f6949270",
+            gaugeController: "0xF191d17dEe9943F06bB784C0492805280AeE0bf9",
+            minter: "0xC3bae38Bfa2CbBE30f442649070408f484bd5882",
+            mirroredVotingEscrow: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
+            rewardPolicyMaker: "0x1dB11Cf7C332E797ac912e11b8762e0A4b24a836",
+            smartWalletChecker: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            treasury: "0x6BFD171dDEF7ef775E6C1d6078C10198229DD242",
+            veBoostDelegation: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
+            votingEscrow: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            },
+        backstop: {
+            delegationProxy: "0xd7f3Bf2085AD32ff95E1bCC408d37F10f6949270",
+            gaugeController: "0x1cF3993EbA538e5f085333c86356622161Dd8C0B",
+            minter: "0xc8e2C35b7C9CD784635B72df14179746B7C0f2a7",
+            mirroredVotingEscrow: "0xc3CC9369fcB8491DaD4FA64cE1Fbd3DD2d70034f",
+            rewardPolicyMaker: "0x3A7f310ee75b8cE3e46410Ac438419842B541D10",
+            smartWalletChecker: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            treasury: "0xC457D2DD3209b7186934426ACd8391d504dc3978",
+            veBoostDelegation: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
+            votingEscrow: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
+            },
     },
     42 : {
         chainId: 42,
@@ -501,13 +496,6 @@ const NETWORKS: NetworkData = {
                 "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        contractV1: {
-            gaugeController: "0xFa0F5d0cA1031aC6A47CA8Db9cf9dcfd45B3659a",
-            minter: "0x89fC1cc860dDF4fb91A7C52b12d5343bB03C332E",
-            rewardPolicyMaker: "0x0d9459A2d7252c4cd62cF13416Cd319c3e0C5bB4",
-            treasury: "0x788Ac705a7B67562CdD1913b67EE091785FA4F68",
-            votingEscrow: "0xbeD8EFa1973F6E1fB3515bf94aa760174431b3F8",
-            },
 
         contractV2: {
             delegationProxy: "",

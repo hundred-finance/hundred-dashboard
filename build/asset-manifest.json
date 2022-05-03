@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/static/css/main.32af25f4.css",
-    "main.js": "/static/js/main.12cc1aaf.js",
+    "main.js": "/static/js/main.86ccc008.js",
     "static/js/563.02ec1509.chunk.js": "/static/js/563.02ec1509.chunk.js",
     "static/js/684.c3c3d306.chunk.js": "/static/js/684.c3c3d306.chunk.js",
     "static/js/27.b310965b.chunk.js": "/static/js/27.b310965b.chunk.js",
-    "static/js/836.b8dfd2b4.chunk.js": "/static/js/836.b8dfd2b4.chunk.js",
-    "static/js/969.56f9d508.chunk.js": "/static/js/969.56f9d508.chunk.js",
+    "static/js/836.67f11c51.chunk.js": "/static/js/836.67f11c51.chunk.js",
+    "static/js/969.96238bbe.chunk.js": "/static/js/969.96238bbe.chunk.js",
     "static/media/cbw.png": "/static/media/cbw.a7f9e4f77508955a848f.png",
     "static/media/mm.png": "/static/media/mm.c7e5ee84f8026b1b4bd2.png",
     "static/media/veDAO-logo.png": "/static/media/veDAO-logo.0142c0fbf0062b6755a4.png",
@@ -19,6 +19,7 @@
     "static/media/AVAX-logo.svg": "/static/media/AVAX-logo.7fe17756216abce9b483870c5b1760d3.svg",
     "static/media/FRAX-logo.svg": "/static/media/FRAX-logo.10f9dac2c4e38cb853ee1b683d211ef6.svg",
     "static/media/IOTX-logo.svg": "/static/media/IOTX-logo.804ed46a8e4161d7afff8133881226cf.svg",
+    "static/media/POLYGON-logo.svg": "/static/media/POLYGON-logo.acee990b29e6a1ff232bc3fc6389c56c.svg",
     "static/media/ONE-logo.svg": "/static/media/ONE-logo.02c2e3bade8b31e4b6943850f5f55c2a.svg",
     "static/media/BTC-logo.svg": "/static/media/BTC-logo.229e5f1077c8a953407f0728b01c2652.svg",
     "static/media/FTM-logo.svg": "/static/media/FTM-logo.3f8c71bb709ec37d4e3bb072c25d75b7.svg",
@@ -26,6 +27,6 @@
   },
   "entrypoints": [
     "static/css/main.32af25f4.css",
-    "static/js/main.12cc1aaf.js"
+    "static/js/main.86ccc008.js"
   ]
 }

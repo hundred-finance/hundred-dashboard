@@ -1,16 +1,15 @@
 import { Col, Row, Table } from "react-bootstrap"
 import Loading from "../Loading/loading"
-import { EpochsInfo } from "../../Types/data"
+import { BackstopsInfo } from "../../Types/data"
 import { useChainsContext } from "../../Types/chainsContext"
 
-const EpochsView = () =>{
+const BackstopChainsView = () =>{
 
-    const {chainEpochs} = useChainsContext()
+    const {backstopInfo} = useChainsContext()
     return(
-        
         <Row> 
                 <Col xl="7" xs="12" >
-                <h4>Epochs & Rewards</h4>
+                <h4>Backstop Data</h4>
             <Table striped bordered hover variant="dark" size="sm" responsive>
                 <thead>
                     <tr>
@@ -24,8 +23,8 @@ const EpochsView = () =>{
                     </tr>
                 </thead>
                  <tbody>
-                     { chainEpochs ? 
-                        chainEpochs.map((network : EpochsInfo) => (
+                     { backstopInfo ? 
+                        backstopInfo.map((network : BackstopsInfo) => (
                      network ? (
                          <tr key={10000}>
                          <td className="text-center">{network.network?.capitalize()} </td>
@@ -34,7 +33,7 @@ const EpochsView = () =>{
                          <td className="text-center">{Math.round(network.epoch1Rewards)} </td>
                          <td className="text-center">{Math.round(network.epoch2Rewards)} </td>
                          <td className="text-center">{Math.round(network.epoch3Rewards)} </td>
-                         <td className="text-center">{(network?.treasuryBalance)?.toFixed(4)} </td>
+                         <td className="text-center">{"Pending.."} </td> 
                       </tr>
                      ): (<tr>
                          <td colSpan={10}>
@@ -57,4 +56,4 @@ const EpochsView = () =>{
         )             
 }
 
-export default EpochsView
+export default BackstopChainsView

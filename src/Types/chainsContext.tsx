@@ -1,11 +1,15 @@
 import { createContext, useContext } from "react";
-import { EpochsInfo, VotingInfo } from "./data";
+import { BackstopsInfo, EpochsInfo, MigrationInfo, VotingInfo } from "./data";
 
 export type ChainsContext = {
     chainEpochs: EpochsInfo[] | undefined,
     setChainEpochs: (e: EpochsInfo[]) => void,
     votingInfo: VotingInfo[] | undefined,
-    setVotingInfo: (e: VotingInfo[]) => void,
+    setVotingInfo: (v: VotingInfo[]) => void,
+    migrationInfo: MigrationInfo | undefined,
+    setMigrationInfo: (m: MigrationInfo) => void,
+    backstopInfo: BackstopsInfo[] | undefined,
+    setBackstopInfo: (b: BackstopsInfo[]) => void,
 
 }
 
@@ -14,6 +18,10 @@ export const ChainDataContext = createContext<ChainsContext>({
     setChainEpochs: () => {},
     votingInfo: undefined,
     setVotingInfo: () => {},
+    migrationInfo: undefined,
+    setMigrationInfo: () => {},
+    backstopInfo: undefined,
+    setBackstopInfo: () => {},
 
 })
 
