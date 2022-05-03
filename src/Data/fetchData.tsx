@@ -1,7 +1,7 @@
 import { Contract, Provider } from "ethcall"
 import { ethers } from "ethers"
 import { BigNumber } from "../bigNumber"
-import _, { floor } from "lodash"
+import { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
