@@ -14,36 +14,19 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     const ethcallHtoken = new Contract(address, ABI.HTOKEN_ABI)
     const oracleContract = new Contract(comptroller.oracleAddress, ABI.ORACLE_ABI)
     const ethcallComptroller = new Contract(unitrollerAddress, ABI.COMPTROLLER_ABI)
-
+    let underlyingAddress = ""
+    if(!isNativeToken) {
+    const underlyingCallResult : string []= await ethcallProvider.all([ethcallCToken.underlying()]);    
+    if (underlyingCallResult.length > 0){
+      underlyingAddress = underlyingCallResult[0]
+    }}
     let calls = [ethcallCToken.interestRateModel(), ethcallCToken.symbol(), ethcallCToken.getCash(), ethcallCToken.totalBorrows(),
         ethcallCToken.totalReserves(), ethcallCToken.reserveFactorMantissa(), ethcallCToken.totalSupply(), ethcallCToken.decimals(), 
         ethcallCToken.exchangeRateStored(), ethcallComptroller.mintGuardianPaused(address), ethcallComptroller.borrowGuardianPaused(address), 
         ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address)]//, ethcallCToken.borrowRatePerBlock()]
-    if(!isNativeToken) calls.push(ethcallCToken.underlying())
-    const data = await ethcallProvider.all(calls)
-    let underlyingAddress = ""
-    const interestAddress = data[0] as string
-    const symbol = data[1] as string
-    const cash = data[2] as any
-    const borrows = data[3] as any
-    const reserves = data[4] as any
-    const reserveFactor = data[5] as any
-    const totalSupply = data[6] as any
-    const decimals = data[7] as number
-    const exchangeRate = data[8] as any
-    const mintPaused = data[9] as boolean
-    const borrowPaused = data[10] as boolean
-    const compSpeeds = data[11] as any
-    const markets = data[12] as any
-    const admin = data[13] as string
-    const price = data[14] as any
-    //const borrowRatePerBlock = data[14]
-    if(!isNativeToken)
-        underlyingAddress = data[15] as string
-
-       
-
-        const interestInfo = interestRateModels[interestAddress.toLowerCase()];
+    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price,] = await ethcallProvider.all(calls); 
+    
+    const interestInfo = interestRateModels[interestAddress.toLowerCase()];
     const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
     const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
     const [supplyRate, borrowRate, utilizationRate] = await ethcallProvider.all([ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
@@ -284,77 +267,39 @@ export const getAdmins = async(oracle: string, hundred: string, pauseGuardian: s
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getGauges = async ( network: Network, ethcallProvider: any): Promise<Array<GaugeV4>> => {
+  if(network.contractV2?.gaugeController){
+    const underlying: UnderlyingInfo[] = [];
+    const controller = network.contractV2?.gaugeController;
+    const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
+    const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
+    const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
 
-    if(network){
-        const controller = network.contractV2?.gaugeController ? network.contractV2?.gaugeController : ""; 
-        const ethcallGaugeController = new Contract(controller, ABI.GAUGE_CONTROLLER_ABI)
-        const [nbGauges] = await ethcallProvider.all([ethcallGaugeController.n_gauges()]) as any
-        const gauges:  any[] = await ethcallProvider.all(Array.from(Array(nbGauges.toNumber()).keys()).map(i => ethcallGaugeController.gauges(i)))
-        const activeGauges: string[] = [];
-
-        let lpAndMinterAddresses: any = await ethcallProvider.all(
-            gauges.flatMap((g) => [
-                new Contract(g, ABI.GAUGE_V4_ABI).lp_token(),
-                new Contract(g, ABI.GAUGE_V4_ABI).minter(),
-                new Contract(g, ABI.GAUGE_V4_ABI).reward_policy_maker(),
-                new Contract(g, ABI.GAUGE_V4_ABI).working_supply(),
-                new Contract(g, ABI.GAUGE_V4_ABI).is_killed(),
-                new Contract(controller, ABI.GAUGE_CONTROLLER_ABI).gauge_relative_weight(g)
-            ])
-        )
-
-        lpAndMinterAddresses = _.chunk(lpAndMinterAddresses, 6)
-        const activeLpAndMinterAddresses: any[][] = []
-
-        for (let i = 0; i < lpAndMinterAddresses.length; i++) {
-            if (!lpAndMinterAddresses[i][4]) {
-                activeGauges.push(gauges[i]);
-                activeLpAndMinterAddresses.push(lpAndMinterAddresses[i])
-            }
-        }
-        let rewards: any = await ethcallProvider.all(
-            activeGauges.flatMap((g, index) => [
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.REWARD_POLICY_MAKER_ABI).rate_at(floor(new Date().getTime() / 1000)),
-                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).balanceOf(g), //staked balance of hToken
-                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).underlying(),
-                    new Contract(activeLpAndMinterAddresses[index][0], ABI.CTOKEN_ABI).decimals(), 
-                    new Contract(activeLpAndMinterAddresses[index][2], ABI.HTOKEN_ABI).admin() // admin address
-
-                ]
-            )
-        )
-        //reshape into 5 arrays
-        rewards = _.chunk(rewards, 5)
-        const underlying: UnderlyingInfo[] = [];
-        
-        //get underlying info
-        for (let i = 0; i < rewards.length; i++) {
-          const info =  await getUnderlying(ethcallProvider, rewards[i][2], network)
-          underlying.push(info) 
-        }
+    //get data
+    const activeGauges : string[] = await getActiveGauges(gauges, ethcallProvider)
+    const gaugeData : any[] = await getLPTokenData(activeGauges, ethcallProvider, ethcallGaugeController)
+    const rewardsData : any[] = await getGaugesRewardsData(activeGauges, gaugeData, ethcallProvider); 
+    for await (const net of rewardsData) {
+    const info =  await getUnderlying(ethcallProvider, net.underlying, network)
+    underlying.push(info)}   
       
-       return activeLpAndMinterAddresses.map((c, index) => {
-            return {
-              
-                address: activeGauges[index],
-                admin: rewards[index][4],
-                backstopGauge: false,
-                backstopTotalBalance: BigNumber.from(0),
-                backstopTotalSupply: BigNumber.from(0),
-                decimals: rewards[index][3],
-                lpBackstopTokenUnderlying: undefined,
-                lpToken: c[0],
-                lpTokenUnderlying: rewards[index][2],
-                minter: c[1],
-                rewardPolicyMaker: c[2],
-                totalStake: rewards[index][1],
-                underlying: underlying[index],
-                weight: c[5],
-                workingTotalStake: c[3],
-              }
-        });
-
-    }
+    return activeGauges.map((gauge, i) => {
+      return {              
+        address: gauge,
+        admin: gaugeData[i].admin,
+        backstopGauge: false,
+        backstopTotalBalance: BigNumber.from(0),
+        backstopTotalSupply: BigNumber.from(0),
+        decimals: rewardsData[i].decimals,
+        lpBackstopTokenUnderlying: undefined,
+        lpToken: gaugeData[i].lpToken,
+        lpTokenUnderlying: rewardsData[i].underlying,
+        minter: gaugeData[i].minter,
+        rewardPolicyMaker: gaugeData[i].rewardsPolicyMaker,
+        totalStake: rewardsData[i].balanceOf,
+        underlying: underlying[i],
+        weight: gaugeData[i].gaugeRelativeWeight,
+        workingTotalStake: gaugeData[i].workingSupply,
+      }});}
     return []
   }
     export const getContracts = async (network: Network, ethcallProvider: Provider): Promise<Contracts> => {
@@ -371,16 +316,17 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
         let V2_VotingEscrow = ""
 
         //fetch V2 addresses
-        if (network.contractV2 && network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
-        if (network.contractV2 && network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
-        if (network.contractV2 && network.contractV2.minter) V2_Minter = network.contractV2.minter;
-        if (network.contractV2 && network.contractV2.mirroredVotingEscrow) V2_MirroredVotingEscrow = network.contractV2.mirroredVotingEscrow;
-        if (network.contractV2 && network.contractV2.rewardPolicyMaker) V2_RewardPolicyMaker = network.contractV2.rewardPolicyMaker;
-        if (network.contractV2 && network.contractV2.smartWalletChecker) V2_SmartWalletChecker = network.contractV2.smartWalletChecker;
-        if (network.contractV2 && network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
-        if (network.contractV2 && network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
-        if (network.contractV2 && network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
-
+        if (network.contractV2){
+        if (network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
+        if (network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
+        if (network.contractV2.minter) V2_Minter = network.contractV2.minter;
+        if (network.contractV2.mirroredVotingEscrow) V2_MirroredVotingEscrow = network.contractV2.mirroredVotingEscrow;
+        if (network.contractV2.rewardPolicyMaker) V2_RewardPolicyMaker = network.contractV2.rewardPolicyMaker;
+        if (network.contractV2.smartWalletChecker) V2_SmartWalletChecker = network.contractV2.smartWalletChecker;
+        if (network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
+        if (network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
+        if (network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
+        }
         //define V2 addresses
         const contractsV2: ContractInfo = {
             DelegationProxy: V2_DelegationProxy,
@@ -412,7 +358,7 @@ export const getBackstopGauges = async ( network: Network, ethcallProvider: any)
     //get data
     const activeGauges : string[] = await getActiveGauges(gauges, ethcallProvider)
     const gaugeData : any[] = await getLPTokenData(activeGauges, ethcallProvider, ethcallGaugeController)
-    const rewardsData : any[] = await getBackStopData(activeGauges, gaugeData, ethcallProvider); 
+    const rewardsData : any[] = await getBackstopGaugesRewardsData(activeGauges, gaugeData, ethcallProvider); 
     const backStopUnderlying = await getBackstopUnderlyingInfo(rewardsData, gaugeData, network, ethcallProvider); 
     for await (const net of rewardsData) {
     const info =  await getUnderlying(ethcallProvider, net.LUSD, network)
@@ -473,7 +419,24 @@ async function getLPTokenData(activeGauges: string[], ethcallProvider: any, ethc
     gaugeData.push(gaugeObject)}
   return gaugeData }
 
-async function getBackStopData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
+async function getGaugesRewardsData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
+  const rewardsData: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for await (const [i, gauge] of activeGauges.entries()) {
+    const rewardContract = new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
+    const cTokenContract = new Contract(gaugeData[i].lpToken, ABI.CTOKEN_ABI);          
+    const calls = [           
+      rewardContract.rate_at(floor(new Date().getTime() / 1000)),
+      cTokenContract.balanceOf(activeGauges[i]),
+      cTokenContract.underlying(),
+      cTokenContract.decimals(), 
+    ]
+    const [rateAt, balanceOf, underlying, decimals] = await ethcallProvider.all(calls); 
+    const rewardsObject = {rateAt, balanceOf, underlying, decimals}
+    rewardsData.push(rewardsObject)}
+  return rewardsData;}
+
+async function getBackstopGaugesRewardsData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
   const rewardsData: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for await (const [i, gauge] of activeGauges.entries()) {
