@@ -1,12 +1,11 @@
 import { Contract, Provider } from "ethcall"
 import { ethers } from "ethers"
 import { BigNumber } from "../bigNumber"
-import _, { floor, forEach } from "lodash"
+import _, { floor } from "lodash"
 import ABI from "../abi"
 import Logos from "../logos"
 import { InterestRateModels, Network } from "../networks"
 import { Admins, Backstop, Comptroller, ContractInfo, Contracts, GaugeV4, HTokenInfo, InterestRateModel, UnderlyingInfo } from "../Types/data"
-import { act } from "@testing-library/react"
 
 export const getCTokenInfo = async (address: string, network: Network, provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     comptroller: Comptroller, isNativeToken:boolean , ethcallProvider: Provider, rewardTokenPrice: number, unitrollerAddress: string, interestRateModels: InterestRateModels): Promise<HTokenInfo> => {
@@ -476,6 +475,7 @@ async function getLPTokenData(activeGauges: string[], ethcallProvider: any, ethc
 
 async function getBackStopData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
   const rewardsData: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for await (const [i, gauge] of activeGauges.entries()) {
     const rewardContract = new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
     const backstopContract = new Contract(gaugeData[i].lpToken, ABI.BPRO_ABI);          
