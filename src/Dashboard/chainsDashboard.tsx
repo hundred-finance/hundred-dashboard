@@ -55,26 +55,42 @@ const ChainsDashboard = () => {
 
    useEffect(() => {
     const votingData = async () => {
-      const lockedHND = await fetchAPI(API.lockedhnd); //fetch API data
-      const veHND = await fetchAPI(API.vehnd);
-
-      const vInterface = votingInterface(lockedHND, veHND); //create interface matching result
-      const vInfo : VotingInfo[]  = await getChainsVotingInfo(vInterface); //get voting data
-      setVotingInfo(vInfo)
-    };
-
+      try{
+        const lockedHND = await fetchAPI(API.lockedhnd); //fetch API data
+        const veHND = await fetchAPI(API.vehnd);
+        const vInterface = votingInterface(lockedHND, veHND); //create interface matching result
+        const vInfo : VotingInfo[]  = await getChainsVotingInfo(vInterface); //get voting data
+        setVotingInfo(vInfo)}
+      catch(error: any){
+          if(!error.toString().includes("execution reverted"))
+              console.error("voting: ", error.error)
+          if(retryRef.current < 10){
+              const temp = retryRef.current + 1
+              setRetry(temp)
+              setTimeout(votingData, temp * 500)
+          }}};
+    //missing if statement?
+    setRetry(0)
     votingData();
   }, []);
 
    useEffect(() => {
     const migrationData = async () => {
-      const migration = await fetchAPI(API.migration);
-
-      const mInterface = migrationInterface(migration); //create interface matching result
-      const mInfo : MigrationInfo  = await getChainsMigrationInfo(mInterface); //get migration data
-      setMigrationInfo(mInfo)
-    };
-
+      try{
+        const migration = await fetchAPI(API.migration);
+        const mInterface = migrationInterface(migration); //create interface matching result
+        const mInfo : MigrationInfo  = await getChainsMigrationInfo(mInterface); //get migration data
+        setMigrationInfo(mInfo)}
+      catch(error: any){
+          if(!error.toString().includes("execution reverted"))
+              console.error("voting: ", error.error)
+          if(retryRef.current < 10){
+              const temp = retryRef.current + 1
+              setRetry(temp)
+              setTimeout(migrationData, temp * 500)
+          }}};
+    //missing if statement?
+    setRetry(0)
     migrationData();
   }, []);
   return (
