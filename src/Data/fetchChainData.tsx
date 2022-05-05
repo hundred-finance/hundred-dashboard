@@ -205,17 +205,17 @@ export const getChainsBackstopsInfo = async (
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
 
-  const backstopGuages = networks.filter(n => n !== "arbitrum" && n !== "fantom" && cData.gaugerewards[n].backstopGauge !== undefined)
-  const treasuryBalance = await fetchAPI(API.gauge) //redo once backstop is added
+  const backstopGauges = networks.filter(n => n !== "arbitrum" && n !== "fantom" && cData.gaugerewards[n].backstopGauge !== undefined)
+  const treasuryBalance = await fetchAPI(API.backstopgauge) //redo once backstop is added
 
-  return backstopGuages.map((n, index) => {
+  return backstopGauges.map((n, index) => {
     return{
       network: n,
-      currentEpoch: cData.gaugerewards[n].gauge[0].epoch,
-      epoch0Rewards: cData.gaugerewards[n].gauge[0].rewards,
-      epoch1Rewards: cData.gaugerewards[n].gauge[1].rewards,
-      epoch2Rewards: cData.gaugerewards[n].gauge[2].rewards,
-      epoch3Rewards: cData.gaugerewards[n].gauge[3].rewards,
-      treasuryBalance: treasuryBalance.gauge[n]
+      currentEpoch: cData.gaugerewards[n].backstopGauge[0].epoch,
+      epoch0Rewards: cData.gaugerewards[n].backstopGauge[0].rewards,
+      epoch1Rewards: cData.gaugerewards[n].backstopGauge[1].rewards,
+      epoch2Rewards: cData.gaugerewards[n].backstopGauge[2].rewards,
+      epoch3Rewards: cData.gaugerewards[n].backstopGauge[3].rewards,
+      treasuryBalance: treasuryBalance.backstopGauge[n]
     };});
 };

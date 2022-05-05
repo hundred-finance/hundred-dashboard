@@ -9,5 +9,6 @@ export const API = {
     vehnd : 'vehnd',
     lprewards : 'lprewards',
     gaugerewards : 'gaugerewards',
+    backstopgauge: 'backstopgauge',
     totalsupply : 'totalsupply',
 }
