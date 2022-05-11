@@ -15,6 +15,15 @@ export const shortenAddress = (str: string) => {
     return "0x" + val.toString(16);
   };
 
+  export const getApiKey = (key: string | undefined) :string | undefined => {
+    switch (key){
+      case "ETHERSCAN_API_KEY" : 
+        return process.env.ETHERSCAN_API_KEY
+      default :
+        return undefined
+    }
+  }
+
   // eslint-disable-next-line no-extend-native
   String.prototype.capitalize = function() {
     const parts = this.split(" ")

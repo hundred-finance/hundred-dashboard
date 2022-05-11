@@ -43,7 +43,8 @@ type Network ={
     multicall?: Multicall,
     lendly?: Lendly,
     contractV2?: ContractData, 
-    backstop?: ContractData
+    backstop?: ContractData,
+    apiKey?: string
 }
 
 export type ContractData = {
@@ -102,8 +103,9 @@ const NETWORKS: NetworkData = {
                 "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "wBTC",      abi : ABI.NO_KINK_MODEL_ABI  },
                 "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                 "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
-        }
-        }
+            }
+        },
+        apiKey: "ETHERSCAN_API_KEY"
     },
     250 : {
         chainId: 250,

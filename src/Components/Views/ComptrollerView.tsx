@@ -3,14 +3,16 @@ import { useEffect, useRef, useState } from "react"
 import { Col, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
 import { BsToggleOff, BsToggleOn } from "react-icons/bs"
 import {MdCancel, MdCheck, MdContentCopy} from "react-icons/md"
-import { shortenAddress } from "../../helpers"
+import { getApiKey, shortenAddress } from "../../helpers"
 import { Comptroller } from "../../Types/data"
 import { useGlobalContext } from "../../Types/gloabalContext"
 import { useMarketContext } from "../../Types/marketContext"
 import Loading from "../Loading/loading"
+import "./views.css"
 
 const ComptrollerView = () => {
     const [content, setContent] = useState("Copy address to clipboard")
+    const [abiContent, setAbiContent] = useState("Copy ABI to clipboard")
     const {signer, comptroller, setComptroller} = useMarketContext()
     const {network} = useGlobalContext()
 
@@ -40,6 +42,34 @@ const ComptrollerView = () => {
         try {
             var successful = document.execCommand('copy');
             successful ? setContent("Copied") : setContent("Copy address to clipboard")
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    const handleABICopy = async (address: string): Promise<void> => {
+        const textArea = document.createElement("textarea");
+        try {
+            const apiKey = getApiKey(network?.apiKey)
+            const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`
+            console.log(url)
+            const res = await fetch(url)
+            const data = await res.json()
+
+            // Avoid scrolling to bottom
+            console.log(data.result)
+            textArea.value = data.result
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+    
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            var successful = document.execCommand('copy');
+            successful ? setAbiContent("Copied") : setAbiContent("Copy ABI to clipboard")
         } catch (err) {
             console.error('Fallback: Oops, unable to copy', err);
         }
@@ -250,11 +280,21 @@ const ComptrollerView = () => {
                                  <a target="_blank" rel="noreferrer" href={`${linkAddress}${comptrollerRef.current.implementation}`}>{ shortenAddress(comptrollerRef.current.implementation) }</a>{" "}
                                  {
                                      comptrollerRef.current.implementation ?
-                                     <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{content}</Tooltip>}>
-                                         <div>
-                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( comptrollerRef.current ? comptrollerRef.current.implementation : "")}/>
-                                         </div>
-                                     </OverlayTrigger>
+                                     <div className="copy-td-content">
+                                        <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{content}</Tooltip>}>
+                                            <div>
+                                                <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( comptrollerRef.current ? comptrollerRef.current.implementation : "")}/>
+                                            </div>
+                                        </OverlayTrigger>
+                                        {network && network.apiKey ? 
+                                            <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{abiContent}</Tooltip>}>
+                                                <div className="abi-copy" onMouseLeave={()=> setAbiContent("Copy ABI to clipboard")} onClick={() => handleABICopy(comptrollerRef.current ? comptrollerRef.current.implementation : "")}>
+                                                   ABI
+                                                </div>
+                                            </OverlayTrigger>
+                                            : null
+                                        }
+                                     </div>
                                      : ""
                                  }
                              </div>
