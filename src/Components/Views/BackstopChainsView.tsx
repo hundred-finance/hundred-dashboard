@@ -33,7 +33,7 @@ const BackstopChainsView = () =>{
                          <td className="text-center">{Math.round(network.epoch1Rewards)} </td>
                          <td className="text-center">{Math.round(network.epoch2Rewards)} </td>
                          <td className="text-center">{Math.round(network.epoch3Rewards)} </td>
-                         <td className="text-center">{"Pending.."} </td> 
+                         <td className="text-center">{Math.round(network.treasuryBalance)} </td> 
                       </tr>
                      ): (<tr>
                          <td colSpan={10}>
