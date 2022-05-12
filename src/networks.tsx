@@ -120,7 +120,7 @@ const NETWORKS: NetworkData = {
             nativeCurrency: {
                 name: "FTM",
                 decimals: 18,
-                symbol: "ETH"
+                symbol: "FTM"
             },
             blockExplorerUrls: ["https://ftmscan.com"]
         },

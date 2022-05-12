@@ -182,7 +182,8 @@ const Logos: Logo ={
     "USDT.e"    : USDTlogo,
     "ioDAI"     : DAIlogo,
     "Polygon"   : POLYGONlogo,
-    "hxDAI"     : DAIlogo
+    "hxDAI"     : DAIlogo,
+    "xDAI"      : DAIlogo
 }
 
 export default Logos

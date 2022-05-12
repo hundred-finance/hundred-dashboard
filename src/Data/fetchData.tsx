@@ -15,17 +15,18 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     const oracleContract = new Contract(comptroller.oracleAddress, ABI.ORACLE_ABI)
     const ethcallComptroller = new Contract(unitrollerAddress, ABI.COMPTROLLER_ABI)
     let underlyingAddress = ""
+    let implementation = ""
     if(!isNativeToken) {
-    const underlyingCallResult : string []= await ethcallProvider.all([ethcallCToken.underlying()]);    
-    if (underlyingCallResult.length > 0){
-      underlyingAddress = underlyingCallResult[0]
-    }}
+      const [underlying, implement] = await ethcallProvider.all([ethcallCToken.underlying(), ethcallCToken.implementation()]);    
+      underlyingAddress = underlying
+      implementation = implement
+    }
     let calls = [ethcallCToken.interestRateModel(), ethcallCToken.symbol(), ethcallCToken.getCash(), ethcallCToken.totalBorrows(),
         ethcallCToken.totalReserves(), ethcallCToken.reserveFactorMantissa(), ethcallCToken.totalSupply(), ethcallCToken.decimals(), 
         ethcallCToken.exchangeRateStored(), ethcallComptroller.mintGuardianPaused(address), ethcallComptroller.borrowGuardianPaused(address), 
         ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address)]//, ethcallCToken.borrowRatePerBlock()]
-    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price,] = await ethcallProvider.all(calls); 
-    
+    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price] = await ethcallProvider.all(calls); 
+  
     const interestInfo = interestRateModels[interestAddress.toLowerCase()];
     const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
     const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
@@ -71,7 +72,8 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       isComped: markets.isComped,
       isCompedLoading: false,
       hndAPR,
-      admin
+      admin,
+      implementation
     }
 }
 

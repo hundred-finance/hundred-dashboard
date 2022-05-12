@@ -4,13 +4,16 @@ import {MdContentCopy, MdCheck, MdCancel} from "react-icons/md"
 import {BsToggleOff, BsToggleOn} from "react-icons/bs"
 import { useMarketContext } from "../../Types/marketContext"
 import { useGlobalContext } from "../../Types/gloabalContext"
-import { shortenAddress } from "../../helpers"
+import { getApiKey, getApiUrl, shortenAddress } from "../../helpers"
 import { BigNumber, ethers } from "ethers"
 import ABI from "../../abi"
 import Loading from "../Loading/loading"
+import "./views.css"
+
 
 const MarketsView = () =>{
     const [content, setContent] = useState("Copy address to clipboard")
+    const [abiContent, setAbiContent] = useState("Copy ABI to clipboard")
     const {signer, comptroller, markets, setMarkets} = useMarketContext()
     const {network, provider} = useGlobalContext()
 
@@ -37,6 +40,35 @@ const MarketsView = () =>{
         }
         document.body.removeChild(textArea);
     }
+
+    const handleABICopy = async (address: string): Promise<void> => {
+      const textArea = document.createElement("textarea");
+      try {
+          const url = getApiUrl(network, address)
+          if(!url){
+              setAbiContent("Unable to copy")
+              return
+          }
+          
+          const res = await fetch(url)
+          const data = await res.json()
+          // Avoid scrolling to bottom
+          textArea.value = data.result
+          textArea.style.top = "0";
+          textArea.style.left = "0";
+          textArea.style.position = "fixed";
+  
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          var successful = document.execCommand('copy');
+          successful ? setAbiContent("Copied") : setAbiContent("Copy ABI to clipboard")
+      } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+  }
 
     const handleFocus = (event: any) => event.target.select();
 
@@ -253,6 +285,7 @@ const MarketsView = () =>{
                         <th className="text-center align-middle">#</th>
                         <th className="text-center align-middle" colSpan={2}>Market</th>
                         <th className="text-center align-middle">Underlying</th>
+                        <th className="text-center align-middle">Implementation</th>
                         <th className="text-center align-middle">Admin</th>
                         <th className="text-center align-middle">Supply</th>
                         <th className="text-center align-middle">Borrows</th>
@@ -307,6 +340,30 @@ const MarketsView = () =>{
                             }
                             </div>
                         </td>
+                        <td>
+                             <div className="copy-td">
+                                 <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.implementation}`}>{ shortenAddress(item.implementation) }</a>{" "}
+                                 {
+                                     item.implementation ?
+                                     <div className="copy-td-content">
+                                        <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{content}</Tooltip>}>
+                                            <div>
+                                                <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( item.implementation)}/>
+                                            </div>
+                                        </OverlayTrigger>
+                                        {getApiKey(network) ? 
+                                            <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{abiContent}</Tooltip>}>
+                                                <div className="abi-copy" onMouseLeave={()=> setAbiContent("Copy ABI to clipboard")} onClick={() => handleABICopy(item.implementation)}>
+                                                   ABI
+                                                </div>
+                                            </OverlayTrigger>
+                                            : null
+                                        }
+                                     </div>
+                                     : ""
+                                 }
+                             </div>
+                         </td>
                         <td>
                             <div className="copy-td">
                             <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.admin}`}>{shortenAddress(item.admin)}</a>
