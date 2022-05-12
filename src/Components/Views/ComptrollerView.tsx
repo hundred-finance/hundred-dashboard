@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Col, FormControl, InputGroup, OverlayTrigger, Row, Spinner, Table, Tooltip} from "react-bootstrap"
 import { BsToggleOff, BsToggleOn } from "react-icons/bs"
 import {MdCancel, MdCheck, MdContentCopy} from "react-icons/md"
-import { getApiKey, shortenAddress } from "../../helpers"
+import { getApiKey, getApiUrl, shortenAddress } from "../../helpers"
 import { Comptroller } from "../../Types/data"
 import { useGlobalContext } from "../../Types/gloabalContext"
 import { useMarketContext } from "../../Types/marketContext"
@@ -51,14 +51,15 @@ const ComptrollerView = () => {
     const handleABICopy = async (address: string): Promise<void> => {
         const textArea = document.createElement("textarea");
         try {
-            const apiKey = getApiKey(network?.apiKey)
-            const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`
-            console.log(url)
+            const url = getApiUrl(network, address)
+            if(!url){
+                setAbiContent("Unable to copy")
+                return
+            }
+            
             const res = await fetch(url)
             const data = await res.json()
-
             // Avoid scrolling to bottom
-            console.log(data.result)
             textArea.value = data.result
             textArea.style.top = "0";
             textArea.style.left = "0";
@@ -286,7 +287,7 @@ const ComptrollerView = () => {
                                                 <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy( comptrollerRef.current ? comptrollerRef.current.implementation : "")}/>
                                             </div>
                                         </OverlayTrigger>
-                                        {network && network.apiKey ? 
+                                        {getApiKey(network) ? 
                                             <OverlayTrigger placement="top-start" overlay={<Tooltip id="second">{abiContent}</Tooltip>}>
                                                 <div className="abi-copy" onMouseLeave={()=> setAbiContent("Copy ABI to clipboard")} onClick={() => handleABICopy(comptrollerRef.current ? comptrollerRef.current.implementation : "")}>
                                                    ABI

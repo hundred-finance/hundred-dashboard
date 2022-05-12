@@ -44,7 +44,7 @@ type Network ={
     lendly?: Lendly,
     contractV2?: ContractData, 
     backstop?: ContractData,
-    apiKey?: string
+    apiUrl?:string
 }
 
 export type ContractData = {
@@ -105,13 +105,14 @@ const NETWORKS: NetworkData = {
                 "0xe8f12f5492ec28609d2932519456b7436d6c93bd" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        apiKey: "ETHERSCAN_API_KEY"
+        apiUrl: "https://api.etherscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey"
     },
     250 : {
         chainId: 250,
         network: "Fantom Opera", 
         logo: Logos["FTM"], 
         blocksPerYear: 24*60*60*365,
+        apiUrl: "https://api.ftmscan.com/api?module=contract&action=getabi&address=$address&apikey=$apiKey",
         networkParams: {
             chainId: "0xFA",
             chainName: "Fantom Opera",
@@ -187,6 +188,7 @@ const NETWORKS: NetworkData = {
         network: "Arbitrum",
         logo: Logos["Arbitrum"], 
         blocksPerYear: 24*60*60/13.5*365,
+        apiUrl: "https://api.arbiscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey",
         networkParams: {
             chainId: "0xa4b1",
             chainName: "Arbitrum",
@@ -268,6 +270,7 @@ const NETWORKS: NetworkData = {
         network: "Moonriver",
         logo: Logos["MOVR"],
         blocksPerYear: 2465386,
+        apiUrl: "https://api-moonriver.moonscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey",
         networkParams : {
             chainId: "0x505",
             chainName: "Moonriver",
@@ -381,6 +384,7 @@ const NETWORKS: NetworkData = {
             veBoostDelegation: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
             votingEscrow: "0x1F8e8472e124F58b7F0D2598EaE3F4f482780b09",
             },
+        apiUrl: "https://api-optimistic.etherscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey"
     },
     4689 : {
         chainId: 4689,
@@ -469,6 +473,7 @@ const NETWORKS: NetworkData = {
             veBoostDelegation: "0x61F95b38f880a6C5A4b7DD15560D7bB8B3E36f35",
             votingEscrow: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
             },
+        apiUrl: "https://api.polygonscan.com/api?module=contract&action=getabi&address=$address&apikey=$apiKey"
     },
     42 : {
         chainId: 42,
