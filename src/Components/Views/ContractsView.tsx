@@ -36,6 +36,10 @@ const ContractsView = () => {
         }
     }
 
+    // if(contracts && contracts.contractsV2 && Object.entries({...contracts.contractsV2}).filter(c => c[1].address !== undefined).length === 0){
+    //     return <></>
+    // }
+
      return(
              <Row>
                  <Col xl="4" lg="4" md="6">
@@ -49,7 +53,8 @@ const ContractsView = () => {
                         <th className="text-left align-middle">Admin</th>
                      </tr>
                  </thead>
-                 {contracts && contracts?.contractsV2 && admins ? <tbody>
+                 {contracts && contracts?.contractsV2 && admins ? 
+                    <tbody>
                      {Object.entries({...contracts?.contractsV2}).map((c, index) => {
                          return <tr key={1001+index}>
                              <td>
@@ -60,12 +65,12 @@ const ContractsView = () => {
                             </td>
                             <td className="text-left">
                                 <div className="copy-td">
-                                    <a target="_blank" rel="noreferrer" href={`${linkAddress}${c[1]}`}>{ shortenAddress(c[1]) }</a>{" "}
+                                    <a target="_blank" rel="noreferrer" href={`${linkAddress}${c[1].address}`}>{ shortenAddress(c[1].address ? c[1].address : "") }</a>{" "}
                                     {
-                                        c[1] ? 
+                                        c[1].address ? 
                                         <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
                                             <div>
-                                                <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(c[1])}/>
+                                                <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(c[1].address ? c[1].address : "")}/>
                                             </div>
                                         </OverlayTrigger>
                                         : null
@@ -74,12 +79,12 @@ const ContractsView = () => {
                             </td>
                             <td>
                                 <div className="copy-td">
-                                <a target="_blank" rel="noreferrer" href={`${linkAddress}${admins.Hundred}`}>{shortenAddress(admins.Hundred)}</a>
+                                <a target="_blank" rel="noreferrer" href={`${linkAddress}${c[1].admin}`}>{shortenAddress(c[1].admin ? c[1].admin : "")}</a>
                                 {
-                                    admins.Hundred ?
+                                    c[1].admin ?
                                     <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
                                         <div>
-                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(admins.Hundred)}/>
+                                            <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(c[1].admin ? c[1].admin : "")}/>
                                         </div>
                                     </OverlayTrigger>
                                     : ""

@@ -104,16 +104,21 @@ export type Contracts = {
     contractsV2: ContractInfo, 
 }
 
+export type ContractInfoValues = {
+    address?: string,
+    admin?: string
+}
+
 export type ContractInfo = {
-    DelegationProxy: string, 
-    GaugeController: string, 
-    Minter: string, 
-    MirroredVotingEscrow: string,
-    RewardPolicyMaker: string, 
-    SmartWalletChecker: string, 
-    Treasury: string, 
-    VeBoostDelegation: string, 
-    VotingEscrow: string, 
+    DelegationProxy?: ContractInfoValues, 
+    GaugeController?: ContractInfoValues, 
+    Minter?: ContractInfoValues, 
+    MirroredVotingEscrow?: ContractInfoValues,
+    RewardPolicyMaker?: ContractInfoValues, 
+    SmartWalletChecker?: ContractInfoValues, 
+    Treasury?: ContractInfoValues, 
+    VeBoostDelegation?: ContractInfoValues, 
+    VotingEscrow?: ContractInfoValues, 
 }
 
 export type GaugeV4 = {

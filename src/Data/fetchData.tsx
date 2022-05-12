@@ -306,43 +306,104 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
   }
     export const getContracts = async (network: Network, ethcallProvider: Provider): Promise<Contracts> => {
 
-        //init V2 addresses
-        let V2_DelegationProxy = ""
-        let V2_GaugeController = ""
-        let V2_Minter = ""
-        let V2_MirroredVotingEscrow = ""
-        let V2_RewardPolicyMaker = ""
-        let V2_SmartWalletChecker = ""
-        let V2_Treasury = ""
-        let V2_veBoostDelegation = ""
-        let V2_VotingEscrow = ""
-
-        //fetch V2 addresses
-        if (network.contractV2){
-        if (network.contractV2.delegationProxy) V2_DelegationProxy = network.contractV2.delegationProxy;
-        if (network.contractV2.gaugeController) V2_GaugeController = network.contractV2.gaugeController;
-        if (network.contractV2.minter) V2_Minter = network.contractV2.minter;
-        if (network.contractV2.mirroredVotingEscrow) V2_MirroredVotingEscrow = network.contractV2.mirroredVotingEscrow;
-        if (network.contractV2.rewardPolicyMaker) V2_RewardPolicyMaker = network.contractV2.rewardPolicyMaker;
-        if (network.contractV2.smartWalletChecker) V2_SmartWalletChecker = network.contractV2.smartWalletChecker;
-        if (network.contractV2.treasury) V2_Treasury = network.contractV2.treasury;
-        if (network.contractV2.veBoostDelegation) V2_veBoostDelegation = network.contractV2.veBoostDelegation;
-        if (network.contractV2.votingEscrow) V2_VotingEscrow = network.contractV2.votingEscrow;
-        }
-        //define V2 addresses
         const contractsV2: ContractInfo = {
-            DelegationProxy: V2_DelegationProxy,
-            GaugeController: V2_GaugeController,
-            Minter: V2_Minter,
-            MirroredVotingEscrow: V2_MirroredVotingEscrow,
-            RewardPolicyMaker: V2_RewardPolicyMaker,
-            SmartWalletChecker: V2_SmartWalletChecker,
-            Treasury: V2_Treasury,
-            VeBoostDelegation: V2_veBoostDelegation,
-            VotingEscrow: V2_VotingEscrow,
+          DelegationProxy: {address: network?.contractV2?.delegationProxy, admin: undefined},
+          GaugeController: {address: network?.contractV2?.gaugeController},
+          Minter: {address: network?.contractV2?.minter},
+          MirroredVotingEscrow: {address: network?.contractV2?.mirroredVotingEscrow},
+          RewardPolicyMaker: {address: network?.contractV2?.rewardPolicyMaker},
+          SmartWalletChecker: {address: network?.contractV2?.smartWalletChecker},
+          Treasury: {address: network?.contractV2?.treasury},
+          VeBoostDelegation: {address: network?.contractV2?.veBoostDelegation},
+          VotingEscrow: {address: network?.contractV2?.votingEscrow}
         }
 
-        //return 'Contracts' object
+        const calls: any = []
+        const entries = Object.entries(contractsV2).filter(c => c[1].address !== undefined).filter(c=> c[1].address !== "0x0000000000000000000000000000000000000000").filter(c=> c[0] !== "Minter")
+        entries.forEach(e => {
+          if(e[1].address){
+            switch(e[0]){
+              case "DelegationProxy":{
+                const delegationContract = new Contract(e[1].address, ABI.DELEGATION_PROXY_ABI)
+                calls.push(delegationContract.ownership_admin())
+                break
+              }
+              case "GaugeController":
+                const gaugeContract = new Contract(e[1].address, ABI.GAUGE_CONTROLLER_ABI)
+                calls.push(gaugeContract.admin())
+                break
+              case "MirroredVotingEscrow":
+                const mirroredContract = new Contract(e[1].address, ABI.MIRRORED_VOTING_ESCROW_ABI)
+                calls.push(mirroredContract.admin())
+                break
+              case "RewardPolicyMaker":
+                const rewardContract = new Contract(e[1].address, ABI.REWARD_POLICY_MAKER_ABI)
+                calls.push(rewardContract.admin())
+                break
+              case "SmartWalletChecker":
+                const smartWalletContract = new Contract(e[1].address, ABI.SMART_WALLET_CHECKER_ABI)
+                calls.push(smartWalletContract.admin())
+                break
+              case "Treasury":
+                const treasuryContract = new Contract(e[1].address, ABI.TREASURY_ABI)
+                calls.push(treasuryContract.admin())
+                break
+              case "VeBoostDelegation": 
+                const vboostContract = new Contract(e[1].address, ABI.VBOOST_DELEGATION_ABI)
+                calls.push(vboostContract.admin())
+                break
+              case "VotingEscrow": 
+                const votingContract = new Contract(e[1].address, ABI.VOTING_ESCROW_ABI)
+                calls.push(votingContract.admin())
+                break
+              default:
+                break
+            }
+          }
+        })
+
+        const data = await ethcallProvider.all(calls)
+
+        entries.forEach((e, index) => {
+          e[1].admin = data[index] as string
+          switch(e[0]){
+            case "DelegationProxy":
+              if(contractsV2.DelegationProxy)
+                contractsV2.DelegationProxy.admin = data[index] as string
+              break
+            case "GaugeController":
+              if(contractsV2.GaugeController)
+                contractsV2.GaugeController.admin = data[index] as string
+              break
+            case "MirroredVotingEscrow":
+              if (contractsV2.MirroredVotingEscrow)
+                contractsV2.MirroredVotingEscrow.admin = data[index] as string
+              break
+            case "RewardPolicyMaker":
+              if (contractsV2.RewardPolicyMaker)
+                contractsV2.RewardPolicyMaker.admin = data[index] as string
+              break
+            case "SmartWalletChecker":
+              if (contractsV2.SmartWalletChecker)
+                contractsV2.SmartWalletChecker.admin = data[index] as string
+              break
+            case "Treasury":
+              if (contractsV2.Treasury)
+                contractsV2.Treasury.admin = data[index] as string
+              break
+            case "VeBoostDelegation": 
+            if (contractsV2.VeBoostDelegation)
+            contractsV2.VeBoostDelegation.admin = data[index] as string
+              break
+            case "VotingEscrow": 
+              if (contractsV2.VotingEscrow)
+              contractsV2.VotingEscrow.admin = data[index] as string
+              break
+            default:
+              break
+          }
+        })
+
         return {
             contractsV2: contractsV2,
         }
