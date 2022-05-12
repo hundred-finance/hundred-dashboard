@@ -32,6 +32,7 @@ export const Header = ()=>{
                         <NavLink className={"nav-link"} to="/gauges"> Gauges </NavLink>
                       </Nav>}
                     <Nav className="nav-buttons">
+                        <a style={{padding: "0 1rem"}} className={"nav-link"} href="https://hundred.finance" rel="noreferrer" target="_blank">Hundred Finance</a>
                         <NetworkButton/>
                         <Connect/>
                     </Nav>
@@ -59,6 +60,7 @@ export const FantomLendlyHeader = ()=>{
                     </Nav>
                     <Nav className="nav-buttons">
                         <NavLink style={{padding: "0 1rem"}} className={"nav-link"} to="/">Hundred Dashboard</NavLink>
+                        <a style={{padding: "0 1rem"}} className={"nav-link"} href="https://hundred.finance" rel="noreferrer" target="_blank">Hundred Finance</a>
                         <NetworkButton/>
                         <Connect/>
                     </Nav>
@@ -69,6 +71,7 @@ export const FantomLendlyHeader = ()=>{
 }
 
 export const ChainsHeader = ()=>{
+    const { network} = useGlobalContext()
     return (
         <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
             <Container fluid>
@@ -78,6 +81,22 @@ export const ChainsHeader = ()=>{
                         <span style={{paddingLeft: ".5rem", color: "#fff"}}>Dashboard</span>
                     </Navbar.Brand>
                 </NavLink>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    {network && network.chainId === 250 && network.lendly ? 
+                        <Nav className="me-auto">
+                            <NavLink className={"nav-link"} to="/"> Dashboard </NavLink>
+                            <NavLink className={"nav-link"} to="/fantom/lendly"> Lendly </NavLink>
+                        </Nav>
+                    : <Nav className="me-auto">
+                        <NavLink className={"nav-link"} to="/"> Dashboard </NavLink>
+                      </Nav>}
+                    <Nav className="nav-buttons">
+                        <a style={{padding: "0 1rem"}} className={"nav-link"} href="https://hundred.finance" rel="noreferrer" target="_blank">Hundred Finance</a>
+                        <NetworkButton/>
+                        <Connect/>
+                    </Nav>
+                </Navbar.Collapse>
             </Container>
         </Navbar>
     )
