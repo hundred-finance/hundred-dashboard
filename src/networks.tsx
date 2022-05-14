@@ -373,6 +373,7 @@ const NETWORKS: NetworkData = {
             }
         },
         linkAddress: "https://optimistic.etherscan.io/address/",
+        safeAddress: "https://gnosis-safe.io/app/oeth:",
         contractV2: {
             delegationProxy: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
             gaugeController: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
