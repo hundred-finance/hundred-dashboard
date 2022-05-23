@@ -325,11 +325,9 @@ const NETWORKS: NetworkData = {
             blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
         },
         hundred:{
-            nativeTokenAddress: "0x090a00a2de0ea83def700b5e216f87a5d4f394fe",
-            unitrollerAddress: "0x0F390559F258eB8591C8e31Cf0905E97cf36ACE2", 
+            nativeTokenAddress: "0x6edcb931168c9f7c20144f201537c0243b19dca4",
+            unitrollerAddress: "0x6bb6ebcf3ac808e26545d59ea60f27a202ce8586", 
             interestRateModels: {
-                "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "ETH",       abi : ABI.NO_KINK_MODEL_ABI  },
-                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "wBTC",      abi : ABI.NO_KINK_MODEL_ABI  },
                 "0x8a0d639f272f4b966b2dea42d4b743dce7e82c28" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
                 "0xbb93c7f378b9b531216f9ad7b5748be189a55807" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
