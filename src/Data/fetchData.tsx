@@ -279,10 +279,12 @@ export const getGauges = async ( network: Network, ethcallProvider: any): Promis
     //get data
     const activeGauges : string[] = await getActiveGauges(gauges, ethcallProvider)
     const gaugeData : any[] = await getLPTokenData(activeGauges, ethcallProvider, ethcallGaugeController)
-    const rewardsData : any[] = await getGaugesRewardsData(activeGauges, gaugeData, ethcallProvider); 
+    const rewardsData : any[] = await getGaugesRewardsData(activeGauges, gaugeData, ethcallProvider, network); 
+    
     for await (const net of rewardsData) {
-    const info =  await getUnderlying(ethcallProvider, net.underlying, network)
-    underlying.push(info)}   
+      const info =  await getUnderlying(ethcallProvider, net.underlying, network)
+      underlying.push(info)
+    }   
       
     return activeGauges.map((gauge, i) => {
       return {              
@@ -482,22 +484,37 @@ async function getLPTokenData(activeGauges: string[], ethcallProvider: any, ethc
     gaugeData.push(gaugeObject)}
   return gaugeData }
 
-async function getGaugesRewardsData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
+async function getGaugesRewardsData(activeGauges: string[], gaugeData: any[], ethcallProvider: any, network: Network ) : Promise<Array<any>>  {
   const rewardsData: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for await (const [i, gauge] of activeGauges.entries()) {
     const rewardContract = new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
-    const cTokenContract = new Contract(gaugeData[i].lpToken, ABI.CTOKEN_ABI);          
-    const calls = [           
-      rewardContract.rate_at(floor(new Date().getTime() / 1000)),
-      cTokenContract.balanceOf(activeGauges[i]),
-      cTokenContract.underlying(),
-      cTokenContract.decimals(), 
-    ]
-    const [rateAt, balanceOf, underlying, decimals] = await ethcallProvider.all(calls); 
-    const rewardsObject = {rateAt, balanceOf, underlying, decimals}
-    rewardsData.push(rewardsObject)}
-  return rewardsData;}
+    const cTokenContract = new Contract(gaugeData[i].lpToken, ABI.CTOKEN_ABI);  
+    
+    if (network.hundred.nativeTokenAddress.toLowerCase() === gaugeData[i].lpToken.toLowerCase()) {
+      const calls = [           
+        rewardContract.rate_at(floor(new Date().getTime() / 1000)),
+        cTokenContract.balanceOf(activeGauges[i]),
+        cTokenContract.decimals(), 
+      ]
+      const [rateAt, balanceOf, decimals] = await ethcallProvider.all(calls); 
+      const rewardsObject = {rateAt, balanceOf, underlying: "", decimals}
+      rewardsData.push(rewardsObject)
+    }
+    else{
+      const calls = [           
+        rewardContract.rate_at(floor(new Date().getTime() / 1000)),
+        cTokenContract.balanceOf(activeGauges[i]),
+        cTokenContract.underlying(),
+        cTokenContract.decimals(), 
+      ]
+      const [rateAt, balanceOf, underlying, decimals] = await ethcallProvider.all(calls); 
+      const rewardsObject = {rateAt, balanceOf, underlying, decimals}
+      rewardsData.push(rewardsObject)
+    }
+  }
+  return rewardsData;
+}
 
 async function getBackstopGaugesRewardsData(activeGauges: string[], gaugeData: any[], ethcallProvider: any ) : Promise<Array<any>>  {
   const rewardsData: any[] = [];
