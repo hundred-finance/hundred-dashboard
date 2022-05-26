@@ -212,7 +212,6 @@ export const getChainsBackstopsInfo = async (
   const backstopGauges = networks.filter(
     (n) =>
       n !== "arbitrum" &&
-      n !== "fantom" &&
       cData.gaugerewards[n].backstopGauge !== undefined,
   );
   const treasuryBalance = await fetchAPI(API.backstopgauge); //redo once backstop is added
