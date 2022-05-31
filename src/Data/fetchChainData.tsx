@@ -239,15 +239,11 @@ export const getLendlyInfo = async (
   const result = Object.values(cData);
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
-console.log(result)
-console.log(networks)
   const lendly = networks.filter(
     (n) =>
       n === "fantom" &&
       cData.gaugerewards[n].lendly !== undefined,
   );
-console.log(cData)
-
   return lendly.map((n, index) => {
     return {
       network: n,
