@@ -3,14 +3,13 @@ import Loading from "../Loading/loading"
 import { EpochsInfo } from "../../Types/data"
 import { useChainsContext } from "../../Types/chainsContext"
 
-const EpochsView = () =>{
+const LendlyDataView = () =>{
 
-    const {chainEpochs} = useChainsContext()
+    const {lendlyInfo} = useChainsContext()
     return(
-        
         <Row> 
                 <Col xl="7" xs="12" >
-                <h4>Epochs & Rewards</h4>
+                <h4>Lendly Data</h4>
             <Table striped bordered hover variant="dark" size="sm" responsive>
                 <thead>
                     <tr>
@@ -24,8 +23,8 @@ const EpochsView = () =>{
                     </tr>
                 </thead>
                  <tbody>
-                     { chainEpochs ? 
-                        chainEpochs.map((network : EpochsInfo, index) => (
+                     { lendlyInfo ? 
+                        lendlyInfo.map((network : EpochsInfo, index) => (
                      network ? (
                          <tr key={index}>
                          <td className="text-center">{network.network?.capitalize()} </td>
@@ -57,4 +56,4 @@ const EpochsView = () =>{
         )             
 }
 
-export default EpochsView
+export default LendlyDataView

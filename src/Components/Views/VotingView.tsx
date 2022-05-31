@@ -25,9 +25,9 @@ const VotingView = () =>{
                 </thead>
                  <tbody>
                      { votingInfo ? 
-                        votingInfo.map((network : VotingInfo) => (
+                        votingInfo.map((network : VotingInfo, index) => (
                      network ? (
-                         <tr key={10000}>
+                         <tr key={index}>
                          <td className="text-center">{network.network?.capitalize()} </td>
                          <td className="text-center">{(network.lockedHnd).toFixed(4)} </td>
                          <td className="text-center">{(network.veHnd).toFixed(4)} </td>

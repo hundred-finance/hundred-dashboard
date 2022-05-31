@@ -24,9 +24,9 @@ const BackstopChainsView = () =>{
                 </thead>
                  <tbody>
                      { backstopInfo ? 
-                        backstopInfo.map((network : BackstopsInfo) => (
+                        backstopInfo.map((network : BackstopsInfo, index) => (
                      network ? (
-                         <tr key={10000}>
+                         <tr key={index}>
                          <td className="text-center">{network.network?.capitalize()} </td>
                          <td className="text-center">{network.currentEpoch} </td>
                          <td className="text-center">{Math.round(network.epoch0Rewards)} </td>

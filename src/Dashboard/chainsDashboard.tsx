@@ -7,6 +7,7 @@ import {
   getChainsEpochsInfo,
   getChainsMigrationInfo,
   getChainsVotingInfo,
+  getLendlyInfo,
   migrationInterface,
   votingInterface,
 } from "../Data/fetchChainData";
@@ -16,12 +17,14 @@ import { API } from "../api";
 import VotingView from "../Components/Views/VotingView";
 import MigrationView from "../Components/Views/MigrationView";
 import BackstopChainsView from "../Components/Views/BackstopChainsView";
+import LendlyDataView from "../Components/Views/LendlyDataView";
 
 const ChainsDashboard = () => {
   const [chainEpochs, setChainEpochs] = useState<EpochsInfo[]>();
   const [votingInfo, setVotingInfo] = useState<VotingInfo[]>();
   const [migrationInfo, setMigrationInfo] = useState<MigrationInfo>();
   const [backstopInfo, setBackstopInfo] = useState<BackstopsInfo[]>();
+  const [lendlyInfo, setLendlyInfo] = useState<EpochsInfo[]>();
   const [retry, setRetry] = useState<number>(0)
   const retryRef = useRef<number>(0)
   retryRef.current = retry
@@ -39,6 +42,8 @@ const ChainsDashboard = () => {
         setChainEpochs(eInfo)
         const bInfo : BackstopsInfo[]  = await getChainsBackstopsInfo(eInterface); //get backstop data
         setBackstopInfo(bInfo)
+        const lendly: EpochsInfo[] = await getLendlyInfo(eInterface)
+        setLendlyInfo(lendly)
       }
       catch(error: any){
           if(!error.toString().includes("execution reverted"))
@@ -103,12 +108,15 @@ const ChainsDashboard = () => {
         migrationInfo,
         setMigrationInfo,
         backstopInfo,
-        setBackstopInfo
+        setBackstopInfo,
+        lendlyInfo,
+        setLendlyInfo
       }}
     >
       <h4>Chains Data</h4>
       <EpochsView/>
       <BackstopChainsView/>
+      <LendlyDataView/>
       <VotingView/>
       <MigrationView/>
     </ChainDataContext.Provider>

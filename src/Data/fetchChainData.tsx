@@ -208,7 +208,8 @@ export const getChainsBackstopsInfo = async (
   const result = Object.values(cData);
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
-
+console.log(result)
+console.log(networks)
   const backstopGauges = networks.filter(
     (n) =>
       n !== "arbitrum" &&
@@ -225,6 +226,37 @@ export const getChainsBackstopsInfo = async (
       epoch2Rewards: cData.gaugerewards[n].backstopGauge[2].rewards,
       epoch3Rewards: cData.gaugerewards[n].backstopGauge[3].rewards,
       treasuryBalance: treasuryBalance.backstopGauge[n],
+    };
+  });
+};
+
+
+//backstop
+export const getLendlyInfo = async (
+  cData: any,
+): Promise<Array<EpochsInfo>> => {
+  // array of networks
+  const result = Object.values(cData);
+  const networks = Object.getOwnPropertyNames(result[0]);
+  networks.shift(); //remove 'total'
+console.log(result)
+console.log(networks)
+  const lendly = networks.filter(
+    (n) =>
+      n === "fantom" &&
+      cData.gaugerewards[n].lendly !== undefined,
+  );
+console.log(cData)
+
+  return lendly.map((n, index) => {
+    return {
+      network: n,
+      currentEpoch: cData.gaugerewards[n].lendly[0].epoch,
+      epoch0Rewards: cData.gaugerewards[n].lendly[0].rewards,
+      epoch1Rewards: cData.gaugerewards[n].lendly[1].rewards,
+      epoch2Rewards: cData.gaugerewards[n].lendly[2].rewards,
+      epoch3Rewards: cData.gaugerewards[n].lendly[3].rewards,
+      treasuryBalance: cData.gaugerewards[n].lendlyGauge
     };
   });
 };

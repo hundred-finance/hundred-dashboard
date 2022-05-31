@@ -10,7 +10,8 @@ export type ChainsContext = {
     setMigrationInfo: (m: MigrationInfo) => void,
     backstopInfo: BackstopsInfo[] | undefined,
     setBackstopInfo: (b: BackstopsInfo[]) => void,
-
+    lendlyInfo: EpochsInfo[] | undefined,
+    setLendlyInfo: (e: EpochsInfo[]) => void,
 }
 
 export const ChainDataContext = createContext<ChainsContext>({
@@ -22,7 +23,8 @@ export const ChainDataContext = createContext<ChainsContext>({
     setMigrationInfo: () => {},
     backstopInfo: undefined,
     setBackstopInfo: () => {},
-
+    lendlyInfo: undefined,
+    setLendlyInfo: () => {}
 })
 
 export const useChainsContext = () => useContext(ChainDataContext)
