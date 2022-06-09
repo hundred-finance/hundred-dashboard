@@ -77,6 +77,7 @@ export type HTokenInfo = {
     hndAPR: number,
     admin: string,
     implementation: string,
+    bprotocol: string
 }
 
 export type InterestRateModel = {

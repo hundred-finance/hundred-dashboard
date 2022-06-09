@@ -287,6 +287,7 @@ const MarketsView = () =>{
                         <th className="text-center align-middle">Underlying</th>
                         <th className="text-center align-middle">Implementation</th>
                         <th className="text-center align-middle">Admin</th>
+                        <th className="text-center align-middle">B.Protocol</th>
                         <th className="text-center align-middle">Supply</th>
                         <th className="text-center align-middle">Borrows</th>
                         <th className="text-center align-middle">Reserves</th>
@@ -372,6 +373,20 @@ const MarketsView = () =>{
                                 <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
                                     <div>
                                         <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(item.admin)}/>
+                                    </div>
+                                </OverlayTrigger>
+                                : ""
+                            }
+                            </div>
+                        </td>
+                        <td>
+                            <div className="copy-td">
+                            <a target="_blank" rel="noreferrer" href={`${linkAddress}${item.bprotocol}`}>{shortenAddress(item.bprotocol)}</a>
+                            {
+                                item.bprotocol ?
+                                <OverlayTrigger placement="top-start" overlay={<Tooltip>{content}</Tooltip>}>
+                                    <div>
+                                        <MdContentCopy className="copy-btn" onMouseLeave={()=> setContent("Copy address to clipboard")} onClick={() => handleCopy(item.bprotocol)}/>
                                     </div>
                                 </OverlayTrigger>
                                 : ""

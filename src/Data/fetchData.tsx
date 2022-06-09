@@ -24,8 +24,8 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     let calls = [ethcallCToken.interestRateModel(), ethcallCToken.symbol(), ethcallCToken.getCash(), ethcallCToken.totalBorrows(),
         ethcallCToken.totalReserves(), ethcallCToken.reserveFactorMantissa(), ethcallCToken.totalSupply(), ethcallCToken.decimals(), 
         ethcallCToken.exchangeRateStored(), ethcallComptroller.mintGuardianPaused(address), ethcallComptroller.borrowGuardianPaused(address), 
-        ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address)]//, ethcallCToken.borrowRatePerBlock()]
-    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price] = await ethcallProvider.all(calls); 
+        ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address), ethcallComptroller.bprotocol(address)]//, ethcallCToken.borrowRatePerBlock()]
+    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price, bprotocol] = await ethcallProvider.all(calls); 
   
     const interestInfo = interestRateModels[interestAddress.toLowerCase()];
     const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
@@ -73,7 +73,8 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       isCompedLoading: false,
       hndAPR,
       admin,
-      implementation
+      implementation,
+      bprotocol
     }
 }
 
