@@ -29,8 +29,9 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     const interestInfo = interestRateModels[interestAddress.toLowerCase()];
     const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
     const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
-    const [supplyRate, borrowRate, utilizationRate] = await ethcallProvider.all([ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
-      ethcallInterestRate.getBorrowRate(cash, borrows, reserves), ethcallInterestRate.utilizationRate(cash, borrows, reserves)])
+    const [supplyRate, borrowRate, utilizationRate, blocksPerYear] = await ethcallProvider.all([ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
+      ethcallInterestRate.getBorrowRate(cash, borrows, reserves), ethcallInterestRate.utilizationRate(cash, borrows, reserves),ethcallInterestRate.blocksPerYear()]
+      )
 
     const underlying = await getUnderlying(ethcallProvider, underlyingAddress, network)
 
@@ -40,7 +41,7 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
 
     const yearlyRewards = pctSpeed * (network.blocksPerYear ? network.blocksPerYear : 0) * rewardTokenPrice
     const hndAPR = cTokenTVL ? yearlyRewards / cTokenTVL : 0
-
+      console.log(blocksPerYear)
     return {
       address,
       symbol,
@@ -53,8 +54,10 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       cash: cash /10 ** underlying.decimals,
       decimals,
       exchangeRate: exchangeRate/10 ** (10 + underlying.decimals),
-      supplyRate: supplyRate/1e18*365*24*60*60/13.5,
-      borrowRate: borrowRate/1e18*365*24*60*60/13.5,
+      supplyRate : supplyRate/1e18*blocksPerYear,
+      // supplyRate: supplyRate/1e18*365*24*60*60/13.5,
+      borrowRate: borrowRate/1e18*blocksPerYear,
+      // borrowRate: borrowRate/1e18*365*24*60*60/13.5,
       utilizationRate,
       interestRateModel : interestInfo.name,
       interestRateContract,
