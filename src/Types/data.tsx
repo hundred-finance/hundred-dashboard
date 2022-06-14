@@ -103,6 +103,7 @@ export type Admins = {
 
 export type Contracts = {
     contractsV2: ContractInfo, 
+    backstop?: null | ContractInfo
 }
 
 export type ContractInfoValues = {

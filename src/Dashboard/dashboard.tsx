@@ -327,7 +327,11 @@ const Dashboard = ({lendly} : Props) => {
                 (<BackstopView/> ) : null}
             <MarketsView/>
             <InterestRateModelsView/>
-            <ContractsView/>
+            <Row>
+                <ContractsView name = {"Contracts Version 2"}/>
+                { network && network.backstop ? 
+                    (<ContractsView name = {"Backstop Contracts"}/>) : null}
+            </Row>
         </MyDataContext.Provider>
     )
 }
