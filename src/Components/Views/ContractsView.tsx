@@ -1,17 +1,18 @@
 import React, {  useState } from "react"
-import { Col, OverlayTrigger, Row, Table, Tooltip} from "react-bootstrap"
+import { Col, OverlayTrigger, Table, Tooltip} from "react-bootstrap"
 import {MdContentCopy} from "react-icons/md"
 import { shortenAddress } from "../../helpers"
 import { useGlobalContext } from "../../Types/gloabalContext"
 import { useMarketContext } from "../../Types/marketContext"
 import Loading from "../Loading/loading"
 
-const ContractsView = () => {
+const ContractsView = (props : any) => {
     const {contracts, admins} = useMarketContext()
     const { network } = useGlobalContext()
     const [content, setContent] = useState<string>("Copy address to clipboard")
   
     const linkAddress = network ? network.linkAddress : ""
+    const allContracts = props.name === "Contracts Version 2" ? contracts?.contractsV2 :  contracts?.backstop
 
     function handleCopy (text: string | undefined) {
         if (text){
@@ -36,14 +37,9 @@ const ContractsView = () => {
         }
     }
 
-    // if(contracts && contracts.contractsV2 && Object.entries({...contracts.contractsV2}).filter(c => c[1].address !== undefined).length === 0){
-    //     return <></>
-    // }
-
      return(
-             <Row>
                  <Col xl="4" lg="4" md="6">
-                 <h4>Contracts Version 2</h4>
+                 <h4>{props.name}</h4>
              <Table striped bordered hover variant="dark" size="sm" responsive>
                  <thead>
                      <tr>
@@ -53,9 +49,9 @@ const ContractsView = () => {
                         <th className="text-left align-middle">Admin</th>
                      </tr>
                  </thead>
-                 {contracts && contracts?.contractsV2 && admins ? 
+                 {allContracts && admins ? 
                     <tbody>
-                     {Object.entries({...contracts?.contractsV2}).map((c, index) => {
+                     {Object.entries({...allContracts}).map((c, index) => {
                          return <tr key={1001+index}>
                              <td>
                                  {index + 1}
@@ -103,7 +99,6 @@ const ContractsView = () => {
                    </tbody>}
              </Table>
                  </Col>
-             </Row>
 
      )
 }
