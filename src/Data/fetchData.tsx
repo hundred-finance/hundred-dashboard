@@ -42,7 +42,7 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
 
     const yearlyRewards = pctSpeed * (network.blocksPerYear ? network.blocksPerYear : 0) * rewardTokenPrice
     const hndAPR = cTokenTVL ? yearlyRewards / cTokenTVL : 0
-      console.log(blocksPerYear)
+
     return {
       address,
       symbol,

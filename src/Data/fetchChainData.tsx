@@ -208,8 +208,7 @@ export const getChainsBackstopsInfo = async (
   const result = Object.values(cData);
   const networks = Object.getOwnPropertyNames(result[0]);
   networks.shift(); //remove 'total'
-console.log(result)
-console.log(networks)
+
   const backstopGauges = networks.filter(
     (n) =>
       n !== "arbitrum" &&

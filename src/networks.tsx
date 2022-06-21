@@ -461,6 +461,7 @@ const NETWORKS: NetworkData = {
             }
         },
         linkAddress: "https://polygonscan.com/address/",
+        safeAddress: "https://gnosis-safe.io/app/matic:",
         contractV2: {
             delegationProxy: "0xd7f3Bf2085AD32ff95E1bCC408d37F10f6949270",
             gaugeController: "0xF191d17dEe9943F06bB784C0492805280AeE0bf9",
