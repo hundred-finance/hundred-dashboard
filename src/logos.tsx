@@ -78,6 +78,7 @@ import Arbitrum from "./assets/images/ARBITRUM-logo.svg"
 import AVAXLogo from "./assets/images/AVAX-logo.svg"
 import POLYGONlogo from "./assets/images/POLYGON-logo.svg"
 import agEURlogo from "./assets/images/agEUR-logo.svg"
+import OPlogo from "./assets/images/OP-logo.png"
 
 type Logo = {
     [key: string] : string
@@ -185,7 +186,8 @@ const Logos: Logo ={
     "Polygon"   : POLYGONlogo,
     "hxDAI"     : DAIlogo,
     "xDAI"      : DAIlogo,
-    "agEUR"     : agEURlogo
+    "agEUR"     : agEURlogo,
+    "OP"        : OPlogo
 }
 
 export default Logos
