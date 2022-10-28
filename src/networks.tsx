@@ -333,7 +333,7 @@ const NETWORKS: NetworkData = {
                 decimals: 18,
                 symbol: "xDAI"
             },
-            blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
+            blockExplorerUrls: [" https://gnosisscan.io/"],
         },
         hundred:{
             nativeTokenAddress: "0x6edcb931168c9f7c20144f201537c0243b19dca4",
@@ -343,7 +343,7 @@ const NETWORKS: NetworkData = {
                 "0xbb93c7f378b9b531216f9ad7b5748be189a55807" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
             }
         },
-        linkAddress: "https://blockscout.com/xdai/mainnet/address/",
+        linkAddress: " https://gnosisscan.io/address/",
         safeAddress: "https://gnosis-safe.io/app/gno:",
         contractV2: {
             delegationProxy: "0x989b2F0722808d9F9c574363fA8759e925f30F12",
