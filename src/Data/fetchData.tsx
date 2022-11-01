@@ -18,8 +18,8 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     let implementation = ""
     if(!isNativeToken) {
       const [underlying, implement] = await ethcallProvider.all([ethcallCToken.underlying(), ethcallCToken.implementation()]);    
-      underlyingAddress = underlying
-      implementation = implement
+      underlyingAddress = underlying as string
+      implementation = implement as string
     }
     let calls = [ethcallCToken.interestRateModel(), ethcallCToken.symbol(), ethcallCToken.getCash(), ethcallCToken.totalBorrows(),
         ethcallCToken.totalReserves(), ethcallCToken.reserveFactorMantissa(), ethcallCToken.totalSupply(), ethcallCToken.decimals(), 
@@ -27,57 +27,57 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
         ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address), ethcallComptroller.bprotocol(address)]//, ethcallCToken.borrowRatePerBlock()]
     const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price, bprotocol] = await ethcallProvider.all(calls); 
   
-    const interestInfo = interestRateModels[interestAddress.toLowerCase()];
-    const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
-    const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
+    const interestInfo = interestRateModels[(interestAddress as string).toLowerCase()];
+    const interestRateContract = new ethers.Contract((interestAddress as string), interestInfo.abi, provider);
+    const ethcallInterestRate = new Contract((interestAddress as string), interestInfo.abi)
     const [supplyRate, borrowRate, utilizationRate, blocksPerYear] = await ethcallProvider.all([ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
       ethcallInterestRate.getBorrowRate(cash, borrows, reserves), ethcallInterestRate.utilizationRate(cash, borrows, reserves),ethcallInterestRate.blocksPerYear()]
       )
 
     const underlying = await getUnderlying(ethcallProvider, underlyingAddress, network)
 
-    const cTokenTVL = (totalSupply / 10**underlying.decimals) * (exchangeRate / 1e18) * (price / 10 ** (36 - underlying.decimals))
+    const cTokenTVL = ((totalSupply as any) / 10**underlying.decimals) * ((exchangeRate as any) / 1e18) * ((price as any) / 10 ** (36 - underlying.decimals))
     
-    const pctSpeed = compSpeeds / 1e18
+    const pctSpeed = (compSpeeds as any) / 1e18
 
     const yearlyRewards = pctSpeed * (network.blocksPerYear ? network.blocksPerYear : 0) * rewardTokenPrice
     const hndAPR = cTokenTVL ? yearlyRewards / cTokenTVL : 0
 
     return {
       address,
-      symbol,
-      totalSupply: totalSupply / 10 ** underlying.decimals * exchangeRate / 1e18,
-      borrows: borrows / 10 ** underlying.decimals,
-      reserves: reserves / 10 ** underlying.decimals,
-      reserveFactor: reserveFactor / 1e18,
-      reserveFactorEdit: reserveFactor / 1e18 * 100,
+      symbol: symbol as string,
+      totalSupply: (totalSupply as any) / 10 ** underlying.decimals * (exchangeRate as any) / 1e18,
+      borrows: (borrows as any) / 10 ** underlying.decimals,
+      reserves: (reserves as any) / 10 ** underlying.decimals,
+      reserveFactor: (reserveFactor as any) / 1e18,
+      reserveFactorEdit: (reserveFactor as any)/ 1e18 * 100,
       reserveFactorLoading: false,
-      cash: cash /10 ** underlying.decimals,
-      decimals,
-      exchangeRate: exchangeRate/10 ** (10 + underlying.decimals),
-      supplyRate : supplyRate/1e18*blocksPerYear,
+      cash: (cash as any) /10 ** underlying.decimals,
+      decimals: decimals as number,
+      exchangeRate: (exchangeRate as any) /10 ** (10 + underlying.decimals),
+      supplyRate : (supplyRate as any) / 1e18 * (blocksPerYear as any),
       // supplyRate: supplyRate/1e18*365*24*60*60/13.5,
-      borrowRate: borrowRate/1e18*blocksPerYear,
+      borrowRate: (borrowRate as any) / 1e18 * (blocksPerYear as any),
       // borrowRate: borrowRate/1e18*365*24*60*60/13.5,
-      utilizationRate,
+      utilizationRate: utilizationRate as number,
       interestRateModel : interestInfo.name,
       interestRateContract,
-      mintPaused,
+      mintPaused: mintPaused as boolean,
       mintPausedLoading: false,
-      borrowPaused,
+      borrowPaused: borrowPaused as boolean,
       borrowPausedLoading: false,
-      compSpeeds,
-      price: price / 10 ** (36 - underlying.decimals),
+      compSpeeds: compSpeeds as number,
+      price: (price as any) / 10 ** (36 - underlying.decimals),
       underlying,
-      collateralFactor: markets.collateralFactorMantissa / 1e18,
-      collateralFactorEdit: markets.collateralFactorMantissa / 1e18 * 100,
+      collateralFactor: (markets as any).collateralFactorMantissa / 1e18,
+      collateralFactorEdit: (markets as any).collateralFactorMantissa / 1e18 * 100,
       collateralFactorLoading: false,
-      isComped: markets.isComped,
+      isComped: (markets as any).isComped,
       isCompedLoading: false,
       hndAPR,
-      admin,
+      admin: admin as string,
       implementation,
-      bprotocol
+      bprotocol: bprotocol as string
     }
 }
 
@@ -107,15 +107,15 @@ const getTokenInfo = async (ethcallProvider: Provider, address: string): Promise
   const contract = new Contract(address, ABI.TOKEN_ABI)
   let [symbol, name, decimals, totalSupply] = await ethcallProvider.all([contract.symbol(), contract.name(), contract.decimals(), contract.totalSupply()])
   //if symbol has "hToken" format
-  if (symbol.charAt(0)==="h"){
-    symbol = symbol.slice(1);}
-  const logo = Logos[symbol]       
+  if ((symbol as string).charAt(0)==="h"){
+    symbol = (symbol as string).slice(1);}
+  const logo = Logos[symbol as string]       
   return{
     address,
-    symbol,
+    symbol: symbol as string,
     logo,
-    name,
-    decimals,
+    name: name as string,
+    decimals: decimals as number,
     totalSupply
   }
 }
@@ -127,10 +127,10 @@ const getMakerInfo = async (ethcallProvider: Provider, address: string): Promise
   
   return{
     address: address,
-    symbol: ethers.utils.parseBytes32String(tempSymbol),
+    symbol: ethers.utils.parseBytes32String(tempSymbol as string),
     logo: Logos["MKR"],
-    name: ethers.utils.parseBytes32String(tempName),
-    decimals: tempDecimals/1,
+    name: ethers.utils.parseBytes32String(tempName as string),
+    decimals: (tempDecimals as number)/1,
     totalSupply
   }
 }
@@ -147,34 +147,34 @@ export const getComptrollerData = async (provider: ethers.providers.Web3Provider
     ethcallComptroller.maxAssets(), ethcallComptroller.pauseGuardian(), ethcallUnitroller.implementation()]) 
    const comptroller = new ethers.Contract(address, ABI.COMPTROLLER_ABI, provider);
   
-  const oracle = new ethers.Contract(oracleAddress, ABI.ORACLE_ABI, provider)
+  const oracle = new ethers.Contract(oracleAddress as string, ABI.ORACLE_ABI, provider)
 
   return {
     address,
     comptroller,
-    oracleAddress,
+    oracleAddress: oracleAddress as string,
     oracle,
-    allMarkets,
-    borrowPaused,
+    allMarkets: allMarkets as string[],
+    borrowPaused: borrowPaused as boolean,
     borrowPausedLoading: false,
-    mintPaused,
+    mintPaused: mintPaused as boolean,
     mintPausedLoading: false,
-    seizePaused,
+    seizePaused: seizePaused as boolean,
     seizePausedLoading: false,
-    transferPaused,
+    transferPaused: transferPaused as boolean,
     transferPausedLoading: false,
-    admin,
-    closeFactor: closeFactor/1e18,
+    admin: admin as string,
+    closeFactor: (closeFactor as any)/1e18,
     closeFactorEdit: 0,
     closeFactorLoading: false,
-    compRate: compRate/1,
-    hundred,
-    liquidationIncentive: liquidationIncentive/1e18,
+    compRate: (compRate as number)/1,
+    hundred: hundred as string,
+    liquidationIncentive: (liquidationIncentive as any)/1e18,
     liquidationIncentiveEdit : 0,
     liquidationIncentiveLoading : false,
-    maxAssets,
-    pauseGuardian: pauseGuardian === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian,
-    implementation
+    maxAssets: maxAssets as number,
+    pauseGuardian: (pauseGuardian as string) === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian as string,
+    implementation: implementation as string
   }
 }
 
@@ -197,15 +197,15 @@ export const getInterestRateModel = async (interestRateContract: any, ethcallPro
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerBlock: baseRatePerBlock/1,
-            baseRatePerYear : (baseRatePerBlock.mul(blocksPerYear))/1e18,
+            baseRatePerBlock: (baseRatePerBlock as number) / 1,
+            baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
             jumpMultiplierPerBlock : 0,
             jumpMultiplierPerYear : 0,
             kink : 0,
-            multiplierPerBlock: multiplierPerBlock/1,
-            multiplierPerYear : (multiplierPerBlock.mul(blocksPerYear))/1e18,
-            blocksPerYear: blocksPerYear/1,
-            owner
+            multiplierPerBlock: (multiplierPerBlock as number)/1,
+            multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
+            blocksPerYear: (blocksPerYear as any)/1,
+            owner: owner as string
           }
       
         }
@@ -217,15 +217,15 @@ export const getInterestRateModel = async (interestRateContract: any, ethcallPro
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerBlock: baseRatePerBlock/1,
-            baseRatePerYear : (baseRatePerBlock.mul(blocksPerYear))/1e18,
-            jumpMultiplierPerBlock : jumpMultiplierPerBlock/1,
-            jumpMultiplierPerYear : (jumpMultiplierPerBlock.mul(blocksPerYear))/1e18,
+            baseRatePerBlock: (baseRatePerBlock as number)/1,
+            baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
+            jumpMultiplierPerBlock : (jumpMultiplierPerBlock as number)/1,
+            jumpMultiplierPerYear : ((jumpMultiplierPerBlock as any).mul(blocksPerYear))/1e18,
             kink : kink/1e18,
-            multiplierPerBlock: multiplierPerBlock/1,
-            multiplierPerYear : (multiplierPerBlock.mul(blocksPerYear))/1e18,
-            blocksPerYear: blocksPerYear/1,
-            owner
+            multiplierPerBlock: (multiplierPerBlock as any)/1,
+            multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
+            blocksPerYear: (blocksPerYear as number)/1,
+            owner: owner as string
           }
         } 
 }
