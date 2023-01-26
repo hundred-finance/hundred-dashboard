@@ -29,9 +29,9 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
 
     const underlying = await getUnderlying(ethcallProvider, underlyingAddress, network)
 
-    const interestInfo = interestRateModels[interestAddress.toLowerCase()];
-    const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
-    const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
+    const interestInfo = interestRateModels[(interestAddress as string).toLowerCase()];
+    const interestRateContract = new ethers.Contract((interestAddress as string), interestInfo.abi, provider);
+    const ethcallInterestRate = new Contract((interestAddress as string), interestInfo.abi)
     const [supplyRate, borrowRate, utilizationRate] = await ethcallProvider.all([
         ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
         ethcallInterestRate.getBorrowRate(cash, borrows, reserves),
