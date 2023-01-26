@@ -3441,6 +3441,383 @@ const ABI = {
     },
   ],
 
+  INTEREST_MODEL_V5_ABI: [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "baseRatePerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "multiplierPerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "jumpMultiplierPerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "kink_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "owner_",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "name_",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "baseRatePerSecond",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "multiplierPerSecond",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "jumpMultiplierPerSecond",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "kink",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewInterestParams",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "baseRatePerSecond",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "cash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "borrows",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reserves",
+          "type": "uint256"
+        }
+      ],
+      "name": "getBorrowRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "cash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "borrows",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reserves",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reserveFactorMantissa",
+          "type": "uint256"
+        }
+      ],
+      "name": "getSupplyRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isInterestRateModel",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "jumpMultiplierPerSecond",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "kink",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "multiplierPerSecond",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "secondsPerYear",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "baseRatePerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "multiplierPerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "jumpMultiplierPerYear",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "kink_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateJumpRateModel",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "cash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "borrows",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reserves",
+          "type": "uint256"
+        }
+      ],
+      "name": "utilizationRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+
   NO_KINK_MODEL_ABI: [
     {
       inputs: [
@@ -5904,7 +6281,240 @@ const ABI = {
       outputs: [{ name: "", type: "uint256" }],
     },
   ],
-
+  REWARD_POLICY_MAKER_V2_ABI: [
+    {
+      "name": "SetAdmin",
+      "inputs": [
+        {
+          "name": "admin",
+          "type": "address",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_epoch_length",
+          "type": "uint256"
+        },
+        {
+          "name": "_admin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "epoch_at",
+      "inputs": [
+        {
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "epoch_start_time",
+      "inputs": [
+        {
+          "name": "_epoch",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "rate_at",
+      "inputs": [
+        {
+          "name": "_timestamp",
+          "type": "uint256"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "current_epoch",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "future_epoch_time",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "future_epoch_rate",
+      "inputs": [
+        {
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "set_admin",
+      "inputs": [
+        {
+          "name": "_admin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "set_rewards_at",
+      "inputs": [
+        {
+          "name": "_epoch",
+          "type": "uint256"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_reward",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "set_rewards_starting_at",
+      "inputs": [
+        {
+          "name": "_epoch",
+          "type": "uint256"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_rewards",
+          "type": "uint256[10]"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "first_epoch_time",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "epoch_length",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "rewards",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        },
+        {
+          "name": "arg1",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
   BPRO_ABI: [
     {
       inputs: [
@@ -6444,24 +7054,21 @@ const ABI = {
       type: "function",
       name: "adjusted_balance_of",
       inputs: [{ name: "_account", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "9489",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "kill_delegation",
       inputs: [],
-      outputs: [],
-      gas: "26337",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "set_delegation",
       inputs: [{ name: "_delegation", type: "address" }],
-      outputs: [],
-      gas: "41322",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -6471,64 +7078,56 @@ const ABI = {
         { name: "_o_admin", type: "address" },
         { name: "_e_admin", type: "address" },
       ],
-      outputs: [],
-      gas: "74708",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "apply_set_admins",
       inputs: [],
-      outputs: [],
-      gas: "78756",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "voting_escrow",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2538",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "delegation",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2568",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "emergency_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2598",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "ownership_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2628",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_emergency_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2658",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_ownership_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2688",
+      outputs: [{ name: "", type: "address" }]
     },
   ],
 
@@ -6595,16 +7194,14 @@ const ABI = {
         { name: "_value", type: "uint256" },
         { name: "_unlock_time", type: "uint256" },
       ],
-      outputs: [],
-      gas: "41811079",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "checkpoint",
       inputs: [],
-      outputs: [],
-      gas: "37425044",
+      outputs: []
     },
     {
       stateMutability: "view",
@@ -6672,8 +7269,7 @@ const ABI = {
       type: "function",
       name: "user_last_checkpoint_ts",
       inputs: [{ name: "_user", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "261346662",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -6728,8 +7324,7 @@ const ABI = {
         { name: "addr", type: "address" },
         { name: "_t", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "628686267",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -6764,8 +7359,7 @@ const ABI = {
       type: "function",
       name: "nearest_locked__end",
       inputs: [{ name: "_addr", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "138077599",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -6800,16 +7394,14 @@ const ABI = {
       type: "function",
       name: "commit_transfer_ownership",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [],
-      gas: "39255",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "apply_transfer_ownership",
       inputs: [],
-      outputs: [],
-      gas: "41394",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -6819,64 +7411,56 @@ const ABI = {
         { name: "_addr", type: "address" },
         { name: "_is_whitelisted", type: "bool" },
       ],
-      outputs: [],
-      gas: "40121",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "add_voting_escrow",
       inputs: [{ name: "_addr", type: "address" }],
-      outputs: [],
-      gas: "78781",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2868",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2898",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "whitelisted_mirrors",
       inputs: [{ name: "arg0", type: "address" }],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "3143",
+      outputs: [{ name: "", type: "bool" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "voting_escrow_count",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "2958",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "voting_escrows",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3033",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "mirrored_chains_count",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3018",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -6886,8 +7470,7 @@ const ABI = {
       outputs: [
         { name: "chain_id", type: "uint256" },
         { name: "escrow_count", type: "uint256" },
-      ],
-      gas: "5483",
+      ]
     },
     {
       stateMutability: "view",
@@ -6901,8 +7484,7 @@ const ABI = {
       outputs: [
         { name: "amount", type: "int128" },
         { name: "end", type: "uint256" },
-      ],
-      gas: "5913",
+      ]
     },
     {
       stateMutability: "view",
@@ -6919,8 +7501,7 @@ const ABI = {
         { name: "slope", type: "int128" },
         { name: "ts", type: "uint256" },
         { name: "blk", type: "uint256" },
-      ],
-      gas: "10408",
+      ]
     },
     {
       stateMutability: "view",
@@ -6931,16 +7512,14 @@ const ABI = {
         { name: "arg1", type: "uint256" },
         { name: "arg2", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3583",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "mirrored_epoch",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3168",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -6952,48 +7531,42 @@ const ABI = {
         { name: "slope", type: "int128" },
         { name: "ts", type: "uint256" },
         { name: "blk", type: "uint256" },
-      ],
-      gas: "10053",
+      ]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "mirrored_slope_changes",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "int128" }],
-      gas: "3343",
+      outputs: [{ name: "", type: "int128" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "name",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "13488",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "symbol",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11241",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "version",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11271",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "decimals",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3348",
+      outputs: [{ name: "", type: "uint256" }]
     },
   ],
 
@@ -7009,48 +7582,42 @@ const ABI = {
       type: "function",
       name: "check",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "2603",
+      outputs: [{ name: "", type: "bool" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "add_to_whitelist",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [],
-      gas: "37687",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "revoke_from_whitelist",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [],
-      gas: "22717",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "set_admin",
       inputs: [{ name: "new_admin", type: "address" }],
-      outputs: [],
-      gas: "37635",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2508",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "whitelisted",
       inputs: [{ name: "arg0", type: "address" }],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "2753",
+      outputs: [{ name: "", type: "bool" }]
     },
   ],
 
@@ -7069,16 +7636,14 @@ const ABI = {
       type: "function",
       name: "set_minter",
       inputs: [{ name: "_minter", type: "address" }],
-      outputs: [],
-      gas: "37545",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "set_admin",
       inputs: [{ name: "_admin", type: "address" }],
-      outputs: [],
-      gas: "37575",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7088,32 +7653,28 @@ const ABI = {
         { name: "_to", type: "address" },
         { name: "_amount", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "9299",
+      outputs: [{ name: "", type: "bool" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "token",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2478",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "minter",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2508",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2538",
+      outputs: [{ name: "", type: "address" }]
     },
   ],
 
@@ -7226,8 +7787,7 @@ const ABI = {
         { name: "_approved", type: "address" },
         { name: "_token_id", type: "uint256" },
       ],
-      outputs: [],
-      gas: "42555",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7260,8 +7820,7 @@ const ABI = {
         { name: "_operator", type: "address" },
         { name: "_approved", type: "bool" },
       ],
-      outputs: [],
-      gas: "37846",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7272,24 +7831,21 @@ const ABI = {
         { name: "_to", type: "address" },
         { name: "_token_id", type: "uint256" },
       ],
-      outputs: [],
-      gas: "4948641",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "tokenURI",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [{ name: "", type: "string" }],
-      gas: "1386084",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "burn",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [],
-      gas: "2932661",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7299,16 +7855,14 @@ const ABI = {
         { name: "_to", type: "address" },
         { name: "_token_id", type: "uint256" },
       ],
-      outputs: [],
-      gas: "863639",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "_burn_for_testing",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [],
-      gas: "923216",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7322,8 +7876,7 @@ const ABI = {
         { name: "_expire_time", type: "uint256" },
         { name: "_id", type: "uint256" },
       ],
-      outputs: [],
-      gas: "1190963",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7335,24 +7888,21 @@ const ABI = {
         { name: "_expire_time", type: "uint256" },
         { name: "_cancel_time", type: "uint256" },
       ],
-      outputs: [],
-      gas: "2339806",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "cancel_boost",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [],
-      gas: "4014683",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "batch_cancel_boosts",
       inputs: [{ name: "_token_ids", type: "uint256[256]" }],
-      outputs: [],
-      gas: "1027671405",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7363,8 +7913,7 @@ const ABI = {
         { name: "_delegator", type: "address" },
         { name: "_status", type: "bool" },
       ],
-      outputs: [],
-      gas: "41201",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7375,56 +7924,49 @@ const ABI = {
         { name: "_delegators", type: "address[256]" },
         { name: "_status", type: "uint256[256]" },
       ],
-      outputs: [],
-      gas: "9771622",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "adjusted_balance_of",
       inputs: [{ name: "_account", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "19094",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "delegated_boost",
       inputs: [{ name: "_account", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "4370",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "received_boost",
       inputs: [{ name: "_account", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "4406",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "token_boost",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [{ name: "", type: "int256" }],
-      gas: "4939",
+      outputs: [{ name: "", type: "int256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "token_expiry",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3049",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "token_cancel_time",
       inputs: [{ name: "_token_id", type: "uint256" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3147",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "pure",
@@ -7434,56 +7976,49 @@ const ABI = {
         { name: "_delegator", type: "address" },
         { name: "_id", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "1270",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "commit_transfer_ownership",
       inputs: [{ name: "_addr", type: "address" }],
-      outputs: [],
-      gas: "38175",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "accept_transfer_ownership",
       inputs: [],
-      outputs: [],
-      gas: "38120",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "set_base_uri",
       inputs: [{ name: "_base_uri", type: "string" }],
-      outputs: [],
-      gas: "179262",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "voting_escrow",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3108",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "balanceOf",
       inputs: [{ name: "arg0", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3353",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "getApproved",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3283",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
@@ -7493,56 +8028,49 @@ const ABI = {
         { name: "arg0", type: "address" },
         { name: "arg1", type: "address" },
       ],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "3628",
+      outputs: [{ name: "", type: "bool" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "ownerOf",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3343",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "name",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11211",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "symbol",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11241",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "base_uri",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "18102",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "totalSupply",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3348",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "tokenByIndex",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3493",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7552,8 +8080,7 @@ const ABI = {
         { name: "arg0", type: "address" },
         { name: "arg1", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3668",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7563,16 +8090,14 @@ const ABI = {
         { name: "arg0", type: "address" },
         { name: "arg1", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3698",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "total_minted",
       inputs: [{ name: "arg0", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3683",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7582,24 +8107,21 @@ const ABI = {
         { name: "arg0", type: "address" },
         { name: "arg1", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3828",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3528",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3558",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
@@ -7609,8 +8131,7 @@ const ABI = {
         { name: "arg0", type: "address" },
         { name: "arg1", type: "address" },
       ],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "4018",
+      outputs: [{ name: "", type: "bool" }]
     },
   ],
 
@@ -7674,40 +8195,35 @@ const ABI = {
       type: "function",
       name: "commit_transfer_ownership",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [],
-      gas: "38895",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "apply_transfer_ownership",
       inputs: [],
-      outputs: [],
-      gas: "41034",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "commit_smart_wallet_checker",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [],
-      gas: "37605",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "apply_smart_wallet_checker",
       inputs: [],
-      outputs: [],
-      gas: "39632",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "get_last_user_slope",
       inputs: [{ name: "addr", type: "address" }],
-      outputs: [{ name: "", type: "int128" }],
-      gas: "5137",
+      outputs: [{ name: "", type: "int128" }]
     },
     {
       stateMutability: "view",
@@ -7717,24 +8233,21 @@ const ABI = {
         { name: "_addr", type: "address" },
         { name: "_idx", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "2940",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "locked__end",
       inputs: [{ name: "_addr", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "2861",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "checkpoint",
       inputs: [],
-      outputs: [],
-      gas: "37460000",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7744,8 +8257,7 @@ const ABI = {
         { name: "_addr", type: "address" },
         { name: "_value", type: "uint256" },
       ],
-      outputs: [],
-      gas: "75105101",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
@@ -7755,32 +8267,28 @@ const ABI = {
         { name: "_value", type: "uint256" },
         { name: "_unlock_time", type: "uint256" },
       ],
-      outputs: [],
-      gas: "75106526",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "increase_amount",
       inputs: [{ name: "_value", type: "uint256" }],
-      outputs: [],
-      gas: "75105947",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "increase_unlock_time",
       inputs: [{ name: "_unlock_time", type: "uint256" }],
-      outputs: [],
-      gas: "75106594",
+      outputs: []
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "withdraw",
       inputs: [],
-      outputs: [],
-      gas: "37638691",
+      outputs: []
     },
     {
       stateMutability: "view",
@@ -7807,8 +8315,7 @@ const ABI = {
         { name: "addr", type: "address" },
         { name: "_block", type: "uint256" },
       ],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "860361",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7829,32 +8336,28 @@ const ABI = {
       type: "function",
       name: "totalSupplyAt",
       inputs: [{ name: "_block", type: "uint256" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "1388730",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "nonpayable",
       type: "function",
       name: "changeController",
       inputs: [{ name: "_newController", type: "address" }],
-      outputs: [],
-      gas: "38055",
+      outputs: []
     },
     {
       stateMutability: "view",
       type: "function",
       name: "token",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "2928",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "supply",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "2958",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7864,16 +8367,14 @@ const ABI = {
       outputs: [
         { name: "amount", type: "int128" },
         { name: "end", type: "uint256" },
-      ],
-      gas: "5737",
+      ]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "epoch",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3018",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
@@ -7885,8 +8386,7 @@ const ABI = {
         { name: "slope", type: "int128" },
         { name: "ts", type: "uint256" },
         { name: "blk", type: "uint256" },
-      ],
-      gas: "10255",
+      ]
     },
     {
       stateMutability: "view",
@@ -7901,104 +8401,91 @@ const ABI = {
         { name: "slope", type: "int128" },
         { name: "ts", type: "uint256" },
         { name: "blk", type: "uint256" },
-      ],
-      gas: "10500",
+      ]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "user_point_epoch",
       inputs: [{ name: "arg0", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3323",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "slope_changes",
       inputs: [{ name: "arg0", type: "uint256" }],
-      outputs: [{ name: "", type: "int128" }],
-      gas: "3253",
+      outputs: [{ name: "", type: "int128" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "controller",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3168",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "transfersEnabled",
       inputs: [],
-      outputs: [{ name: "", type: "bool" }],
-      gas: "3198",
+      outputs: [{ name: "", type: "bool" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "name",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "13530",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "symbol",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11283",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "version",
       inputs: [],
-      outputs: [{ name: "", type: "string" }],
-      gas: "11313",
+      outputs: [{ name: "", type: "string" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "decimals",
       inputs: [],
-      outputs: [{ name: "", type: "uint256" }],
-      gas: "3318",
+      outputs: [{ name: "", type: "uint256" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_smart_wallet_checker",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3348",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "smart_wallet_checker",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3378",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3408",
+      outputs: [{ name: "", type: "address" }]
     },
     {
       stateMutability: "view",
       type: "function",
       name: "future_admin",
       inputs: [],
-      outputs: [{ name: "", type: "address" }],
-      gas: "3438",
+      outputs: [{ name: "", type: "address" }]
     },
   ],
 };

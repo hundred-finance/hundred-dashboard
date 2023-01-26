@@ -31,7 +31,6 @@ export type Comptroller = {
     liquidationIncentive: number,
     liquidationIncentiveEdit : number,
     liquidationIncentiveLoading : boolean,
-    maxAssets: number,
     pauseGuardian: string,
     implementation: string
 }
@@ -66,7 +65,6 @@ export type HTokenInfo = {
     mintPausedLoading: boolean,
     borrowPaused: boolean,
     borrowPausedLoading: boolean,
-    compSpeeds: number,
     price: number,
     underlying: UnderlyingInfo,
     collateralFactor: number,
@@ -74,7 +72,6 @@ export type HTokenInfo = {
     collateralFactorLoading: boolean,
     isComped: boolean,
     isCompedLoading: boolean,
-    hndAPR: number,
     admin: string,
     implementation: string,
     bprotocol: string
@@ -83,14 +80,14 @@ export type HTokenInfo = {
 export type InterestRateModel = {
     address : string,
     name: string,
-    baseRatePerBlock: number,
+    baseRatePerSecond: number,
     baseRatePerYear : number,
-    jumpMultiplierPerBlock : number,
+    jumpMultiplierPerSecond : number,
     jumpMultiplierPerYear : number,
     kink : number,
-    multiplierPerBlock: number,
+    multiplierPerSecond: number,
     multiplierPerYear : number,
-    blocksPerYear: number,
+    secondsPerYear: number,
     owner: string
 }
 

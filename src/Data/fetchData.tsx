@@ -24,24 +24,19 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
     let calls = [ethcallCToken.interestRateModel(), ethcallCToken.symbol(), ethcallCToken.getCash(), ethcallCToken.totalBorrows(),
         ethcallCToken.totalReserves(), ethcallCToken.reserveFactorMantissa(), ethcallCToken.totalSupply(), ethcallCToken.decimals(), 
         ethcallCToken.exchangeRateStored(), ethcallComptroller.mintGuardianPaused(address), ethcallComptroller.borrowGuardianPaused(address), 
-        ethcallComptroller.compSpeeds(address), ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address), ethcallComptroller.bprotocol(address)]//, ethcallCToken.borrowRatePerBlock()]
-    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,compSpeeds,markets,admin,price, bprotocol] = await ethcallProvider.all(calls); 
-  
-    const interestInfo = interestRateModels[(interestAddress as string).toLowerCase()];
-    const interestRateContract = new ethers.Contract((interestAddress as string), interestInfo.abi, provider);
-    const ethcallInterestRate = new Contract((interestAddress as string), interestInfo.abi)
-    const [supplyRate, borrowRate, utilizationRate, blocksPerYear] = await ethcallProvider.all([ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
-      ethcallInterestRate.getBorrowRate(cash, borrows, reserves), ethcallInterestRate.utilizationRate(cash, borrows, reserves),ethcallInterestRate.blocksPerYear()]
-      )
+        ethcallComptroller.markets(address), ethcallHtoken.admin(), oracleContract.getUnderlyingPrice(address), ethcallComptroller.bprotocol(address)]//, ethcallCToken.borrowRatePerBlock()]
+    const [interestAddress,symbol,cash,borrows,reserves,reserveFactor,totalSupply,decimals,exchangeRate,mintPaused,borrowPaused,markets,admin,price, bprotocol] = await ethcallProvider.all(calls);
 
     const underlying = await getUnderlying(ethcallProvider, underlyingAddress, network)
 
-    const cTokenTVL = ((totalSupply as any) / 10**underlying.decimals) * ((exchangeRate as any) / 1e18) * ((price as any) / 10 ** (36 - underlying.decimals))
-    
-    const pctSpeed = (compSpeeds as any) / 1e18
-
-    const yearlyRewards = pctSpeed * (network.blocksPerYear ? network.blocksPerYear : 0) * rewardTokenPrice
-    const hndAPR = cTokenTVL ? yearlyRewards / cTokenTVL : 0
+    const interestInfo = interestRateModels[interestAddress.toLowerCase()];
+    const interestRateContract = new ethers.Contract(interestAddress, interestInfo.abi, provider);
+    const ethcallInterestRate = new Contract(interestAddress, interestInfo.abi)
+    const [supplyRate, borrowRate, utilizationRate] = await ethcallProvider.all([
+        ethcallInterestRate.getSupplyRate(cash, borrows, reserves, reserveFactor),
+        ethcallInterestRate.getBorrowRate(cash, borrows, reserves),
+        ethcallInterestRate.utilizationRate(cash, borrows, reserves)]
+    )
 
     return {
       address,
@@ -54,10 +49,10 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       reserveFactorLoading: false,
       cash: (cash as any) /10 ** underlying.decimals,
       decimals: decimals as number,
-      exchangeRate: (exchangeRate as any) /10 ** (10 + underlying.decimals),
-      supplyRate : (supplyRate as any) / 1e18 * (blocksPerYear as any),
+      exchangeRate: (exchangeRate as any)/10 ** (10 + underlying.decimals),
+      supplyRate : (supplyRate as any)/ 1e18 * (network.blocksPerYear as any),
       // supplyRate: supplyRate/1e18*365*24*60*60/13.5,
-      borrowRate: (borrowRate as any) / 1e18 * (blocksPerYear as any),
+      borrowRate: (borrowRate as any) / 1e18 * (network.blocksPerYear as any),
       // borrowRate: borrowRate/1e18*365*24*60*60/13.5,
       utilizationRate: utilizationRate as number,
       interestRateModel : interestInfo.name,
@@ -66,7 +61,6 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       mintPausedLoading: false,
       borrowPaused: borrowPaused as boolean,
       borrowPausedLoading: false,
-      compSpeeds: compSpeeds as number,
       price: (price as any) / 10 ** (36 - underlying.decimals),
       underlying,
       collateralFactor: (markets as any).collateralFactorMantissa / 1e18,
@@ -74,7 +68,6 @@ export const getCTokenInfo = async (address: string, network: Network, provider:
       collateralFactorLoading: false,
       isComped: (markets as any).isComped,
       isCompedLoading: false,
-      hndAPR,
       admin: admin as string,
       implementation,
       bprotocol: bprotocol as string
@@ -109,7 +102,7 @@ const getTokenInfo = async (ethcallProvider: Provider, address: string): Promise
   //if symbol has "hToken" format
   if ((symbol as string).charAt(0)==="h"){
     symbol = (symbol as string).slice(1);}
-  const logo = Logos[symbol as string]       
+  const logo = Logos[symbol as string]
   return{
     address,
     symbol: symbol as string,
@@ -140,11 +133,11 @@ export const getComptrollerData = async (provider: ethers.providers.Web3Provider
   const ethcallUnitroller = new Contract(address, ABI.UNITROLLER_ABI)
   
   const [oracleAddress, allMarkets, borrowPaused, mintPaused, seizePaused, transferPaused, admin, closeFactor, compRate, hundred, liquidationIncentive,
-        maxAssets, pauseGuardian, implementation] = 
+        pauseGuardian, implementation] =
   await ethcallProvider.all([ethcallComptroller.oracle(), ethcallComptroller.getAllMarkets(), ethcallComptroller._borrowGuardianPaused(), 
     ethcallComptroller._mintGuardianPaused(), ethcallComptroller.seizeGuardianPaused(), ethcallComptroller.transferGuardianPaused(), ethcallComptroller.admin(), 
     ethcallComptroller.closeFactorMantissa(), ethcallComptroller.compRate(), ethcallComptroller.getCompAddress(), ethcallComptroller.liquidationIncentiveMantissa(),
-    ethcallComptroller.maxAssets(), ethcallComptroller.pauseGuardian(), ethcallUnitroller.implementation()]) 
+    ethcallComptroller.pauseGuardian(), ethcallUnitroller.implementation()])
    const comptroller = new ethers.Contract(address, ABI.COMPTROLLER_ABI, provider);
   
   const oracle = new ethers.Contract(oracleAddress as string, ABI.ORACLE_ABI, provider)
@@ -172,17 +165,16 @@ export const getComptrollerData = async (provider: ethers.providers.Web3Provider
     liquidationIncentive: (liquidationIncentive as any)/1e18,
     liquidationIncentiveEdit : 0,
     liquidationIncentiveLoading : false,
-    maxAssets: maxAssets as number,
-    pauseGuardian: (pauseGuardian as string) === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian as string,
+    pauseGuardian: (pauseGuardian as string) === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian,
     implementation: implementation as string
   }
 }
 
-export const getInterestRateModel = async (interestRateContract: any, ethcallProvider: Provider, interestRateModels: InterestRateModels): Promise<InterestRateModel> => {
+export const getInterestRateModel = async (interestRateContract: any, ethcallProvider: Provider, interestRateModels: InterestRateModels, network: Network): Promise<InterestRateModel> => {
         const address = interestRateContract.address.toLowerCase();
         const name = interestRateModels[address].name;
         const interestInfo = interestRateModels[address.toLowerCase()];
-        const ethcallInterestRate = new Contract(address, interestInfo.abi)
+        const ethcallInterestRate = new Contract(address, interestInfo.abi);
         let kink = null
         try{
           kink = await interestRateContract.kink()
@@ -191,40 +183,49 @@ export const getInterestRateModel = async (interestRateContract: any, ethcallPro
 
         }
         if (!kink) {
-          const [baseRatePerBlock, multiplierPerBlock, blocksPerYear, owner] = await ethcallProvider.all([ethcallInterestRate.baseRatePerBlock(), 
-            ethcallInterestRate.multiplierPerBlock(), ethcallInterestRate.blocksPerYear(), ethcallInterestRate.owner()])
+          const [baseRatePerBlock, multiplierPerBlock, blocksPerYear, owner] = await ethcallProvider.all([
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.baseRatePerSecond() : ethcallInterestRate.baseRatePerBlock(),
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.multiplierPerSecond() : ethcallInterestRate.multiplierPerBlock(),
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.secondsPerYear() : ethcallInterestRate.blocksPerYear(),
+              ethcallInterestRate.owner()
+          ])
 
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerBlock: (baseRatePerBlock as number) / 1,
+            baseRatePerSecond: (baseRatePerBlock as number) / (365 * 24 * 3600 / blocksPerYear),
             baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
-            jumpMultiplierPerBlock : 0,
+            jumpMultiplierPerSecond : 0,
             jumpMultiplierPerYear : 0,
             kink : 0,
-            multiplierPerBlock: (multiplierPerBlock as number)/1,
+            multiplierPerSecond: (multiplierPerBlock as number)/(365 * 24 * 3600 / blocksPerYear),
             multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
-            blocksPerYear: (blocksPerYear as any)/1,
+            secondsPerYear: (blocksPerYear as any)/1,
             owner: owner as string
           }
       
         }
         else{ 
-          const [baseRatePerBlock, jumpMultiplierPerBlock, multiplierPerBlock, blocksPerYear, owner] = await ethcallProvider.all([ethcallInterestRate.baseRatePerBlock(), 
-            ethcallInterestRate.jumpMultiplierPerBlock(), ethcallInterestRate.multiplierPerBlock(), ethcallInterestRate.blocksPerYear(), ethcallInterestRate.owner()])
+          const [baseRatePerBlock, jumpMultiplierPerBlock, multiplierPerBlock, blocksPerYear, owner] = await ethcallProvider.all([
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.baseRatePerSecond() : ethcallInterestRate.baseRatePerBlock(),
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.jumpMultiplierPerSecond() : ethcallInterestRate.jumpMultiplierPerBlock(),
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.multiplierPerSecond() : ethcallInterestRate.multiplierPerBlock(),
+              network.contractV2?.isMinterV2 ? ethcallInterestRate.secondsPerYear() : ethcallInterestRate.blocksPerYear(),
+              ethcallInterestRate.owner()
+          ])
 
             // const kink = await interestRateContract.kink()
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerBlock: (baseRatePerBlock as number)/1,
+            baseRatePerSecond: (baseRatePerBlock as number)/(365 * 24 * 3600 / blocksPerYear),
             baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
-            jumpMultiplierPerBlock : (jumpMultiplierPerBlock as number)/1,
+            jumpMultiplierPerSecond : (jumpMultiplierPerBlock as number)/1,
             jumpMultiplierPerYear : ((jumpMultiplierPerBlock as any).mul(blocksPerYear))/1e18,
             kink : kink/1e18,
-            multiplierPerBlock: (multiplierPerBlock as any)/1,
+            multiplierPerSecond: (multiplierPerBlock as any)/(365 * 24 * 3600 / blocksPerYear),
             multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
-            blocksPerYear: (blocksPerYear as number)/1,
+            secondsPerYear: (blocksPerYear as number)/1,
             owner: owner as string
           }
         } 
@@ -511,12 +512,16 @@ async function getGaugesRewardsData(activeGauges: string[], gaugeData: any[], et
   const rewardsData: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for await (const [i, gauge] of activeGauges.entries()) {
-    const rewardContract = new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
+    const rewardContract = network.contractV2?.isMinterV2 ?
+        new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_V2_ABI) :
+        new Contract(gaugeData[i].rewardsPolicyMaker, ABI.REWARD_POLICY_MAKER_ABI);
     const cTokenContract = new Contract(gaugeData[i].lpToken, ABI.CTOKEN_ABI);  
     
     if (network.hundred.nativeTokenAddress.toLowerCase() === gaugeData[i].lpToken.toLowerCase()) {
-      const calls = [           
-        rewardContract.rate_at(floor(new Date().getTime() / 1000)),
+      const calls = [
+        network.contractV2?.isMinterV2 ?
+            rewardContract.rate_at(floor(new Date().getTime() / 1000), network.hundred.address) :
+            rewardContract.rate_at(floor(new Date().getTime() / 1000)),
         cTokenContract.balanceOf(activeGauges[i]),
         cTokenContract.decimals(), 
       ]
@@ -525,7 +530,9 @@ async function getGaugesRewardsData(activeGauges: string[], gaugeData: any[], et
       rewardsData.push(rewardsObject)
     }
     else{
-      const calls = [           
+      const calls = [
+        network.contractV2?.isMinterV2 ?
+        rewardContract.rate_at(floor(new Date().getTime() / 1000), network.hundred.address) :
         rewardContract.rate_at(floor(new Date().getTime() / 1000)),
         cTokenContract.balanceOf(activeGauges[i]),
         cTokenContract.underlying(),

@@ -186,7 +186,7 @@ const Dashboard = ({lendly} : Props) => {
                         }
                     }
                     const interestRateModelsData =  net.lendly && lendly ? net.lendly[lendly].interestRateModels : net.hundred.interestRateModels
-                    const interestRateModels = await Promise.all(interestRateModelAddress.map((x) => getInterestRateModel(x, ethcallProvider, interestRateModelsData)));
+                    const interestRateModels = await Promise.all(interestRateModelAddress.map((x) => getInterestRateModel(x, ethcallProvider, interestRateModelsData, network)));
                     setInterestRateModels(_ => interestRateModels)
                 }
             }

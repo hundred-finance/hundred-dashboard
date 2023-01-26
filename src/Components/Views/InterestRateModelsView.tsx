@@ -85,13 +85,13 @@ const InterestRateModelsView = () =>{
                                     }
                                 </div>
                             </td>
-                            <td className="text-right">{item.blocksPerYear}</td>
-                            <td className="text-right">{item.baseRatePerBlock}</td>
+                            <td className="text-right">{item.secondsPerYear}</td>
+                            <td className="text-right">{item.baseRatePerSecond}</td>
                             <td className="text-right">{(item.baseRatePerYear * 100).toFixed(2)}%</td>
-                            <td className="text-right">{item.multiplierPerBlock}</td>
+                            <td className="text-right">{item.multiplierPerSecond}</td>
                             <td className="text-right">{(item.multiplierPerYear * 100).toFixed(2)}%</td>
                             <td className="text-right"> {item.kink * 100}%</td>
-                            <td className="text-right">{item.jumpMultiplierPerBlock}</td>
+                            <td className="text-right">{item.jumpMultiplierPerSecond}</td>
                             <td className="text-right">{(item.jumpMultiplierPerYear * 100).toFixed(2)}%</td>
                         </tr>
                     )) : <tr>

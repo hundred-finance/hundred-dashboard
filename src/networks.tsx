@@ -21,6 +21,7 @@ export type LendlyData = {
 }
 
 export type HundredData = {
+    address?: string,
     nativeTokenAddress: string,
     unitrollerAddress: string,
     interestRateModels: InterestRateModels
@@ -57,6 +58,7 @@ export type ContractData = {
     treasury?: string,
     veBoostDelegation?: string,
     votingEscrow?: string,
+    isMinterV2?: boolean,
 }
 type NativeCurrency = {
     name: string,
@@ -374,26 +376,28 @@ const NETWORKS: NetworkData = {
             blockExplorerUrls: ["https://optimistic.etherscan.io"],
         },
         hundred: {
-            nativeTokenAddress: "0xe8f12f5492ec28609d2932519456b7436d6c93bd",
-            unitrollerAddress: "0x0f390559f258eb8591c8e31cf0905e97cf36ace2",
+            address: "0x10010078a54396F62c96dF8532dc2B4847d47ED3",
+            nativeTokenAddress: "0x1a61a72f5cf5e857f15ee502210b81f8b3a66263",
+            unitrollerAddress: "0x5a5755e1916f547d04ef43176d4cbe0de4503d5d",
             interestRateModels: {
-                "0x28707252fdea41b72cf321d153a6c01fa9f6fb79" : { name: "Stables",   abi : ABI.INTEREST_MODEL_ABI },
-                "0x9d56800b8ae23b79fe9d4822aa3245fa527caf3f" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_ABI }
+                "0x14cb5e017a3f10b9f6254ff24b87e2297dc8b8b3" : { name: "Stables",   abi : ABI.INTEREST_MODEL_V5_ABI },
+                "0xcabc8fc306fcaa4c05b58522b13756ae12edd902" : { name: "BlueChips", abi : ABI.INTEREST_MODEL_V5_ABI }
             }
         },
         linkAddress: "https://optimistic.etherscan.io/address/",
         safeAddress: "https://gnosis-safe.io/app/oeth:",
         contractV2: {
             delegationProxy: "0xb4BAfc3d60662De362c0cB0f5e2DE76603Ea77D7",
-            gaugeController: "0xBa57440fA35Fdb671E58F6F56c1A4447aB1f6C2B",
-            minter: "0x4adF575DBe0e6F1c5909AE9c7119927b4FaabbBd",
+            gaugeController: "0x55Bba7755B77420d3d3C966440164F15a74F8696",
+            minter: "0xbE7CA18470B4AB61741bC2dcad50B1D4052b6b04",
             mirroredVotingEscrow: "0xAc8204a9d79CA87D192ea98A9381600642A66a5F",
-            rewardPolicyMaker: "0x3ffd03Ef31F6D5A6C517CEFA9CDf43efEBeE8399",
+            rewardPolicyMaker: "0x274E94f03AC51779D14bD45aF77C0e0e9d97cef9",
             smartWalletChecker: "0x1747D329CB37e0A0f387f24065aDdbc60eAB69DD",
-            treasury: "0xec378cdd60E890332F7A8CC251315327a4f244B6",
+            treasury: "0x6333000289bc27A090b3D51E734C2f13e3edc4fd",
             veBoostDelegation: "0x3A4148DDDd121fbceD8717CB7B82370Be27F76bf",
             votingEscrow: "0x1F8e8472e124F58b7F0D2598EaE3F4f482780b09",
-            },
+            isMinterV2: true,
+        },
         apiUrl: "https://api-optimistic.etherscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey"
     },
     4689 : {
