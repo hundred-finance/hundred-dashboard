@@ -193,13 +193,13 @@ export const getInterestRateModel = async (interestRateContract: any, ethcallPro
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerSecond: (baseRatePerBlock as number) / (365 * 24 * 3600 / blocksPerYear),
-            baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
+            baseRatePerSecond: (baseRatePerBlock as number) / (365 * 24 * 3600 / (blocksPerYear as any)),
+            baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear as any))/1e18,
             jumpMultiplierPerSecond : 0,
             jumpMultiplierPerYear : 0,
             kink : 0,
-            multiplierPerSecond: (multiplierPerBlock as number)/(365 * 24 * 3600 / blocksPerYear),
-            multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
+            multiplierPerSecond: (multiplierPerBlock as number)/(365 * 24 * 3600 / (blocksPerYear as any)),
+            multiplierPerYear : ((multiplierPerBlock as any).mul((blocksPerYear as any)))/1e18,
             secondsPerYear: (blocksPerYear as any)/1,
             owner: owner as string
           }
@@ -218,13 +218,13 @@ export const getInterestRateModel = async (interestRateContract: any, ethcallPro
           return {
             address : interestRateContract.address,
             name,
-            baseRatePerSecond: (baseRatePerBlock as number)/(365 * 24 * 3600 / blocksPerYear),
-            baseRatePerYear : ((baseRatePerBlock as any).mul(blocksPerYear))/1e18,
+            baseRatePerSecond: (baseRatePerBlock as number)/(365 * 24 * 3600 / (blocksPerYear as any)),
+            baseRatePerYear : ((baseRatePerBlock as any).mul((blocksPerYear as any)))/1e18,
             jumpMultiplierPerSecond : (jumpMultiplierPerBlock as number)/1,
-            jumpMultiplierPerYear : ((jumpMultiplierPerBlock as any).mul(blocksPerYear))/1e18,
+            jumpMultiplierPerYear : ((jumpMultiplierPerBlock as any).mul((blocksPerYear as any)))/1e18,
             kink : kink/1e18,
-            multiplierPerSecond: (multiplierPerBlock as any)/(365 * 24 * 3600 / blocksPerYear),
-            multiplierPerYear : ((multiplierPerBlock as any).mul(blocksPerYear))/1e18,
+            multiplierPerSecond: (multiplierPerBlock as any)/(365 * 24 * 3600 / (blocksPerYear as any)),
+            multiplierPerYear : ((multiplierPerBlock as any).mul((blocksPerYear as any)))/1e18,
             secondsPerYear: (blocksPerYear as number)/1,
             owner: owner as string
           }
