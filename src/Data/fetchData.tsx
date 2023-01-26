@@ -165,7 +165,7 @@ export const getComptrollerData = async (provider: ethers.providers.Web3Provider
     liquidationIncentive: (liquidationIncentive as any)/1e18,
     liquidationIncentiveEdit : 0,
     liquidationIncentiveLoading : false,
-    pauseGuardian: (pauseGuardian as string) === "0x0000000000000000000000000000000000000000" ? "" : pauseGuardian,
+    pauseGuardian: (pauseGuardian as string) === "0x0000000000000000000000000000000000000000" ? "" : (pauseGuardian as string),
     implementation: implementation as string
   }
 }
